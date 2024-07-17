@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
 );
 
 export const register = (firstName, lastName, username, password, phoneNumber) => {
-  return axiosInstance.post('/users/signup/', {
+  return axios.post(`${BACKEND_URL}/users/signup/`, {
     "first_name": firstName,
     "last_name": lastName,
     "username": username,

@@ -5,12 +5,15 @@ import './index.css'
 import {createBrowserRouter, RouterProvider,} from 'react-router-dom';
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
+import Dashboard from "@/pages/Dashboard";
+import Teachers from "@/pages/Teachers";
 
 const router = createBrowserRouter([
     { path: "/", element: <Login />},
     { path: "/login", element: <Login />},
     { path: "/signup", element: <SignUp />},
-    { path: "/dashboard", element: <div>Dashboard</div>},
+    { path: "/dashboard", element: <Dashboard />},
+    { path: "/teachers", element: <Teachers />},
   ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
