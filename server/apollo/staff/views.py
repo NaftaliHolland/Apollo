@@ -41,4 +41,5 @@ def create_staff(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
-def create_teacher(
+def create_teacher(request):
+    pass

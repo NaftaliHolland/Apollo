@@ -12,7 +12,7 @@ class Staff(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(null=True, blank=True)
-    role = models.ManyToManyField(Role, on_delete=models.CASCADE)
+    role = models.ManyToManyField(Role)
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
