@@ -1,5 +1,6 @@
 //import Link from "next/link"
 import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import {
   Bell,
   CircleUser,
@@ -34,12 +35,15 @@ import {
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Layout from "@/components/layouts/Layout"
+import AddTeacherForm from "@/components/forms/AddTeacherForm"
+import FormDialog from "@/components/FormDialog"
 
 const Teachers = () => {
   return (
 	  <Layout>
-          <div className="flex items-center">
+          <div className="flex justify-between">
             <h1 className="text-lg font-semibold md:text-2xl">Teachers page</h1>
+            <FormDialog buttonAction="Add Teacher" form={<AddTeacherForm/>} />
           </div>
           <div
             className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm" x-chunk="dashboard-02-chunk-1"

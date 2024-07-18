@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Staff, Role
+from .models import Staff, Role, Teacher
 
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,4 +9,9 @@ class StaffSerializer(serializers.ModelSerializer):
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
+        fields = "__all__"
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
         fields = "__all__"

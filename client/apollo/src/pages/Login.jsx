@@ -30,7 +30,7 @@ const Login = () => {
       setMessage("User found loging you in");
       localStorage.setItem("accessToken", response.data.tokens.token)
       localStorage.setItem("refreshToken", response.data.tokens.refresh)
-      navigate('/dashboard', { replace: true });
+      navigate('/dashboard');
     } catch (error) {
       console.log(error)
       setMessage(error.response.data.error);

@@ -53,8 +53,19 @@ export const register = (firstName, lastName, username, password, phoneNumber) =
 };
 
 export const login = (username, password) => {
-  return axiosInstance.post('/users/login/', {
+  return axios.post(`${BACKEND_URL}/users/login/`, {
     "username": username,
     "password": password,
+  });
+};
+
+export const addTeacher = (firstName, lastName, phone, tscNumber, email) => {
+  return axiosInstance.post("/staff/add_teacher/", {
+    "first_name": firstName,
+    "last_name": lastName,
+    "phone_number": phone,
+    "tsc_number": tscNumber,
+    "email": email,
+    "role": "teacher"
   });
 };

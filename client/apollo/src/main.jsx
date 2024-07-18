@@ -7,13 +7,18 @@ import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 import Dashboard from "@/pages/Dashboard";
 import Teachers from "@/pages/Teachers";
+import ProtectedRoutes from "@/utils/ProtectedRoutes";
 
 const router = createBrowserRouter([
     { path: "/", element: <Login />},
+    { element: <ProtectedRoutes/>,
+      children: [
+        { path: "/dashboard", element: <Dashboard />},
+        { path: "/teachers", element: <Teachers />},
+      ]
+    },
     { path: "/login", element: <Login />},
     { path: "/signup", element: <SignUp />},
-    { path: "/dashboard", element: <Dashboard />},
-    { path: "/teachers", element: <Teachers />},
   ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
