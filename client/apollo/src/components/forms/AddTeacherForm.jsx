@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select"
 import { addTeacher } from "@/Api/services"
 
-const AddTeacherForm = () => {
+const AddTeacherForm = ({ addToState }) => {
   const [firstName, setFirstName] = useState('');
   const [validFirstName, setValidFirstName] = useState(false);
   
@@ -45,8 +45,15 @@ const AddTeacherForm = () => {
 		console.log(phone, lastName, firstName, tscNumber, email)
     try {
       const response = await addTeacher(firstName, lastName, phone, tscNumber, email)
-      setSuccess(true)
+      addToState(response.data.teacher)
       setMessage(response.data.message);
+      setFirstName('')
+      setLastName('')
+      setEmail('')
+      setPhone('')
+      setTscNumber('')
+      setSuccess(true)
+
       console.log(response)
     } catch (error) {
       setSuccess(false)

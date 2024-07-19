@@ -69,3 +69,7 @@ export const addTeacher = (firstName, lastName, phone, tscNumber, email) => {
     "role": "teacher"
   });
 };
+
+export const getTeachers = () => {
+  return axiosInstance.get("/staff/get_teachers/");
+};

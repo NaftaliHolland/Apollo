@@ -1,6 +1,6 @@
 //import Link from "next/link"
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Bell,
   CircleUser,
@@ -15,7 +15,6 @@ import {
   BookOpenCheck,
 } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -32,31 +31,62 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Layout from "@/components/layouts/Layout"
 import AddTeacherForm from "@/components/forms/AddTeacherForm"
 import FormDialog from "@/components/FormDialog"
+import TeachersList from "@/components/TeachersList"
+import { getTeachers } from "@/Api/services"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const Teachers = () => {
+  const [teachers, setTeachers] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await getTeachers();
+        setTeachers(response.data.teachers)
+        setIsLoading(false)
+      } catch (error) {
+        setError(error)
+        setIsLoading(false)
+      }
+    }
+    fetchTeachers();
+  }, []);
+
+  const addToState = (teacher) => {
+		setTeachers(prevState => [teacher, ...prevState]);
+}
   return (
 	  <Layout>
           <div className="flex justify-between">
-            <h1 className="text-lg font-semibold md:text-2xl">Teachers page</h1>
-            <FormDialog buttonAction="Add Teacher" form={<AddTeacherForm/>} />
+            <h1 className="text-md font-semibold md:text-2xl">Teachers</h1>
+            <FormDialog buttonAction="Add Teacher" form={<AddTeacherForm addToState={addToState} />} />
           </div>
-          <div
-            className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm" x-chunk="dashboard-02-chunk-1"
-          >
-            <div className="flex flex-col items-center gap-1 text-center">
-              <h3 className="text-2xl font-bold tracking-tight">
-                We will have some data here soon, teacher data of course
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                We will be able to see everything about Transtar teachers just wait.
-              </p>
-            </div>
-          </div>
+          <Card x-chunk="dashboard-05-chunk-3">
+             <CardHeader className="px-7">
+             </CardHeader>
+             <CardContent>
+                { isLoading? (
+									<div className="flex items-center space-x-4">
+      							<Skeleton className="h-12 w-12 rounded-full" />
+      						<div className="space-y-2">
+        							<Skeleton className="h-4 w-[250px]" />
+        							<Skeleton className="h-4 w-[200px]" />
+      							</div>
+    							</div>
+                ) : (
+                <TeachersList teachers={ teachers } />
+                )
+                }
+             </CardContent>
+           </Card>
 	  </Layout>
   )
 }

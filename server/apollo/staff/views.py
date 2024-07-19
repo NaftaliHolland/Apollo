@@ -63,3 +63,10 @@ def add_teacher(request):
         print(teacher)
         return Response({"message": "Teacher added successfully", "teacher": serializer.data}, status=status.HTTP_201_CREATED)
     return Response({"message": "Error creating teacher", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_teachers(request):
+    teachers = Teacher.objects.all()
+    print(teachers)
+    serializer = TeacherSerializer(teachers, many=True)
+    return Response({"teachers": serializer.data}, status=status.HTTP_200_OK)
