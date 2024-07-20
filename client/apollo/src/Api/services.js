@@ -73,3 +73,19 @@ export const addTeacher = (firstName, lastName, phone, tscNumber, email) => {
 export const getTeachers = () => {
   return axiosInstance.get("/staff/get_teachers/");
 };
+
+export const addStudent = (firstName, lastName, dateOfBirth, _class, gender, parentDetails) => {
+  return axiosInstance.post("/students/add_student/", {
+    "first_name": firstName,
+    "last_name": lastName,
+    "date_of_birth": dateOfBirth,
+    "_class": _class,
+    "gender": gender,
+    "parent": {
+      "first_name": parentDetails.firstName,
+      "last_name": parentDetails.lastName,
+      "email": parentDetails.email,
+      "phone_number": parentDetails.phoneNumber,
+    }
+  });
+};

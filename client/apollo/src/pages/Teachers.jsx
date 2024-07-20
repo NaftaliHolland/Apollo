@@ -61,8 +61,8 @@ const Teachers = () => {
   }, []);
 
   const addToState = (teacher) => {
-		setTeachers(prevState => [teacher, ...prevState]);
-}
+    setTeachers(prevState => [teacher, ...prevState]);
+  }
   return (
 	  <Layout>
           <div className="flex justify-between">

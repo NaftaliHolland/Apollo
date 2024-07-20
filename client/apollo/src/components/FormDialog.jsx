@@ -15,17 +15,17 @@ import { Label } from "@/components/ui/label"
 const FormDialog = ({ buttonAction, form }) => {
   return (
     <Dialog>
+			<DialogTitle></DialogTitle>
       <DialogTrigger asChild>
         <Button>{ buttonAction }</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[700px] sm:max-h-[100vh] overflow-y-auto p-4">
         <DialogHeader>
           <DialogTitle>{ buttonAction }</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-2">
           { form }
         </div>
         <DialogFooter>

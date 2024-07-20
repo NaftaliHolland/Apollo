@@ -11,31 +11,28 @@ import {
 } from "@/components/ui/table"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-const TeachersList = ({ teachers }) => {
+const StudentsList = ({ students }) => {
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="hidden sm:table-cell">ID</TableHead>
+          <TableHead className="hidden sm:table-cell">Student ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead className="hidden sm:table-cell">
-            subject
+            Class
           </TableHead>
-          <TableHead className="hidden sm:table-cell">
-            class 
-          </TableHead>
+          <TableHead className="hidden sm:table-cell">Gender</TableHead>
           <TableHead className="hidden md:table-cell">
-           email 
+            isActive 
           </TableHead>
-          <TableHead className="text-right">Gender</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-      { teachers.map(teacher => 
-        <TableRow key={ teacher.id }>
+      { students.map(student => 
+        <TableRow key={ student.id }>
 					<TableCell >
-						{ teacher.id }
+						{ student.id }
 					</TableCell>
           <TableCell>
 						<div className="flex items-center space-x-2">
@@ -43,28 +40,24 @@ const TeachersList = ({ teachers }) => {
 								<AvatarImage src="" />{/*TODO add avatar link*/}
 								<AvatarFallback>CN</AvatarFallback>
 							</Avatar>
-							<div className="font-medium">{ `${teacher.first_name} ${teacher.last_name}` } </div>
+							<div className="font-medium">{ `${student.first_name} ${student.last_name}` } </div>
 							<div className="hidden text-sm text-muted-foreground md:inline">
-								{ teacher.email } 
+								{ student._class } 
 							</div>
 				    </div>
 					</TableCell>
           <TableCell className="hidden sm:table-cell">
-            { teacher.subject || "english" } 
+            { student.gender } 
           </TableCell>
           <TableCell className="hidden sm:table-cell">
             <Badge className="text-xs" variant="secondary">
-             { teacher.class } 
+              { student.isActive || false } 
             </Badge>
           </TableCell>
-          <TableCell className="hidden md:table-cell">
-            2023-06-23
-          </TableCell>
-          <TableCell className="text-right">{ teacher.gender }</TableCell>
         </TableRow>
       )}
       </TableBody>
     </Table>);
 };
 
-export default TeachersList;
+export default StudentsList;

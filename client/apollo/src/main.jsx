@@ -7,6 +7,7 @@ import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 import Dashboard from "@/pages/Dashboard";
 import Teachers from "@/pages/Teachers";
+import Students from "@/pages/Students";
 import ProtectedRoutes from "@/utils/ProtectedRoutes";
 
 const router = createBrowserRouter([
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
       children: [
         { path: "/dashboard", element: <Dashboard />},
         { path: "/teachers", element: <Teachers />},
+        { path: "/students", element: <Students />},
       ]
     },
     { path: "/login", element: <Login />},
