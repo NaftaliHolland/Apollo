@@ -89,3 +89,7 @@ export const addStudent = (firstName, lastName, dateOfBirth, _class, gender, par
     }
   });
 };
+
+export const getStudents = (_class) => {
+  return axiosInstance.get(`students/get_students/${_class}/`)
+}

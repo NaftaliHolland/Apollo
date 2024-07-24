@@ -17,8 +17,8 @@ const StudentsList = ({ students }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="hidden sm:table-cell">Student ID</TableHead>
           <TableHead>Name</TableHead>
+          <TableHead className="hidden sm:table-cell">Student ID</TableHead>
           <TableHead className="hidden sm:table-cell">
             Class
           </TableHead>
@@ -32,26 +32,28 @@ const StudentsList = ({ students }) => {
       { students.map(student => 
         <TableRow key={ student.id }>
 					<TableCell >
-						{ student.id }
-					</TableCell>
-          <TableCell>
 						<div className="flex items-center space-x-2">
 							<Avatar className="w-8 h-8">
 								<AvatarImage src="" />{/*TODO add avatar link*/}
 								<AvatarFallback>CN</AvatarFallback>
 							</Avatar>
 							<div className="font-medium">{ `${student.first_name} ${student.last_name}` } </div>
-							<div className="hidden text-sm text-muted-foreground md:inline">
-								{ student._class } 
-							</div>
 				    </div>
 					</TableCell>
+          <TableCell>
+						{ student.id }
+					</TableCell>
+          <TableCell>
+							<div className="hidden text-sm text-muted-foreground md:inline">
+								{ student._class.name } 
+							</div>
+          </TableCell>
           <TableCell className="hidden sm:table-cell">
             { student.gender } 
           </TableCell>
           <TableCell className="hidden sm:table-cell">
             <Badge className="text-xs" variant="secondary">
-              { student.isActive || false } 
+              { student.is_active? "Active" : "absent" } 
             </Badge>
           </TableCell>
         </TableRow>

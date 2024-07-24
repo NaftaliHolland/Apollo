@@ -61,8 +61,6 @@ const AddStudentForm = ({ addToState }) => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("Form data submited")
-		console.log(lastName, firstName, date, gender, _class, parentDetails)
     try {
       const response = await addStudent(firstName, lastName, date, _class, gender, parentDetails)
       addToState(response.data.student)
@@ -150,11 +148,16 @@ const AddStudentForm = ({ addToState }) => {
               <SelectValue placeholder="Select class" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="pg">Play group</SelectItem>
+              <SelectItem value="pp-1">PP 1</SelectItem>
+              <SelectItem value="pp-2">PP 2</SelectItem>
               <SelectItem value="grade-1">Grade 1</SelectItem>
               <SelectItem value="grade-2">Grade 2</SelectItem>
               <SelectItem value="grade-3">Grade 3</SelectItem>
               <SelectItem value="grade-4">Grade 4</SelectItem>
               <SelectItem value="grade-5">Grade 5</SelectItem>
+              <SelectItem value="grade-6">Grade 6</SelectItem>
+              <SelectItem value="grade-7">Grade 7</SelectItem>
             </SelectContent>
           </Select>
         </div>

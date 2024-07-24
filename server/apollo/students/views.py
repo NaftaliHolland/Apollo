@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from .serializers import StudentSerializer, ParentSerializer
 from .models import *
+from classes.serializers import ClassSerializer
 
 @api_view(['POST'])
 def create_parent(request):
@@ -24,24 +25,16 @@ def create_parent(request):
 def add_student(request):
     data = request.data
     date = data["date_of_birth"].split("T")
-    print(date[0])
     data["date_of_birth"] = date[0]
-    print(data)
     # Check if parent exists, if not, create parent
-    try:
-        parent = Parent.objects.get(phone_number=data["parent"]["phone_number"])
-    except Parent.DoesNotExist:
-        parent_serializer = ParentSerializer(data=data["parent"])
-        if parent_serializer.is_valid():
-            parent = parent_serializer.save()
-    # get class
-    try:
-        _class = Class.objects.get(name=data["_class"])
-    except Class.DoesNotExist:
-        return Response({"message": "Class has to be created first before you can add students"}, status=status.HTTP_400_BAD_REQUEST)
+    parent, created = Parent.objects.get_or_create(**data["parent"])
+    parentSerializer = ParentSerializer(parent)
+    data["parent"] = parentSerializer.data
+    # get or create a class
+    _class, created = Class.objects.get_or_create(name=data["_class"])
 
-    data["parent"] = parent.id
-    data["_class"] = _class.id
+    class_serializer = ClassSerializer(_class)
+    data["_class"] = class_serializer.data
     serializer = StudentSerializer(data=data)
     if serializer.is_valid():
         student = serializer.save()

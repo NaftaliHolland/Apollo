@@ -41,7 +41,7 @@ import Layout from "@/components/layouts/Layout"
 import AddStudentForm from "@/components/forms/AddStudentForm"
 import FormDialog from "@/components/FormDialog"
 import StudentsList from "@/components/StudentsList"
-import { getTeachers } from "@/Api/services"
+import { getStudents } from "@/Api/services"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -52,29 +52,19 @@ const Students = () => {
 	const [error, setError] = useState(false)
 	const [class_, setClass_] = useState('all')
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      console.log(class_);
-      if (class_ === "playgroup") {
-        setStudents([])
-      }
-    }
-    fetchStudents();
-  }, [class_]);
-
-	/*useEffect(() => {
-		const fetchTeachers = async () => {
+	useEffect(() => {
+		const fetchStudents= async () => {
 			try {
-				const response = await getTeachers();
-				setTeachers(response.data.teachers)
+				const response = await getStudents(class_);
+				setStudents(response.data.students)
 				setIsLoading(false)
 			} catch (error) {
 				setError(error)
 				setIsLoading(false)
 			}
 		}
-		fetchTeachers();
-	}, []);*/
+		fetchStudents();
+	}, [class_]);
 
 	const addToState = (student) => {
 		setStudents(prevState => [student, ...prevState]);
@@ -83,22 +73,32 @@ const Students = () => {
   <Layout>
 		<div className="flex justify-between">
       <h1 className="text-md font-semibold md:text-2xl">Students</h1>
-      <FormDialog buttonAction="Admit student" form={<AddStudentForm addToState={addToState} />} />
+      <div className="flex justify-between">
+        <div className="relative ml-auto flex-1 md:grow-0">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+           />
+        </div>
+        <FormDialog buttonAction="Admit student" form={<AddStudentForm addToState={addToState} />} />
+      </div>
 		</div>
     <Tabs defaultValue="all">
 			<div className="flex items-center">
 				<TabsList>
 					<TabsTrigger value="all" onClick={() => setClass_("all")}>All</TabsTrigger>
-					<TabsTrigger value="playgroup" onClick={() => setClass_("playgroup")}>Playgroup</TabsTrigger>
-					<TabsTrigger value="pp1" onClick={() => setClass_("pp1")}>PP1</TabsTrigger>
-					<TabsTrigger value="pp2" onClick={() => setClass_("pp2")}>PP2</TabsTrigger>
-					<TabsTrigger value="grade1" onClick={() => setClass_("grade1")}>Grade1</TabsTrigger>
-					<TabsTrigger value="grade2" onClick={() => setClass_("grade2")}>Grade2</TabsTrigger>
-					<TabsTrigger value="grade3" onClick={() => setClass_("grade3")}>Grade3</TabsTrigger>
-					<TabsTrigger value="grade4" onClick={() => setClass_("grade4")}>Grade4</TabsTrigger>
-					<TabsTrigger value="grade5" onClick={() => setClass_("grade5")}>Grade5</TabsTrigger>
-					<TabsTrigger value="grade6" onClick={() => setClass_("grade6")}>Grade6</TabsTrigger>
-					<TabsTrigger value="grade7" onClick={() => setClass_("grade7")}>Grade7</TabsTrigger>
+					<TabsTrigger value="pg" onClick={() => setClass_("pg")}>Playgroup</TabsTrigger>
+					<TabsTrigger value="pp-1" onClick={() => setClass_("pp-1")}>PP1</TabsTrigger>
+					<TabsTrigger value="pp-2" onClick={() => setClass_("pp-2")}>PP2</TabsTrigger>
+					<TabsTrigger value="grade-1" onClick={() => setClass_("grade-1")}>Grade1</TabsTrigger>
+					<TabsTrigger value="grade-2" onClick={() => setClass_("grade-2")}>Grade2</TabsTrigger>
+					<TabsTrigger value="grade-3" onClick={() => setClass_("grade-3")}>Grade3</TabsTrigger>
+					<TabsTrigger value="grade-4" onClick={() => setClass_("grade-4")}>Grade4</TabsTrigger>
+					<TabsTrigger value="grade-5" onClick={() => setClass_("grade-5")}>Grade5</TabsTrigger>
+					<TabsTrigger value="grade-6" onClick={() => setClass_("grade-6")}>Grade6</TabsTrigger>
+					<TabsTrigger value="grade-7" onClick={() => setClass_("grade-7")}>Grade7</TabsTrigger>
 				</TabsList>
 				<div className="ml-auto flex items-center gap-2">
 					<DropdownMenu>
@@ -141,7 +141,7 @@ const Students = () => {
       <CardHeader className="px-7">
       </CardHeader>
 		  <CardContent>
-        { !isLoading? (
+        { isLoading? (
           <div className="flex items-center space-x-4">
             <Skeleton className="h-12 w-12 rounded-full" />
             <div className="space-y-2">
