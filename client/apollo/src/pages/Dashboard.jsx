@@ -1,43 +1,65 @@
-//import Link from "next/link"
-import { Link, useNavigate } from 'react-router-dom'
-import {
-  Bell,
-  CircleUser,
-  Home,
-  LineChart,
-  Menu,
-  Package,
-  Package2,
-  Search,
-  ShoppingCart,
-  Users,
-  BookOpenCheck,
-} from "lucide-react"
-
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Layout from "@/components/layouts/Layout"
-
+import {
+  UsersIcon,
+  SchoolIcon,
+  BookIcon,
+  CalendarIcon,
+  BarChartIcon,
+} from "lucide-react"
+ 
 const Dashboard = () => {
   return (
 	  <Layout>
+	    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="bg-red-50">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+                <UsersIcon className="w-4 h-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">1,234</div>
+                <p className="text-xs text-muted-foreground">+5.2% from last year</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-orange-50">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
+                <SchoolIcon className="w-4 h-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">125</div>
+                <p className="text-xs text-muted-foreground">+3.1% from last year</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-lime-50">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Total Classes</CardTitle>
+                <BookIcon className="w-4 h-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">45</div>
+                <p className="text-xs text-muted-foreground">+2.4% from last year</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-green-50">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Attendance Rate</CardTitle>
+                <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">92.5%</div>
+                <p className="text-xs text-muted-foreground">+1.2% from last year</p>
+              </CardContent>
+            </Card>
+         </div>
           <div className="flex items-center">
             <h1 className="text-lg font-semibold md:text-2xl">TBD</h1>
           </div>
