@@ -49,3 +49,17 @@ def add_student(request):
     print(serializer.errors)
     return Response({"message": "Student could not be created", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def get_students(request, _class):
+    if _class == "all":
+        students = Student.objects.all()
+    else:
+        try:
+            _class = Class.objects.get(name=_class)
+        except Class.DoesNotExist:
+            return Response({"message": "The provided class does not exist make sure the class is created first"}, status=status.HTTP_404_NOT_FOUND)
+
+        students = Student.objects.filter(_class=_class)
+    serializer = StudentSerializer(students, many=True)
+    return Response({"students": serializer.data}, status=status.HTTP_200_OK)
+    
