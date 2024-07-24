@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label"
 const FormDialog = ({ buttonAction, form }) => {
   return (
     <Dialog>
-			<DialogTitle></DialogTitle>
+	<DialogTitle></DialogTitle>
       <DialogTrigger asChild>
         <Button>{ buttonAction }</Button>
       </DialogTrigger>
