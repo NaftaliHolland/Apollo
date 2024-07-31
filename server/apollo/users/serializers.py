@@ -14,7 +14,8 @@ class UserSerializer(serializers.ModelSerializer):
                 username = validated_data["username"],
                 email = validated_data.get("email"),
                 phone_number = validated_data["phone_number"],
-                password = validated_data["password"]
+                password = validated_data["password"],
+                role = validated_data["role"]
                 )
         user.is_superuser = True
         user.is_staff = True
