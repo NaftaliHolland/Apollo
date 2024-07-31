@@ -9,6 +9,7 @@ import Dashboard from "@/pages/Dashboard";
 import Teachers from "@/pages/Teachers";
 import Students from "@/pages/Students";
 import ProtectedRoutes from "@/utils/ProtectedRoutes";
+import { AuthProvider } from '@/contexts/AuthContext'
 
 const router = createBrowserRouter([
     { path: "/", element: <Login />},
@@ -25,6 +26,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 )

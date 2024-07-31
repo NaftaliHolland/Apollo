@@ -12,36 +12,35 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { login } from "@/Api/services"
+import { useAuth } from '@/contexts/AuthContext'
 
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
-  
+  const { login: authLogin, user, loading } = useAuth();
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard');
+    }
+  }, [loading, user, navigate]);
+
+  if (loading) {
+      return <div>Loading...</div>;
+  }
+
+
   const handleLogin = async () => {
-    console.log(username, password, "Login clicked")
     try {
-      const response = await login(username, password);
-      setSuccess(true);
-      console.log(response)
-      setMessage("User found loging you in");
-      localStorage.setItem("accessToken", response.data.tokens.token)
-      localStorage.setItem("refreshToken", response.data.tokens.refresh)
+      await authLogin(username, password);
       navigate('/dashboard');
     } catch (error) {
-      console.log(error)
-      setMessage(error.response.data.error);
+      console.error('LoginFailed', error);
     }
-  };
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      navigate('/dashboard');
-      }
-    }, [navigate]);
+  }
 
   const successClassName = "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
   const errClassName = "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -59,7 +58,7 @@ const Login = () => {
       <CardContent>
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="email">Username</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               type="username"

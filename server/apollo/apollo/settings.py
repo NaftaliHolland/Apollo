@@ -76,6 +76,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
+    'TOKEN_BOTAIN_SERIALIZER': 'apollo.serializers.ApolloObtainPairSerializer',
 }
 
 ROOT_URLCONF = 'apollo.urls'
