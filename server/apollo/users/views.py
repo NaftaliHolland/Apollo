@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.tokens import RefreshToken
+from apollo.serializers import CustomObtainPairSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from .serializers import UserSerializer 
@@ -9,9 +10,10 @@ from .models import *
 
 def get_user_tokens(user):
    refresh = RefreshToken.for_user(user)
+   access = CustomObtainPairSerializer.get_token(user)
    return {
         'refresh': str(refresh),
-        'access': str(refresh.access_token),
+        'access': str(access),
     } 
 
 @api_view(['POST'])
