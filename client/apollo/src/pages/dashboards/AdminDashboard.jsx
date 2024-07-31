@@ -16,7 +16,7 @@ import {
 } from "lucide-react"
 import { useAuth} from "@/contexts/AuthContext"
  
-const Dashboard = () => {
+const AdminDashboard = () => {
   const { user, logout } = useAuth()
 
   console.log( user )
@@ -82,4 +82,4 @@ const Dashboard = () => {
 	  </Layout>
   )
 }
-export default Dashboard;
+export default AdminDashboard;

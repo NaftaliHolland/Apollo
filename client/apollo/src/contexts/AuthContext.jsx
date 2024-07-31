@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { login as serviceLogin } from '@/Api/services';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -10,7 +11,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if(token) {
-      setUser(token)
+      const decoded = jwtDecode(token);
+      const role = decoded.role;
+      const userName = decoded.user_name;
+      setUser({ token, role, userName })
     } else {
       console.log("Not logged in");
     }
@@ -21,13 +25,11 @@ export const AuthProvider = ({ children }) => {
     console.log(username, password, "Login clicked")
     try {
       const response = await serviceLogin(username, password);
-      console.log(response)
       localStorage.setItem("accessToken", response.data.tokens.access)
       localStorage.setItem("refreshToken", response.data.tokens.refresh)
-      setUser(response.data.tokens.access)
+      const decoded = jwtDecode(response.data.tokens.access);
+      setUser({ "token": response.data.tokens.access, "role": decoded.role, "userName": decoded.first_name })
       //navigate('/dashboard');
-      console.log(response.data.tokens.access)
-      console.log(user)
     } catch (error) {
       console.log(error)
     }
