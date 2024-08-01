@@ -2,20 +2,18 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import date
 
+class Role(models.Model):
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.name
+
 class User(AbstractUser):
-
-    ROLES = (
-        ('admin', 'Admin'),
-        ('teacher', 'Teacher'),
-        ('parent', 'Parent'),
-        ('staff', 'Staff'),
-        ('student', 'Student'),
-    )
-
     username = models.CharField(max_length = 50, unique = True)
     email = models.EmailField(blank = True, null = True)
     phone_number = models.CharField(max_length = 20)
-    role = models.CharField(max_length=20, choices=ROLES, default='admin')
+    roles = models.ManyToManyField(Role)
+    school = models.ForeignKey("schools.School", on_delete=models.CASCADE, default=1)
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ['first_name', 'last_name', 'password', 'phone_number']
 

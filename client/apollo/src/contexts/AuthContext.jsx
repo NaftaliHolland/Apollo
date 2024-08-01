@@ -12,9 +12,9 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('accessToken');
     if(token) {
       const decoded = jwtDecode(token);
-      const role = decoded.role;
+      const roles = decoded.roles;
       const userName = decoded.user_name;
-      setUser({ token, role, userName })
+      setUser({ token, roles, userName })
     } else {
       console.log("Not logged in");
     }
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("accessToken", response.data.tokens.access)
       localStorage.setItem("refreshToken", response.data.tokens.refresh)
       const decoded = jwtDecode(response.data.tokens.access);
-      setUser({ "token": response.data.tokens.access, "role": decoded.role, "userName": decoded.first_name })
+      setUser({ "token": response.data.tokens.access, "roles": decoded.roles, "userName": decoded.first_name })
       //navigate('/dashboard');
     } catch (error) {
       console.log(error)

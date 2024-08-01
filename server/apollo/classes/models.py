@@ -3,6 +3,7 @@ from staff.models import Teacher
 
 class Class(models.Model):
     name = models.CharField(max_length=50)
+    school = models.ForeignKey("schools.School", on_delete=models.CASCADE)
     class_teacher = models.ForeignKey(Teacher, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):

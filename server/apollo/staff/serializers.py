@@ -1,17 +1,15 @@
 from rest_framework import serializers
-from .models import Staff, Role, Teacher
+from .models import Teacher
+from users.serializers import UserSerializer
 
-class StaffSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Staff
-        fields = "__all__"
-
-class RoleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Role
-        fields = "__all__"
-
-class TeacherSerializer(serializers.ModelSerializer):
+#class TeacherSerializer(serializers.ModelSerializer):
+class TeacherSerializer(UserSerializer):
     class Meta:
         model = Teacher
         fields = "__all__"
+
+    def create(self, validated_data):
+        tsc_number = validated_data.pop("tsc_number")
+        user = super().create(validated_data)
+        setattr(user, "tsc_number", tsc_number)
+        return user
