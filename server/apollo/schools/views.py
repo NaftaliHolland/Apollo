@@ -8,6 +8,7 @@ from rest_framework import status
 
 @api_view(['POST'])
 def register_school(request):
+    print(request.data)
     serializer = SchoolSerializer(data=request.data)
     if serializer.is_valid():
         school = serializer.save()

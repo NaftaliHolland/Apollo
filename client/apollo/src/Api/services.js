@@ -42,6 +42,33 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const registerInstitution = (
+  name,
+  postalCode,
+  county,
+  phone,
+  email,
+  year,
+  description,
+  type,
+  website,
+  logo,
+  documents
+) => {
+  return axios.post(`${BACKEND_URL}/schools/register_school/`, {
+    "name": name,
+    "postal_code": postalCode,
+    "county": county,
+    "phone_number": phone,
+    "email": email,
+    "year_established": year,
+    "type": type,
+    "website": website,
+    "logo": "logourl",
+    "documents": "documentsurl"
+  });
+};
+
 export const register = (firstName, lastName, username, password, phoneNumber) => {
   return axios.post(`${BACKEND_URL}/users/signup/`, {
     "first_name": firstName,
