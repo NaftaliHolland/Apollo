@@ -34,9 +34,14 @@ export const AuthProvider = ({ children }) => {
       console.log(error)
     }
   }
+  const logout = async () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    setUser(null);
+  }
 
   return (
-    <AuthContext.Provider value={{ user, login, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
        {children}
     </AuthContext.Provider>
   );
