@@ -1,5 +1,6 @@
 //import Link from "next/link"
 import { NavLink, Link, useNavigate } from 'react-router-dom'
+import { Toaster } from "@/components/ui/toaster";
 import {
   Bell,
   CircleUser,
@@ -229,6 +230,7 @@ const Layout = ({children}) => {
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
 	  {children}
         </main>
+	<Toaster />
       </div>
     </div>
   )

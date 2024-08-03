@@ -8,6 +8,5 @@ class CustomObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         serialized_user = UserSerializer(user)
         token['roles'] = serialized_user.data["roles"]
-        token['first_name'] = user.first_name
 
         return token

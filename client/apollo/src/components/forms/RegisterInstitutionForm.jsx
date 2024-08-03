@@ -11,8 +11,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { registerInstitution } from "@/Api/services";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
+import { useAuth } from '@/contexts/AuthContext'
 
 const RegisterInstitutionForm = () => {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [password, setPassword] = useState('')
+  const [repeatPassword, setRepeatPassword] = useState('')
+  const [adminEmail, setAdminEmail] = useState('')
+  const [adminPhone, setAdminPhone] = useState('')
+
   const [name, setName] = useState('')
   const [postalCode, setPostalCode] = useState('')
   const [phone, setPhone] = useState('')
@@ -27,10 +40,14 @@ const RegisterInstitutionForm = () => {
   const [success, setSuccess] = useState(false)
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const { login: authLogin, user, loading: authLoading } = useAuth();
+  const { toast } = useToast()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true)
+
     try {
       const response = await registerInstitution(
         name,
@@ -43,15 +60,36 @@ const RegisterInstitutionForm = () => {
         type,
         website,
         logo,
-        documents
+        documents,
+        firstName,
+        lastName,
+        adminEmail,
+        adminPhone,
+        password
       )
       setSuccess(true)
       setLoading(false)
       setMessage(response.data.message)
-      console.log(message)
+      toast({
+        title: "School created",
+        description: "Your school data has been uploaded succesfully"
+      });
+      console.log(message);
+      try {
+        await authLogin(adminPhone, password);
+        navigate("/dashboard")
+      } catch (error) {
+        console.error('LoginFailed', error)
+      }
     } catch (error) {
       setSuccess(false)
       setLoading(false)
+      toast({
+        title: "School not created",
+        description: "Your data could not be processed",
+        variant: "destructive",
+        action: <ToastAction altText="Try Again">Try Again</ToastAction>,
+      });
       console.log(error)
     }
   }
@@ -250,6 +288,70 @@ const RegisterInstitutionForm = () => {
               onChange={(e) => setDocuments(e.target.files)}
             />
           </div>
+          <Separator className="mt-4 h-0.5"/>
+          <h3 className="text-lg font-semibold">Add Institution Admin Details</h3>
+          <h2 className="text-md">Use these credentials to log into the school as an admin</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="fist-name">First Name</Label>
+              <Input
+                id="first-name"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="last-name">Last Name</Label>
+              <Input
+                id="last-name"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="admin-email">Email</Label>
+            <Input
+              id="admin-email"
+              placeholder="Enter email"
+              type="email"
+              onChange={(e) => setAdminEmail(e.target.value)}
+              value={ adminEmail }
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="admin-phone">Phone</Label>
+            <Input
+              id="admin-phone"
+              placeholder="Enter phone"
+              onChange={(e) => setAdminPhone(e.target.value)}
+              value={ adminPhone }
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="repeat-password">Repeat Password</Label>
+              <Input
+                id="repeat-password"
+                type="password"
+                placeholder="Repeat Password"
+                value={repeatPassword}
+                onChange={(e) => setRepeatPassword(e.target.value)}
+              />
+            </div>
+          </div>
         </form>
       </CardContent>
       <CardFooter>
@@ -257,6 +359,7 @@ const RegisterInstitutionForm = () => {
           { loading ? "loading..." : "Register Institution" }
         </Button>
       </CardFooter>
+    <Toaster />
     </Card>
   )
 }

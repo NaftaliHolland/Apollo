@@ -11,7 +11,7 @@ class Role(models.Model):
 class User(AbstractUser):
     username = models.CharField(max_length = 50, unique = True)
     email = models.EmailField(blank = True, null = True)
-    phone_number = models.CharField(max_length = 20)
+    phone_number = models.CharField(max_length = 20, unique=True)
     roles = models.ManyToManyField(Role)
     school = models.ForeignKey("schools.School", on_delete=models.CASCADE, default=1)
     USERNAME_FIELD = "username"

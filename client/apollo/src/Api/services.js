@@ -53,19 +53,35 @@ export const registerInstitution = (
   type,
   website,
   logo,
-  documents
+  documents,
+  firstName,
+  lastName,
+  adminEmail,
+  adminPhone,
+  password
 ) => {
   return axios.post(`${BACKEND_URL}/schools/register_school/`, {
-    "name": name,
-    "postal_code": postalCode,
-    "county": county,
-    "phone_number": phone,
-    "email": email,
-    "year_established": year,
-    "type": type,
-    "website": website,
-    "logo": "logourl",
-    "documents": "documentsurl"
+    "school":
+    {
+      "name": name,
+      "postal_code": postalCode,
+      "county": county,
+      "phone_number": phone,
+      "email": email,
+      "year_established": year,
+      "type": type,
+      "website": website,
+      "logo": "logourl",
+      "documents": "documentsurl",
+    },
+    "admin":
+    {
+      "first_name": firstName,
+      "last_name": lastName,
+      "email": adminEmail,
+      "phone_number": adminPhone,
+      "password": password
+    }
   });
 };
 

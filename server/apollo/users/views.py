@@ -22,8 +22,8 @@ def get_user_tokens(user):
 def signup(request):
     data = request.data
     try:
-        user = User.objects.get(username=data["username"])
-        return Response({"message": "User with the provided username exists"}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(username=data["phone_number"])
+        return Response({"message": "User with the provided number exists"}, status=status.HTTP_400_BAD_REQUEST)
     except User.DoesNotExist:
         # remove these later
         data["school"] = 1
@@ -33,6 +33,7 @@ def signup(request):
         school_serializer = SchoolSerializer(school)
         data["school"] = school_serializer.data
         data["roles"] = [role_serializer.data]
+        data["username"] = data["phone_number"]
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
             user = serializer.save()

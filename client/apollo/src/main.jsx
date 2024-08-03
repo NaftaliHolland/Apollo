@@ -7,13 +7,14 @@ import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 import Teachers from "@/pages/Teachers";
 import Students from "@/pages/Students";
+import LandingPage from "@/pages/LandingPage";
 import Dashboards from "@/components/Dashboards";
 import RegisterInstitution from "@/pages/RegisterInstitution";
 import ProtectedRoutes from "@/utils/ProtectedRoutes";
 import { AuthProvider } from '@/contexts/AuthContext'
 
 const router = createBrowserRouter([
-    { path: "/", element: <Login />},
+    { path: "/", element: <LandingPage />},
     { path: "/register_institution", element: <RegisterInstitution />},
     { element: <ProtectedRoutes/>,
       children: [

@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("accessToken", response.data.tokens.access)
       localStorage.setItem("refreshToken", response.data.tokens.refresh)
       const decoded = jwtDecode(response.data.tokens.access);
-      setUser({ "token": response.data.tokens.access, "roles": decoded.roles, "userName": decoded.first_name })
+      setUser({ "token": response.data.tokens.access, "roles": decoded.roles})
       //navigate('/dashboard');
     } catch (error) {
       console.log(error)
