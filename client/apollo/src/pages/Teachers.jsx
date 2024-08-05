@@ -48,8 +48,9 @@ const Teachers = () => {
 
   useEffect(() => {
     const fetchTeachers = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
       try {
-        const response = await getTeachers();
+        const response = await getTeachers(schoolId);
         setTeachers(response.data.teachers)
         setIsLoading(false)
       } catch (error) {

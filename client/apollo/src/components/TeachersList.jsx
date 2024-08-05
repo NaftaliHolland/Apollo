@@ -47,7 +47,7 @@ const TeachersList = ({ teachers }) => {
         </TableHeader>
         <TableBody>
         { teachers.filter((teacher) => {
-          return search.toLowerCase() === '' ? teacher : teacher.first_name.toLowerCase().includes(search) || teacher.last_name.toLowerCase().includes(search) || search.includes(teacher.id) 
+          return search.toLowerCase() === '' ? teacher : teacher.user.first_name.toLowerCase().includes(search) || teacher.user.last_name.toLowerCase().includes(search) || search.includes(teacher.user.id) 
         }).map(teacher => 
           <TableRow key={ teacher.id }>
             <TableCell >
@@ -59,9 +59,9 @@ const TeachersList = ({ teachers }) => {
                   <AvatarImage src="" />{/*TODO add avatar link*/}
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <div className="font-medium">{ `${teacher.first_name} ${teacher.last_name}` } </div>
+                <div className="font-medium">{ `${teacher.user.first_name} ${teacher.user.last_name}` } </div>
                 <div className="hidden text-sm text-muted-foreground md:inline">
-                  { teacher.email } 
+                  { teacher.user.email } 
                 </div>
               </div>
             </TableCell>
@@ -70,13 +70,13 @@ const TeachersList = ({ teachers }) => {
             </TableCell>
             <TableCell className="hidden sm:table-cell">
               <Badge className="text-xs" variant="secondary">
-               { teacher.class } 
+               { teacher.user.class } 
               </Badge>
             </TableCell>
             <TableCell className="hidden md:table-cell">
-              2023-06-23
+              { teacher.user.email }
             </TableCell>
-            <TableCell className="text-right">{ teacher.gender }</TableCell>
+            <TableCell className="text-right">{ teacher.user.gender }</TableCell>
           </TableRow>
         )}
         </TableBody>

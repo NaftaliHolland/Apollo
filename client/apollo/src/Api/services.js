@@ -102,19 +102,20 @@ export const login = (username, password) => {
   });
 };
 
-export const addTeacher = (firstName, lastName, phone, tscNumber, email) => {
-  return axiosInstance.post("/staff/add_teacher/", {
+export const addTeacher = (firstName, lastName, phone, tscNumber, email, schoolId) => {
+  return axiosInstance.post("/staff/teachers/", {
     "first_name": firstName,
     "last_name": lastName,
     "phone_number": phone,
     "tsc_number": tscNumber,
     "email": email,
-    "role": "teacher"
+    "role": "teacher",
+    "school": schoolId
   });
 };
 
-export const getTeachers = () => {
-  return axiosInstance.get("/staff/get_teachers/");
+export const getTeachers = (schoolId) => {
+  return axiosInstance.get(`/schools/${schoolId}/teachers`);
 };
 
 export const addStudent = (firstName, lastName, dateOfBirth, _class, gender, parentDetails) => {

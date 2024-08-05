@@ -39,12 +39,14 @@ const AddTeacherForm = ({ addToState }) => {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+    const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
 		console.log("Form data submited")
 		console.log(phone, lastName, firstName, tscNumber, email)
     try {
-      const response = await addTeacher(firstName, lastName, phone, tscNumber, email)
+      const response = await addTeacher(firstName, lastName, phone, tscNumber, email, schoolId)
       addToState(response.data.teacher)
       setMessage(response.data.message);
       setFirstName('')
