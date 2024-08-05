@@ -2,17 +2,21 @@
 <h2>MVP</h2>
 <h3>User Authentication</h3>
 
-1. [ ] Admin login and registration.
+1. [x] Admin login and registration.
 
 2. [ ] Teacher login and registration.
 
 3. [ ] Parent login and registration.
 
+4. [ ] edit use details.
+
 <h3>School Account Setup</h3>
 
-1. [ ] Admin creates and configures the school account.
+1. [x] Admin creates and configures the school account.
 
-2. [ ] Basic school details.
+2. [x] Basic school details.
+
+3. [ ] Edit school details.
 
 <h3>User Management/Information management</h3>
 
@@ -20,13 +24,13 @@
 
 2. [ ] Enrollment and registration.
 
-3. [ ] Basice staff profiles.
+3. [ ] Basic staff profiles.
 
 4. [ ] Role assignment.
 
 3. [ ] Admin can add, edit, and delete teachers and students..
 
-4. [ ] Role based access control (admin, teacher, parent, *student*).
+4. [x] Role based access control (admin, teacher, parent, *student*).
 
 <h3>Class Management</h3>
 
