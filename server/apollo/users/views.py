@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import authentication
+from rest_framework.views import APIView
 from apollo.serializers import CustomObtainPairSerializer
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,14 +14,17 @@ from schools.models import School
 from schools.serializers import SchoolSerializer
 
 def get_user_tokens(user):
-   refresh = RefreshToken.for_user(user)
-   access = CustomObtainPairSerializer.get_token(user)
+   #refresh = RefreshToken.for_user(user)
+   refresh = CustomObtainPairSerializer.get_token(user)
+   access = refresh.access_token
    return {
         'refresh': str(refresh),
         'access': str(access),
     } 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def signup(request):
     data = request.data
     try:
@@ -42,6 +48,8 @@ def signup(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def login(request):
     username = request.data.get("username")
     password = request.data.get("password")
@@ -51,7 +59,10 @@ def login(request):
     if user is not None:
         user_serializer = UserSerializer(user)
         tokens = get_user_tokens(user)
-
+        #tokens = RefreshToken.for_user(user)
+        print(type(tokens))
+        print(tokens["refresh"])
+        print(tokens["access"])
         return Response({"user": user_serializer.data, "tokens": tokens}, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)  
@@ -66,3 +77,16 @@ def create_role(request):
                 "message": "Role created successfully",
                 }
         return Response(response_data, status=status.HTTP_201_CREATED)
+
+class UserView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, format=None):
+        token = request.headers["Authorization"].split(' ')[1]
+        user_serializer = UserSerializer(request.user)
+        return Response({"message": "Hello there get user", "user": user_serializer.data}, status=status.HTTP_200_OK)
+
+    def put(self, request, format=None):
+        pass
+
+    def delete(self, request, format=None):
+        pass
