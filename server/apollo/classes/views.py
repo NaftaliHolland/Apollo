@@ -9,8 +9,10 @@ from .models import Class
 from schools.models import School
 
 class ClassView(APIView):
-    def get(self, request, format=None):
-        pass
+    def get(self, request, id, format=None):
+        classes = Class.objects.filter(school=id)
+        serializer = ClassSerializer(classes, many=True)
+        return Response({"classes": serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request, id, format=None):
 

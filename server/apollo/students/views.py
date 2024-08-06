@@ -22,7 +22,7 @@ def create_parent(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
-def add_student(request):
+def add_student(request, id):
     data = request.data
     date = data["date_of_birth"].split("T")
     data["date_of_birth"] = date[0]
@@ -31,7 +31,10 @@ def add_student(request):
     parentSerializer = ParentSerializer(parent)
     data["parent"] = parentSerializer.data
     # get or create a class
-    _class, created = Class.objects.get_or_create(name=data["_class"])
+    try:
+        _class = Class.objects.get(pk=id)
+    except Class.DoesNotExist:
+        return Response({"message": "The class does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
     class_serializer = ClassSerializer(_class)
     data["_class"] = class_serializer.data
@@ -43,12 +46,12 @@ def add_student(request):
     return Response({"message": "Student could not be created", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def get_students(request, _class, school_id):
-    if _class == "all":
-        students = Student.objects.all()
+def get_students(request, class_id, school_id):
+    if not class_id:
+        students = Student.objects.filter(_class__school=school_id)
     else:
         try:
-            _class = Class.objects.get(name=_class, school=school_id)
+            _class = Class.objects.get(pk=class_id)
         except Class.DoesNotExist:
             return Response({"message": "The provided class does not exist make sure the class is created first"}, status=status.HTTP_404_NOT_FOUND)
 

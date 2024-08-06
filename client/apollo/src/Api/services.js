@@ -141,3 +141,7 @@ export const getUserDetails = () => {
 export const getStudents = (_class, schoolId) => {
   return axiosInstance.get(`students/get_students/${_class}/${schoolId}`)
 }
+
+export const getClasses = (schoolId) => {
+  return axiosInstance.get(`/schools/${schoolId}/classes`);
+}

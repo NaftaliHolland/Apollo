@@ -32,5 +32,3 @@ def register_school(request):
         tokens = get_user_tokens(user)
         return Response({"message": "School account created succesfully created successfully", "user": user_serializer.data, "tokens": tokens}, status=status.HTTP_201_CREATED)
     return Response({"message": "Could not create school", "errors": user_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-

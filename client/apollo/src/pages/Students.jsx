@@ -41,7 +41,7 @@ import Layout from "@/components/layouts/Layout"
 import AddStudentForm from "@/components/forms/AddStudentForm"
 import FormDialog from "@/components/FormDialog"
 import StudentsList from "@/components/StudentsList"
-import { getStudents } from "@/Api/services"
+import { getStudents, getClasses } from "@/Api/services"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -50,11 +50,12 @@ const Students = () => {
 	const [students, setStudents] = useState([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState(false)
-	const [class_, setClass_] = useState('all')
+	const [class_, setClass_] = useState(0)
+  const [classes, setClasses] = useState([])
 
 	useEffect(() => {
 		const fetchStudents= async () => {
-                const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
 			try {
 				const response = await getStudents(class_, schoolId);
 				setStudents(response.data.students)
@@ -67,6 +68,22 @@ const Students = () => {
 		fetchStudents();
 	}, [class_]);
 
+	useEffect(() => {
+    const fetchClasses = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getClasses(schoolId);
+        console.log(response)
+        setClasses(response.data.classes)
+        console.log(classes)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchClasses();
+
+	}, []);
+
 	const addToState = (student) => {
 		setStudents(prevState => [student, ...prevState]);
 	}
@@ -78,20 +95,14 @@ const Students = () => {
         <FormDialog buttonAction="Admit student" form={<AddStudentForm addToState={addToState} />} />
       </div>
 		</div>
-    <Tabs defaultValue="all">
+    <Tabs defaultValue={0}>
 			<div className="flex items-center">
 				<TabsList>
-					<TabsTrigger value="all" onClick={() => setClass_("all")}>All</TabsTrigger>
-					<TabsTrigger value="pg" onClick={() => setClass_("pg")}>Playgroup</TabsTrigger>
-					<TabsTrigger value="pp-1" onClick={() => setClass_("pp-1")}>PP1</TabsTrigger>
-					<TabsTrigger value="pp-2" onClick={() => setClass_("pp-2")}>PP2</TabsTrigger>
-					<TabsTrigger value="grade-1" onClick={() => setClass_("grade-1")}>Grade1</TabsTrigger>
-					<TabsTrigger value="grade-2" onClick={() => setClass_("grade-2")}>Grade2</TabsTrigger>
-					<TabsTrigger value="grade-3" onClick={() => setClass_("grade-3")}>Grade3</TabsTrigger>
-					<TabsTrigger value="grade-4" onClick={() => setClass_("grade-4")}>Grade4</TabsTrigger>
-					<TabsTrigger value="grade-5" onClick={() => setClass_("grade-5")}>Grade5</TabsTrigger>
-					<TabsTrigger value="grade-6" onClick={() => setClass_("grade-6")}>Grade6</TabsTrigger>
-					<TabsTrigger value="grade-7" onClick={() => setClass_("grade-7")}>Grade7</TabsTrigger>
+					<TabsTrigger value={ 0 } onClick={() => setClass_(0)}>All</TabsTrigger>
+          { classes.map(value =>
+					  <TabsTrigger key={ value.id } value={ value.id } onClick={() => setClass_( value.id )}>{value.name}</TabsTrigger>
+            )
+          }
 				</TabsList>
 				<div className="ml-auto flex items-center gap-2">
 					<DropdownMenu>

@@ -7,4 +7,4 @@ class Class(models.Model):
     class_teacher = models.ForeignKey(Teacher, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return f"{self.name} {self.class_teacher}"
+        return f"{self.name} {self.school.name}"

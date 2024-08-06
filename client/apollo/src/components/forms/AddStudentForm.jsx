@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { addStudent } from "@/Api/services"
+import { addStudent, getClasses } from "@/Api/services"
 import { Separator } from "@/components/ui/separator"
 import DatePicker from "@/components/DatePicker"
 
@@ -43,6 +43,7 @@ const AddStudentForm = ({ addToState }) => {
   const [success, setSuccess] = useState(false);
 
   const [date, setDate] = useState('')
+  const [classes, setClasses] = useState([])
 
 	const [parentDetails, setParentDetails] = useState(
 			{
@@ -58,6 +59,24 @@ const AddStudentForm = ({ addToState }) => {
       ...prevDetails, [name]: value,
     }));
   }
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getClasses(schoolId);
+        console.log(response)
+        setClasses(response.data.classes)
+        console.log(classes)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchClasses();
+
+	}, []);
+
+
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -148,16 +167,9 @@ const AddStudentForm = ({ addToState }) => {
               <SelectValue placeholder="Select class" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="pg">Play group</SelectItem>
-              <SelectItem value="pp-1">PP 1</SelectItem>
-              <SelectItem value="pp-2">PP 2</SelectItem>
-              <SelectItem value="grade-1">Grade 1</SelectItem>
-              <SelectItem value="grade-2">Grade 2</SelectItem>
-              <SelectItem value="grade-3">Grade 3</SelectItem>
-              <SelectItem value="grade-4">Grade 4</SelectItem>
-              <SelectItem value="grade-5">Grade 5</SelectItem>
-              <SelectItem value="grade-6">Grade 6</SelectItem>
-              <SelectItem value="grade-7">Grade 7</SelectItem>
+              { classes.map(value => 
+                  <SelectItem key={ value.id } value={ value.id }>{ value.name }</SelectItem>)
+              }
             </SelectContent>
           </Select>
         </div>
