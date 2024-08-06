@@ -118,12 +118,11 @@ export const getTeachers = (schoolId) => {
   return axiosInstance.get(`/schools/${schoolId}/teachers`);
 };
 
-export const addStudent = (firstName, lastName, dateOfBirth, _class, gender, parentDetails) => {
-  return axiosInstance.post("/students/add_student/", {
+export const addStudent = (firstName, lastName, dateOfBirth, gender, parentDetails, classId) => {
+  return axiosInstance.post(`/classes/${classId}/add_student`, {
     "first_name": firstName,
     "last_name": lastName,
     "date_of_birth": dateOfBirth,
-    "_class": _class,
     "gender": gender,
     "parent": {
       "first_name": parentDetails.firstName,

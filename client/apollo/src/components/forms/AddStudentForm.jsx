@@ -36,7 +36,7 @@ const AddStudentForm = ({ addToState }) => {
   const [gender, setGender] = useState('');
   const [validGender, setValidGender] = useState(false);
 
-  const [_class, set_Class] = useState('');
+  const [classId, setClassId] = useState('');
   const [valid_Class, setValid_Class] = useState(false);
 
   const [message, setMessage] = useState('');
@@ -81,12 +81,12 @@ const AddStudentForm = ({ addToState }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
     try {
-      const response = await addStudent(firstName, lastName, date, _class, gender, parentDetails)
+      const response = await addStudent(firstName, lastName, date, gender, parentDetails, classId)
       addToState(response.data.student)
       setFirstName('')
       setLastName('')
       setDate('')
-      set_Class('')
+      setClassId('')
       setGender('')
       setParentDetails(
         {
@@ -162,7 +162,7 @@ const AddStudentForm = ({ addToState }) => {
         </div>
         <div className="space-y-2">
           <Label htmlFor="class">Class</Label>
-          <Select onValueChange={(value) => set_Class(value)}>
+          <Select onValueChange={(value) => setClassId(value)}>
             <SelectTrigger id="class">
               <SelectValue placeholder="Select class" />
             </SelectTrigger>
