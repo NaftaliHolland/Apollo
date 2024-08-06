@@ -43,12 +43,12 @@ def add_student(request):
     return Response({"message": "Student could not be created", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def get_students(request, _class):
+def get_students(request, _class, school_id):
     if _class == "all":
         students = Student.objects.all()
     else:
         try:
-            _class = Class.objects.get(name=_class)
+            _class = Class.objects.get(name=_class, school=school_id)
         except Class.DoesNotExist:
             return Response({"message": "The provided class does not exist make sure the class is created first"}, status=status.HTTP_404_NOT_FOUND)
 

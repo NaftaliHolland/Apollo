@@ -54,8 +54,9 @@ const Students = () => {
 
 	useEffect(() => {
 		const fetchStudents= async () => {
+                const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
 			try {
-				const response = await getStudents(class_);
+				const response = await getStudents(class_, schoolId);
 				setStudents(response.data.students)
 				setIsLoading(false)
 			} catch (error) {
