@@ -1,6 +1,9 @@
 from rest_framework import viewsets, permissions
 from .models import *
 from .serializers import *
+from rest_framework import status
+from rest_framework.response import Response
+
 
 class AcademicYearViewSet(viewsets.ModelViewSet):
     queryset = AcademicYear.objects.all()
@@ -40,6 +43,23 @@ class PaymentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+
+    def create(self, request):
+        data = request.data
+        # Update the student fee balance
+        term_category = data["payment_for"]
+        student = data["student"]
+        student_fee_balance = StudentFeeBalance.objects.get(student=student, term_category=term_category)
+        print(student_fee_balance.balance)
+        student_fee_balance.balance -= data["amount_paid"]
+        student_fee_balance.save()
+        print(student_fee_balance.balance)
+        serializer = PaymentSerializer(data=data)
+        if serializer.is_valid():
+            payment = serializer.save()
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DiscountViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
