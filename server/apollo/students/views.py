@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .serializers import StudentSerializer, ParentSerializer
 from .models import *
 from classes.serializers import ClassSerializer
+from fee.serializers import StudentAccountSerializer
 
 @api_view(['POST'])
 def create_parent(request):
@@ -41,6 +42,11 @@ def add_student(request, id):
     serializer = StudentSerializer(data=data)
     if serializer.is_valid():
         student = serializer.save()
+        # Create student account
+        account_serializer = StudentAccountSerializer(data={"student": student.id})
+        if account_serializer.is_valid():
+            student_account = account_serializer.save()
+            print(account_serializer.data)
         return Response({"message": "Student added successfully", "student": serializer.data}, status=status.HTTP_201_CREATED)
     print(serializer.errors)
     return Response({"message": "Student could not be created", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

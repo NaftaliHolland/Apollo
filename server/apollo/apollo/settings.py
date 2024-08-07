@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'staff',
     'students',
     'users',
+    'fee',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
