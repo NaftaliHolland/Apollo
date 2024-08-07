@@ -6,6 +6,7 @@ from .serializers import StudentSerializer, ParentSerializer
 from .models import *
 from classes.serializers import ClassSerializer
 from fee.serializers import StudentAccountSerializer
+from fee.models import AcademicYear, TermCategory, FeeStructure, StudentFeeBalance
 
 @api_view(['POST'])
 def create_parent(request):
@@ -47,6 +48,18 @@ def add_student(request, id):
         if account_serializer.is_valid():
             student_account = account_serializer.save()
             print(account_serializer.data)
+
+        # Get feeStructues for the current accademic year for the school
+        fee_structure = FeeStructure.objects.get(academic_year__school=student._class.school, academic_year__is_current=True)
+        # get term categories in the current fee structure
+        term_categories = fee_structure.term_categories.all()
+        # For all terms get term_categories
+        for term_category in term_categories:
+            student_fee_balance = StudentFeeBalance(student=student, term_category=term_category)
+            # For all term_categories create_student_fee_balance objects for the current student
+            student_fee_balance.save()
+            print(student_fee_balance)
+
         return Response({"message": "Student added successfully", "student": serializer.data}, status=status.HTTP_201_CREATED)
     print(serializer.errors)
     return Response({"message": "Student could not be created", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

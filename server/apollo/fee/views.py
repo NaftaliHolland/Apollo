@@ -31,11 +31,6 @@ class StudentAccountViewSet(viewsets.ModelViewSet):
     queryset = StudentAccount.objects.all()
     serializer_class = StudentAccountSerializer
 
-class PeriodAccountViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = PeriodAccount.objects.all()
-    serializer_class = PeriodAccountSerializer
-
 class PaymentMethodViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = PaymentMethod.objects.all()

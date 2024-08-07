@@ -37,11 +37,6 @@ class StudentAccountSerializer(serializers.ModelSerializer):
         model = StudentAccount
         fields = '__all__'
 
-class PeriodAccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PeriodAccount
-        fields = '__all__'
-
 class PaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod

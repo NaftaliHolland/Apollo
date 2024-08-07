@@ -6,6 +6,7 @@ class AcademicYear(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     is_current = models.BooleanField(default=False)
+    school = models.ForeignKey("schools.School", on_delete=models.CASCADE, related_name="academic_years")
 
     def __str__(self):
         return self.name
@@ -40,7 +41,7 @@ class TermCategory(models.Model):
 
 class FeeStructure(models.Model):
     academic_year = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
-    term_categories = models.ManyToManyField(TermCategory)
+    term_categories = models.ManyToManyField(TermCategory, related_name="term_categories")
     due_date = models.DateField()
 
     def __str__(self):
@@ -57,17 +58,15 @@ class StudentAccount(models.Model):
     def _str__(self):
         return f"{self.student} {self.balance}"
 
-class PeriodAccount(models.Model):
+class StudentFeeBalance(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    period_type = models.CharField(max_length=5, choices=[('year', 'Year'), ('term', 'Term')])
-    year = models.ForeignKey(AcademicYear, on_delete=models.SET_NULL, null=True, blank=True)
-    term = models.ForeignKey(Term, on_delete=models.SET_NULL, null=True, blank=True)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
+    term_category = models.ForeignKey(TermCategory, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
-        return f"Period for period {self.year} {self.term} for {self.student}"
+        return f"{self.student.first_name} {self.term_category} {self.balance}"
 
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=100)
@@ -75,12 +74,10 @@ class PaymentMethod(models.Model):
 
 class Payment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    fee_structure = models.ForeignKey(FeeStructure, on_delete=models.CASCADE)
+    payment_for = models.ForeignKey(TermCategory, on_delete=models.SET_NULL, null=True, blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField()
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.PROTECT)
-    student_account = models.ForeignKey(StudentAccount, on_delete=models.CASCADE)
-    period_account = models.ForeignKey(PeriodAccount, on_delete=models.CASCADE)
 
 class Discount(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
