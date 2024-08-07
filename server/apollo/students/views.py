@@ -54,11 +54,22 @@ def add_student(request, id):
         # get term categories in the current fee structure
         term_categories = fee_structure.term_categories.all()
         # For all terms get term_categories
+        account_year_balance=0
+        account_term_balance=0
         for term_category in term_categories:
             student_fee_balance = StudentFeeBalance(student=student, term_category=term_category)
+            if term_category.term.status == "current":
+                account_term_balance += term_category.amount
             # For all term_categories create_student_fee_balance objects for the current student
+            student_fee_balance.balance = term_category.amount
+            # Update the student account
+            account_year_balance += term_category.amount
             student_fee_balance.save()
             print(student_fee_balance)
+        student_account.year_balance = account_year_balance
+        student_account.term_balance = account_term_balance
+        student_account.save()
+        print(StudentAccountSerializer(student_account).data)
 
         return Response({"message": "Student added successfully", "student": serializer.data}, status=status.HTTP_201_CREATED)
     print(serializer.errors)

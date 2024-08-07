@@ -56,7 +56,7 @@ class StudentAccount(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 	
     def _str__(self):
-        return f"{self.student} {self.balance}"
+        return f"{self.student} {self.term_balance} {self.year_balance}"
 
 class StudentFeeBalance(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
