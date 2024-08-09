@@ -15,6 +15,7 @@ import {
 	BookOpenCheck,
 	File,
   ListFilter,
+  Plus,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -103,6 +104,10 @@ const Students = () => {
 					  <TabsTrigger key={ value.id } value={ value.id } onClick={() => setClass_( value.id )}>{value.name}</TabsTrigger>
             )
           }
+          <FormDialog buttonAction={ <Plus className="h-4 w-4"/> } buttonVariant="outline" form={<AddStudentForm addToState={addToState} />} />
+    {/*<Button variant="outline" size="icon">
+            <Plus className="h-4 w-4"/>
+          </Button>*/}
 				</TabsList>
 				<div className="ml-auto flex items-center gap-2">
 					<DropdownMenu>

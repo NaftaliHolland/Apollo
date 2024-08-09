@@ -8,8 +8,10 @@ import SignUp from "@/pages/SignUp";
 import Teachers from "@/pages/Teachers";
 import Students from "@/pages/Students";
 import LandingPage from "@/pages/LandingPage";
+import Setup from "@/pages/Setup";
 import Dashboards from "@/components/Dashboards";
 import RegisterInstitution from "@/pages/RegisterInstitution";
+import CreateClass from "@/pages/CreateClass";
 import ProtectedRoutes from "@/utils/ProtectedRoutes";
 import { AuthProvider } from '@/contexts/AuthContext'
 
@@ -21,6 +23,7 @@ const router = createBrowserRouter([
         { path: "/dashboard", element: <Dashboards />},
         { path: "/teachers", element: <Teachers />},
         { path: "/students", element: <Students />},
+        { path: "/setup", element: <Setup />},
       ]
     },
     { path: "/login", element: <Login />},

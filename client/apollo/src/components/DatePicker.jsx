@@ -21,12 +21,13 @@ const DatePicker = ({setDateState}) => {
   }, [date])
 
   return (
+    <div>
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
+            "w-auto justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
         >
@@ -43,6 +44,7 @@ const DatePicker = ({setDateState}) => {
         />
       </PopoverContent>
     </Popover>
+    </div>
   )
 }
 
