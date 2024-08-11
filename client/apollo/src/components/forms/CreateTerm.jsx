@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { format } from "date-fns"
 import { Input } from "@/components/ui/input";
 import {
 	Popover,
@@ -10,12 +11,20 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import DatePicker from "@/components/DatePicker";
 
-const CreateTerm = ({ handleNextStep }) => {
-	const [terms, setTerms] = useState([{
-		name: '',
-		startDate: null,
-		endDate: null,
-		}]);
+const CreateTerm = ({ handleNextStep, terms, setTerms}) => {
+
+	const handleTermChange = (index, field, value) => {
+    setTerms((prevState) =>
+      prevState.map((term, i) =>
+        i === index
+          ? {
+              ...term,
+              [field]: value,
+            }
+          : term,
+      ),
+    )
+  }
 
   const handleAddTerm = (e) => {
     e.preventDefault()
@@ -46,7 +55,7 @@ const CreateTerm = ({ handleNextStep }) => {
 									placeholder={`e.g., Term ${index + 1}`}
 								/>
 							</div>
-              <div className="flex">
+              <div className="flex gap-2">
                 <div>
                   <Label htmlFor={`termStartDate-${index}`}>Start Date</Label>
                   <Popover>
@@ -88,10 +97,10 @@ const CreateTerm = ({ handleNextStep }) => {
 					</div>
 				))}
 				<Button onClick={handleAddTerm}>Add Term/Semester</Button>
+			</form>
 				<div className="flex justify-end">
 					<Button onClick={handleNextStep}>Next: Create Classes</Button>
 				</div>
-			</form>
 	</div>
   );
 }
