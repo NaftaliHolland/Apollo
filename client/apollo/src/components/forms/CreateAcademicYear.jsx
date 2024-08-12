@@ -9,14 +9,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import DatePicker from "@/components/DatePicker"
-const CreateAcademicYear = ( { handleNextStep, setAcademicYearState }) => {
+
+const CreateAcademicYear = ( { handleNextStep, academicYear, setAcademicYear }) => {
   const [academicYearName, setAcademicYearName] = useState('')
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
   const handleAcademicYear = (e) => {
     e.preventDefault()
-    setAcademicYearState({
+    setAcademicYear({
       name: academicYearName,
       startDate: startDate,
       endDate: endDate

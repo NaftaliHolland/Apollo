@@ -5,6 +5,7 @@ import CreateTerm from "@/components/forms/CreateTerm";
 import CreateClasses from "@/components/forms/CreateClasses";
 import CreateFeeStructure from "@/components/forms/CreateFeeStructure";
 import SetupSummary from "@/components/SetupSummary";
+import SetupComplete from "@/components/SetupComplete";
 
 const Setup = () => {
 	const [currentStep, setCurrentStep] = useState(1);
@@ -21,6 +22,7 @@ const Setup = () => {
       ],
     },
   ]);
+
   const [classes, setClasses] = useState([
     {
       name: "",
@@ -40,21 +42,18 @@ const Setup = () => {
     endDate: null
   });
 
+  const [setupComplete, setSetupComplete] = useState(false);
   const setAcademicYearState = (academicYear) => {
     setAcademicYear(academicYear)
   }
 	const handleNextStep = () => {
-    console.log(academicYear)
-		console.log(terms)
-    console.log(classes)
-    console.log(fees)
 		setCurrentStep(currentStep + 1);
 	};
 
   return (
     <div className="h-screen">
 		<div className="flex items-center justify-center h-full">
- 			<div className="mx-auto max-w-3xl p-6">
+ 			<div className="mx-auto max-w-3xl p-6 flex items-center justify-center">
       {currentStep === 1 && (
         <div className="space-y-4">
           <h1 className="text-3xl font-bold">Welcome to the Setup Wizard</h1>
@@ -65,7 +64,8 @@ const Setup = () => {
       {currentStep === 2 && (
         <CreateAcademicYear
           handleNextStep={ handleNextStep }
-          setAcademicYearState={ setAcademicYearState }/>
+          academicYear = { academicYear }
+          setAcademicYear={ setAcademicYear }/>
        )}
       {currentStep === 3 && (
         <CreateTerm
@@ -87,9 +87,19 @@ const Setup = () => {
 					handleNextStep={ handleNextStep }
 				/>
        )}
+      { setupComplete && (
+        <SetupComplete />
+      )}
 			</div>
 			{currentStep === 6 && (
-        <SetupSummary />
+        <SetupSummary
+          setSetupComplete={ setSetupComplete }
+					handleNextStep={ handleNextStep }
+          academicYear={ academicYear }
+          terms={ terms }
+          classes={ classes }
+          fees={ fees }
+        />
 		  )}
       </div>
     </div>

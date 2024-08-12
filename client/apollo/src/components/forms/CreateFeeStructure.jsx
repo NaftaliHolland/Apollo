@@ -114,8 +114,7 @@ const CreateFeeStructure = ( { classes, handleNextStep, fees, setFees }) => {
 										<tr key={classIndex}>
 											<td className="px-4 py-2">
 												<Select
-													value={classFee.classId}
-													onValueChange={(e) => handleFeeChange(feeIndex, "classFees", e.target.value, classIndex)}
+													onValueChange={(value) => handleFeeChange(feeIndex, "classFees", value, classIndex)}
 												>
 													<SelectTrigger>
 														<SelectValue placeholder="Select class" />
