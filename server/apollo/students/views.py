@@ -7,6 +7,7 @@ from .models import *
 from classes.serializers import ClassSerializer
 from fee.serializers import StudentAccountSerializer
 from fee.models import AcademicYear, TermCategory, FeeStructure, StudentFeeBalance
+from schools.models import School
 
 @api_view(['POST'])
 def create_parent(request):
@@ -26,6 +27,7 @@ def create_parent(request):
 @api_view(['POST'])
 def add_student(request, id):
     data = request.data
+    print(data)
     date = data["date_of_birth"].split("T")
     data["date_of_birth"] = date[0]
     # Check if parent exists, if not, create parent
@@ -89,3 +91,14 @@ def get_students(request, class_id, school_id):
     serializer = StudentSerializer(students, many=True)
     return Response({"students": serializer.data}, status=status.HTTP_200_OK)
     
+@api_view(['GET'])
+def get_student_count(request):
+    school_id = request.GET.get("school_id")
+
+    try:
+        school = School.objects.get(pk=school_id)
+    except School.DoesNotExist:
+        return Response({"message": "School with the provided id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+    student_count = Student.objects.filter(_class__school=school).count()
+    return Response({"student_count": student_count}, status=status.HTTP_200_OK)

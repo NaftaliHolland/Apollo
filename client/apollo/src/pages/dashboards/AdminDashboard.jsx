@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -5,8 +6,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import Layout from "@/components/layouts/Layout"
+} from "@/components/ui/card";
+import Layout from "@/components/layouts/Layout";
 import {
   UsersIcon,
   SchoolIcon,
@@ -14,36 +15,79 @@ import {
   CalendarIcon,
   BarChartIcon,
 } from "lucide-react"
-import { useAuth} from "@/contexts/AuthContext"
+import { useAuth} from "@/contexts/AuthContext";
+import { getStudentCount, getTeacherCount } from "@/Api/services";
  
+const StudentCount = () => {
+  const [studentCount, setStudentCount] = useState(0);
+
+  useEffect(() => {
+    const fetchStudentCount = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getStudentCount(schoolId);
+        setStudentCount(response.data.student_count);
+      } catch (error) {
+        console.log(error);
+      };
+    }
+    fetchStudentCount();
+  }, []);
+
+  return (
+    <Card className="bg-red-50">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+        <UsersIcon className="w-4 h-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{ studentCount }</div>
+        <p className="text-xs text-muted-foreground">+5.2% from last year</p>
+      </CardContent>
+    </Card>
+
+  );
+};
+
+const TeacherCount = () => {
+  const [teacherCount, setTeacherCount] = useState(0);
+
+  useEffect(() => {
+    const fetchTeacherCount = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getTeacherCount(schoolId);
+        setTeacherCount(response.data.teacher_count);
+      } catch (error) {
+        console.log(error);
+      };
+    }
+    fetchTeacherCount();
+  }, []);
+  
+  return (
+    <Card className="bg-orange-50">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
+        <SchoolIcon className="w-4 h-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{ teacherCount }</div>
+        <p className="text-xs text-muted-foreground">+3.1% from last year</p>
+      </CardContent>
+    </Card>
+  );
+}
 const AdminDashboard = () => {
-  const { user, logout, school } = useAuth()
+  const { user, logout, school } = useAuth();
 
   return (
 	  <Layout>
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 h-full">
 				<div className="col-span2 md:col-span-2 lg:col-span-2 xl:col-span-2">
 					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-							<Card className="bg-red-50">
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">Total Students</CardTitle>
-									<UsersIcon className="w-4 h-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">1,234</div>
-									<p className="text-xs text-muted-foreground">+5.2% from last year</p>
-								</CardContent>
-							</Card>
-							<Card className="bg-orange-50">
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
-									<SchoolIcon className="w-4 h-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">125</div>
-									<p className="text-xs text-muted-foreground">+3.1% from last year</p>
-								</CardContent>
-							</Card>
+              <StudentCount />
+              <TeacherCount />
 							<Card className="bg-lime-50">
 								<CardHeader className="flex flex-row items-center justify-between pb-2">
 									<CardTitle className="text-sm font-medium">Total Classes</CardTitle>

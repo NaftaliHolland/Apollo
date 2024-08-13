@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useCallback, useState, useRef, useEffect } from 'react'
  
 import { Button } from "@/components/ui/button"
 import {
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { addTeacher } from "@/Api/services"
+import { addTeacher, uploadProfilePhoto } from "@/Api/services"
 
 const AddTeacherForm = ({ addToState }) => {
   const [firstName, setFirstName] = useState('');
@@ -39,14 +39,62 @@ const AddTeacherForm = ({ addToState }) => {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
+	const [uploading, setUploading] = useState(true);
+	const [profilePhotoFile, setProfilePhotoFile] = useState(null);
+	const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+
+	const handleProfilePhotoChange = (event) => {
+		const file = event.target.files[0];
+		console.log(event.target.value);
+		setProfilePhotoFile(file);
+		console.log(profilePhotoFile);
+	};
+
+	useEffect (() => {
+		let isMounted = true;
+		const uploadPhoto = async () => {
+			if (!profilePhotoFile) {
+				return
+			}
+			setUploading(true)
+			try{
+				const cloudinaryResponse = await uploadProfilePhoto(profilePhotoFile);
+				console.log(cloudinaryResponse);
+				if (isMounted) {
+					setProfilePhotoUrl(cloudinaryResponse.data.secure_url);
+				}
+				console.log("Here", profilePhotoUrl);
+			} catch (error) {
+				if (isMounted) {
+					console.log(error, "From the catch block");
+					setMessage("Failed to upload photo");
+					setSuccess(false);
+				}
+			} finally {
+				if (isMounted) {
+					setUploading(false);
+				}
+			}
+		}
+		uploadPhoto();
+		return () => {
+			isMounted = false;
+		}
+	}, [profilePhotoFile]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		if (uploading) {
+			setMessage("Please wait, still uploading profile photo");
+			return;
+		}
+
     const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
 		console.log("Form data submited")
 		console.log(phone, lastName, firstName, tscNumber, email)
     try {
-      const response = await addTeacher(firstName, lastName, phone, tscNumber, email, schoolId)
+      const response = await addTeacher(firstName, lastName, phone, tscNumber, email, schoolId, profilePhotoUrl)
+      console.log(response)
       addToState(response.data.teacher)
       setMessage(response.data.message);
       setFirstName('')
@@ -56,11 +104,10 @@ const AddTeacherForm = ({ addToState }) => {
       setTscNumber('')
       setSuccess(true)
 
-      console.log(response)
     } catch (error) {
       setSuccess(false)
-      setMessage(error.response.data.message);
       console.log(error)
+      setMessage(error.response.data.message);
     }
   };
 
@@ -123,6 +170,14 @@ const AddTeacherForm = ({ addToState }) => {
 						value={tscNumber}
 						/>
         </div>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="profile">Profile photo</Label>
+					<Input id="profile"
+						type="file"
+						accept="image/jpeg, image/png"
+						onChange={ handleProfilePhotoChange }
+					/>
+				</div>
 				<Button type="submit" onClick={handleSubmit}>Add</Button>
       </div>
     </form>

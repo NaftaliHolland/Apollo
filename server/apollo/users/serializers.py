@@ -19,7 +19,6 @@ class UserSerializer(serializers.ModelSerializer):
         roles_data = validated_data.pop("roles")
         school_data = validated_data.pop("school")
         school = School.objects.get(**school_data)
-        print(validated_data)
         user = User.objects.create_user(**validated_data, school=school)
         for  role_data in roles_data:
             role = Role.objects.get(**role_data)

@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const BACKEND_URL = 'http://localhost:8000';//TODO set this as an environment variable
+//const BACKEND_URL = 'http://localhost:8000';//TODO set this as an environment variable
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_SECRET_KEY = import.meta.env.VITE_CLOUDINARY_SECRET_KEY;
+const CLOUDINARY_API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:8000',
@@ -102,7 +107,7 @@ export const login = (username, password) => {
   });
 };
 
-export const addTeacher = (firstName, lastName, phone, tscNumber, email, schoolId) => {
+export const addTeacher = (firstName, lastName, phone, tscNumber, email, schoolId, profilePhotoUrl) => {
   return axiosInstance.post("/staff/teachers/", {
     "first_name": firstName,
     "last_name": lastName,
@@ -110,7 +115,8 @@ export const addTeacher = (firstName, lastName, phone, tscNumber, email, schoolI
     "tsc_number": tscNumber,
     "email": email,
     "role": "teacher",
-    "school": schoolId
+    "school": schoolId,
+		"profile_photo": profilePhotoUrl
   });
 };
 
@@ -118,12 +124,13 @@ export const getTeachers = (schoolId) => {
   return axiosInstance.get(`/schools/${schoolId}/teachers`);
 };
 
-export const addStudent = (firstName, lastName, dateOfBirth, gender, parentDetails, classId) => {
+export const addStudent = (firstName, lastName, dateOfBirth, gender, parentDetails, classId, profilePhotoUrl) => {
   return axiosInstance.post(`/classes/${classId}/add_student`, {
     "first_name": firstName,
     "last_name": lastName,
     "date_of_birth": dateOfBirth,
     "gender": gender,
+		"profile_photo": profilePhotoUrl,
     "parent": {
       "first_name": parentDetails.firstName,
       "last_name": parentDetails.lastName,
@@ -138,9 +145,25 @@ export const getUserDetails = () => {
 }
 
 export const getStudents = (_class, schoolId) => {
-  return axiosInstance.get(`students/get_students/${_class}/${schoolId}`)
+  return axiosInstance.get(`students/get_students/${_class}/${schoolId}/`)
 }
 
 export const getClasses = (schoolId) => {
   return axiosInstance.get(`/schools/${schoolId}/classes`);
+}
+
+export const getStudentCount = (schoolId) => {
+  return axiosInstance.get(`/students/count/?school_id=${schoolId}`);
+}
+
+export const getTeacherCount = (schoolId) => {
+  return axiosInstance.get(`/staff/count/?school_id=${schoolId}`);
+}
+
+export const uploadProfilePhoto = (file) => {
+	const formData = new FormData();
+	formData.append('file', file);
+	formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+	return axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, formData
+	);
 }

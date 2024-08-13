@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
  
 import { Button } from "@/components/ui/button"
 import {
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { addStudent, getClasses } from "@/Api/services"
+import { addStudent, getClasses, uploadProfilePhoto } from "@/Api/services"
 import { Separator } from "@/components/ui/separator"
 import DatePicker from "@/components/DatePicker"
 
@@ -42,8 +42,13 @@ const AddStudentForm = ({ addToState }) => {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const [date, setDate] = useState('')
-  const [classes, setClasses] = useState([])
+  const [date, setDate] = useState('');
+  const [classes, setClasses] = useState([]);
+
+	const [uploading, setUploading] = useState(true);
+
+	const [profilePhotoFile, setProfilePhotoFile] = useState(null);
+	const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
 
 	const [parentDetails, setParentDetails] = useState(
 			{
@@ -73,15 +78,57 @@ const AddStudentForm = ({ addToState }) => {
       }
     }
     fetchClasses();
-
 	}, []);
 
+	const handleProfilePhotoChange = (event) => {
+		const file = event.target.files[0];
+		console.log(event.target.value);
+		setProfilePhotoFile(file);
+		console.log(profilePhotoFile);
+	};
 
+	useEffect (() => {
+		let isMounted = true;
+		const uploadPhoto = async () => {
+			if (!profilePhotoFile) {
+				return
+			}
+			setUploading(true)
+			try{
+				const cloudinaryResponse = await uploadProfilePhoto(profilePhotoFile);
+				console.log(cloudinaryResponse);
+				if (isMounted) {
+					setProfilePhotoUrl(cloudinaryResponse.data.secure_url);
+				}
+				console.log("Here", profilePhotoUrl);
+			} catch (error) {
+				if (isMounted) {
+					console.log(error);
+					setMessage("Failed to upload photo");
+					setSuccess(false);
+				}
+			} finally {
+				if (isMounted) {
+					setUploading(false);
+				}
+			}
+		}
+		uploadPhoto();
+		return () => {
+			isMounted = false;
+		}
+	}, [profilePhotoFile]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		console.log(uploading);
+		if (uploading) {
+			setMessage("Please wait, still uploading profile photo");
+			return;
+		}
+
     try {
-      const response = await addStudent(firstName, lastName, date, gender, parentDetails, classId)
+      const response = await addStudent(firstName, lastName, date, gender, parentDetails, classId, profilePhotoUrl)
       addToState(response.data.student)
       setFirstName('')
       setLastName('')
@@ -105,6 +152,7 @@ const AddStudentForm = ({ addToState }) => {
       console.log(error)
     }
   };
+
   const setDateState = (date) => {
 		setDate(date)
   }
@@ -172,6 +220,14 @@ const AddStudentForm = ({ addToState }) => {
               }
             </SelectContent>
           </Select>
+					<div className="grid w-full max-w-sm items-center gap-1.5">
+						<Label htmlFor="profile">Profile photo</Label>
+						<Input id="profile"
+							type="file"
+							accept="image/jpeg, image/png"
+							onChange={ handleProfilePhotoChange }
+						/>
+					</div>
         </div>
         <Separator />
         <div className="grid grid-cols-2 gap-4">

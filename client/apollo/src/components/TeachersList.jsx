@@ -56,7 +56,7 @@ const TeachersList = ({ teachers }) => {
             <TableCell>
               <div className="flex items-center space-x-2">
                 <Avatar className="w-8 h-8">
-                  <AvatarImage src="" />{/*TODO add avatar link*/}
+                  <AvatarImage src={ teacher.user.profile_photo } />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="font-medium">{ `${teacher.user.first_name} ${teacher.user.last_name}` } </div>
