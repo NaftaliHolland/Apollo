@@ -167,3 +167,7 @@ export const uploadProfilePhoto = (file) => {
 	return axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, formData
 	);
 }
+
+export const getSubjects = (schoolId) => {
+  return axiosInstance.get(`/grades/subjects/?school_id=${schoolId}`)
+}

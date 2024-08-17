@@ -12,10 +12,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-
-const SubjectList = () => {
+const SubjectList = ({ subjects }) => {
 	return (
-		<div className="border rounded-lg overflow-hidden">
+		<div className="border rounded-lg overflow-hidden mx-8">
 			<Table>
 				<TableHeader>
 					<TableRow>
@@ -25,6 +24,7 @@ const SubjectList = () => {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
+          { subjects.map(subject => 
 					<TableRow>
 						<TableCell>
 							<div className="flex items-center gap-3">
@@ -32,71 +32,23 @@ const SubjectList = () => {
 									<Book className="w-5 h-5" />
 								</div>
 								<div>
-									<div className="font-medium">Mathematics</div>
-									<div className="text-sm text-muted-foreground">Fundamentals of mathematics</div>
+									<div className="font-medium">{ subject.name }</div>
+									<div className="text-sm text-muted-foreground">{ subject.description }</div>
 								</div>
 							</div>
 						</TableCell>
-						<TableCell>MATH101</TableCell>
+						<TableCell>{ subject.code }</TableCell>
 						<TableCell className="text-right">
 							<div className="flex items-center justify-end gap-2">
 								<Button size="sm" variant="outline">
 									Edit
 								</Button>
-								<Button size="sm" variant="destructive">
-									Delete
-								</Button>
-							</div>
-						</TableCell>
-					</TableRow>
-					<TableRow>
-						<TableCell>
-							<div className="flex items-center gap-3">
-								<div className="bg-muted rounded-md flex items-center justify-center aspect-square w-10 md:w-12">
-									<Book className="w-5 h-5" />
-								</div>
-								<div>
-									<div className="font-medium">Physics</div>
-									<div className="text-sm text-muted-foreground">Introduction to classical physics</div>
-								</div>
-							</div>
-						</TableCell>
-						<TableCell>PHYS101</TableCell>
-						<TableCell className="text-right">
-							<div className="flex items-center justify-end gap-2">
 								<Button size="sm" variant="outline">
-									Edit
-								</Button>
-								<Button size="sm" variant="destructive">
-									Delete
+									<span className="text-red-500">Delete</span>
 								</Button>
 							</div>
 						</TableCell>
-					</TableRow>
-					<TableRow>
-						<TableCell>
-							<div className="flex items-center gap-3">
-								<div className="bg-muted rounded-md flex items-center justify-center aspect-square w-10 md:w-12">
-									<Book className="w-5 h-5" />
-								</div>
-								<div>
-									<div className="font-medium">Computer Science</div>
-									<div className="text-sm text-muted-foreground">Fundamentals of computer programming</div>
-								</div>
-							</div>
-						</TableCell>
-						<TableCell>CS101</TableCell>
-						<TableCell className="text-right">
-							<div className="flex items-center justify-end gap-2">
-								<Button size="sm" variant="outline">
-									Edit
-								</Button>
-								<Button size="sm" variant="destructive">
-									Delete
-								</Button>
-							</div>
-						</TableCell>
-					</TableRow>
+					</TableRow>)}
 				</TableBody>
 			</Table>
 		</div>

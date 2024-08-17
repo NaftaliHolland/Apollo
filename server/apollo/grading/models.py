@@ -2,9 +2,16 @@ from django.db import models
 from fee.models import AcademicYear, Term
 from django.core.validators import MinValueValidator, MaxValueValidator
 from students.models import Student
+from schools.models import School
 
 class Subject(models.Model):
     name = models.CharField(max_length=100)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    code = models.CharField(max_length=50, null=True, blank=True)
+    description = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Grade(models.Model):
     name = models.CharField(max_length=100)

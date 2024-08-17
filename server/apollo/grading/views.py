@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Subject, Exam, Grade, SubjectGrade, StudentSubjectGrade
 from students.models import Student
+from schools.models import School
 from students.serializers import StudentSerializer
 from .serializers import (
     SubjectSerializer, ExamSerializer, GradeSerializer, SubjectGradeSerializer, SubjectGradeCreateSerializer, StudentSubjectGradeSerializer, StudentSubjectGradeCreateSerializer
@@ -13,6 +14,17 @@ class SubjectViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+
+    def list(self, request, *args, **kwargs):
+        school_id = request.GET.get("school_id")
+        try:
+            school = School.objects.get(pk=school_id)
+        except School.DoesNotExist:
+            return Response({"message": "School with provided id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = Subject.objects.filter(school=school)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"subjects": serializer.data}, status=status.HTTP_200_OK)
 
 class ExamViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]

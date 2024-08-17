@@ -1,68 +1,100 @@
+import { useState, useEffect } from 'react';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Layout from "@/components/layouts/Layout";
+import { getSubjects } from "@/Api/services";
 import SubjectList from "@/components/SubjectList";
 
 const Subjects = () => {
+  const [subjects, setSubjects] = useState([
+    {
+      name: '',
+      code: '',
+      description: '',
+    }
+  ])
+  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getSubjects(schoolId);
+        console.log(response)
+        setSubjects(response.data.subjects);
+        setLoading(false);
+        setSuccess(true);
+        console.log(subjects)
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    }
+    fetchSubjects();
+  }, [])
+
   return (
 		<Layout>
-			<header className="sticky top-0 z-30 flex flex-col border-b bg-background">
-				<div className="container flex items-center gap-4 px-4 py-3 md:px-6 md:py-4">
-					<Breadcrumb className="flex-1">
-						<BreadcrumbList>
-							<BreadcrumbItem>
-								<BreadcrumbLink asChild>
-									<Link to="/dashboard">
-										Dashboard
-									</Link>
-								</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbLink asChild>
-									<Link to="/dashboard" prefetch={false}>
-										Academics
-									</Link>
-								</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbPage>Subjects</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
-					<div className="flex items-center gap-2">
-						<Button size="sm" variant="outline" className="h-8 gap-1">
-							<FilterIcon className="h-4 w-4" />
-							<span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filter</span>
-						</Button>
-						<Button size="sm" variant="outline" className="h-8 gap-1">
-							<ImportIcon className="h-4 w-4" />
-							<span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
-						</Button>
-						<Button size="sm" className="h-8 gap-1">
-							<PlusIcon className="h-4 w-4" />
-							<span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Course</span>
-						</Button>
-					</div>
-				</div>
-				<div className="container flex items-center gap-4 border-t bg-muted px-4 py-3 md:px-6 md:py-4">
-					<h1 className="text-2xl font-bold">Subjects</h1>
-					<div className="relative ml-auto flex-1 md:grow-0">
-						<SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
-							type="search"
-							placeholder="Search courses..."
-							className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-						/>
-					</div>
-				</div>
-			</header>
-			<main>
-				<SubjectList />
-			</main>
+      <div className="flex flex-col gap-8">
+        <header className="sticky top-0 z-30 flex flex-col border-b bg-background">
+          <div className="container flex items-center gap-4 px-4 py-3 md:px-6 md:py-4">
+            <Breadcrumb className="flex-1">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to="/dashboard">
+                      Dashboard
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to="/dashboard" prefetch={false}>
+                      Academics
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Subjects</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <div className="flex items-center gap-2">
+              <Button size="sm" variant="outline" className="h-8 gap-1">
+                <FilterIcon className="h-4 w-4" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filter</span>
+              </Button>
+              <Button size="sm" variant="outline" className="h-8 gap-1">
+                <ImportIcon className="h-4 w-4" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
+              </Button>
+              <Button size="sm" className="h-8 gap-1">
+                <PlusIcon className="h-4 w-4" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Course</span>
+              </Button>
+            </div>
+          </div>
+          <div className="container flex items-center gap-4 border-t bg-muted px-4 py-3 md:px-6 md:py-4">
+            <h1 className="text-2xl font-bold">Subjects</h1>
+            <div className="relative ml-auto flex-1 md:grow-0">
+              <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search courses..."
+                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+              />
+            </div>
+          </div>
+        </header>
+        <main>
+          <SubjectList subjects={ subjects }/>
+        </main>
+      </div>
 		</Layout>
   )
 }
