@@ -3,12 +3,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Subject, Exam, Grade, SubjectGrade, StudentSubjectGrade
 from students.models import Student
-from stuents.serializers import StudentSerializer
+from students.serializers import StudentSerializer
 from .serializers import (
-    SubjectSerializer, ExamSerializer, GradeSerializer,
-    SubjectGradeSerializer, StudentSubjectGradeSerializer, StudentSubjectGradeCreateSerializer
+    SubjectSerializer, ExamSerializer, GradeSerializer, SubjectGradeSerializer, SubjectGradeCreateSerializer, StudentSubjectGradeSerializer, StudentSubjectGradeCreateSerializer
 )
-#from .grading import grade_student  # Import the grading function we created earlier
+from .utils import grade_student
 
 class SubjectViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -28,7 +27,11 @@ class GradeViewSet(viewsets.ModelViewSet):
 class SubjectGradeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = SubjectGrade.objects.all()
-    serializer_class = SubjectGradeSerializer
+    def get_serializer_class(self):
+        if self.action in ['create', 'update', 'partial_upadate']:
+            return SubjectGradeCreateSerializer
+
+        return SubjectGradeSerializer
 
 class StudentSubjectGradeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -39,20 +42,25 @@ class StudentSubjectGradeViewSet(viewsets.ModelViewSet):
             return StudentSubjectGradeCreateSerializer
         return StudentSubjectGradeSerializer
 
+    def create(self, request, *args, **kwargs):
+        if 'subject_marks' in request.data:
+            return self.grade_exam(request)
+        return super().create(request, *args, **kwargs)
+
     @action(detail=False, methods=['post'])
     def grade_exam(self, request):
-        student_id = request.data.get('student_id')
-        exam_id = request.data.get('exam_id')
+        student = request.data.get('student')
+        exam = request.data.get('exam')
         subject_marks = request.data.get('subject_marks')
 
-        if not all([student_id, exam_id, subject_marks]):
+        if not all([student, exam, subject_marks]):
             return Response(
                 {"error": "Provide student_id, exam_id, and subject_marks"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         try:
-            grades = grade_student(student_id, exam_id, subject_marks)
+            grades = grade_student(student, exam, subject_marks)
             return Response(grades, status=status.HTTP_200_OK)
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

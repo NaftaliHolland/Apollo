@@ -3,6 +3,16 @@ import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { Toaster } from "@/components/ui/toaster";
 import { useState, useEffect } from "react";
 import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu"
+import {
   Bell,
   CircleUser,
   Home,
@@ -15,6 +25,12 @@ import {
   Users,
   BookOpenCheck,
   MessageSquare,
+  GraduationCap,
+  Medal,
+  ClipboardCheck,
+  PieChart,
+  ChevronRight,
+  ChevronDown,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -40,9 +56,10 @@ import { useAuth} from "@/contexts/AuthContext"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const navStyle = "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-const navStyleActive = navStyle.concat(" bg-muted")
+const navStyleActive = "flex items-center gap-3 rounded-lg px-3 py-2 text-foreground transition-all hover:text-primary bg-muted"
 const Layout = ({children}) => {
-  const { user, logout, school} = useAuth()
+  const { user, logout, school} = useAuth();
+  const [academicsToggled, setAcademicsToggled] = useState(false);
 
 	
 	const parsedSchool = JSON.parse(school)
@@ -92,15 +109,6 @@ const Layout = ({children}) => {
                 Students/Classes{" "}
               </NavLink>
               <NavLink
-                to="/exams"
-                className={({ isActive }) =>
-                  isActive? navStyleActive : navStyle
-		            }
-              >
-                <BookOpenCheck className="h-4 w-4" />
-                 Exams 
-              </NavLink>
-              <NavLink
                 to="/analytics"
                 className={({ isActive }) =>
                   isActive? navStyleActive : navStyle
@@ -109,9 +117,70 @@ const Layout = ({children}) => {
                 <LineChart className="h-4 w-4" />
                 Analytics/Fee
               </NavLink>
-            </nav>
-          </div>
-          <div className="mt-auto p-4">
+              <div onClick={() => setAcademicsToggled(!academicsToggled)}
+>
+                <div
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 ${ academicsToggled ? ("text-foreground bg-muted") : ("text-muted-foreground") } transition-all hover:text-primary hover:cursor-pointer`}>
+                  <GraduationCap size={16}/>
+                  <span>Academics</span>
+                  <div className="ml-auto">
+                    { !academicsToggled? (<ChevronRight size={18} />) : (<ChevronDown size={18}/>) }
+                  </div>
+                </div>
+                { academicsToggled? (
+                   <div className="ml-4">
+                    <NavLink
+                      to="/subjects"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <Home className="h-4 w-4" />
+                     Subjects 
+                    </NavLink>
+                    <NavLink
+                      to="/exams"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <BookOpenCheck className="h-5 w-5" />
+                     Exams 
+                    </NavLink>
+                    <NavLink
+                      to="/grades"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <Medal className="h-5 w-5" />
+                    Grades 
+                    </NavLink>
+                    <NavLink
+                      to="/results"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <ClipboardCheck className="h-5 w-5" />
+                    Results 
+                    </NavLink>
+                    <NavLink
+                      to="/reports"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <PieChart className="h-5 w-5" />
+                    Reports 
+                    </NavLink>
+                  </div>
+                ) : 
+                  (null)}
+               </div>
+              </nav>
+            </div>
+    {/*<div className="mt-auto p-4">
             <Card x-chunk="dashboard-02-chunk-0">
               <CardHeader className="p-2 pt-0 md:p-4">
                 <CardTitle>Upgrade to Pro</CardTitle>
@@ -126,7 +195,7 @@ const Layout = ({children}) => {
                 </Button>
               </CardContent>
             </Card>
-          </div>
+          </div>*/}
         </div>
       </div>
       <div className="flex flex-col">

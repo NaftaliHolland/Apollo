@@ -28,11 +28,11 @@ class SubjectGrade(models.Model):
         unique_together = ["subject", "grade"]
 
     def __str__(self):
-        return f"{self.suject.name}--{self.grade.name}"
+        return f"{self.subject.name}--{self.grade.name}"
 
 
 class Exam(models.Model):
-    academic_year = models.ForeignKey(AcademicYear, on_delete=models.CASCADE, default=1)# Remove the default
+    _name = ''
     term = models.ForeignKey(Term, on_delete=models.CASCADE, default=1)# Remove default
 
     @property
@@ -41,10 +41,10 @@ class Exam(models.Model):
 
     @name.setter
     def name(self):
-        self._name = f"{self.academi_year.name}/{term.name}"
+        self._name = f"{self.term.academic_year.name}/{term.name}"
 
     def __str__(self):
-        return f"{self.academic_year.name}--{self.term.name}"
+        return f"{self.term.academic_year.name}--{self.term.name}"
 
 class StudentSubjectGrade(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -59,4 +59,4 @@ class StudentSubjectGrade(models.Model):
         unique_together = ["student", "exam", "subject"]
     
     def __str__(self):
-        return f"{self.student.name}--{self.exam.name}--{self.subject.name}--{self.marks}"
+        return f"{self.student.first_name}--{self.exam.name}--{self.subject.name}--{self.score}"

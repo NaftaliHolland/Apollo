@@ -24,6 +24,10 @@ class SubjectGradeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectGrade
         fields = '__all__'
+class SubjectGradeCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectGrade
+        fields = '__all__'
 
 class StudentSubjectGradeSerializer(serializers.ModelSerializer):
     student = StudentSerializer(read_only=True)
@@ -37,4 +41,4 @@ class StudentSubjectGradeSerializer(serializers.ModelSerializer):
 class StudentSubjectGradeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentSubjectGrade
-        fields = ['student', 'exam', 'subject', 'marks']
+        fields = ['student', 'exam', 'subject', 'score']
