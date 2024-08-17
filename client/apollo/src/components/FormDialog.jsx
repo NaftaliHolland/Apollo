@@ -19,7 +19,7 @@ const FormDialog = ({ buttonAction, buttonVariant="default", form }) => {
       <DialogTrigger asChild>
         <Button variant={ buttonVariant }>{ buttonAction }</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] sm:max-h-[100vh] overflow-y-auto p-4">
+      <DialogContent className="overflow-y-auto p-4">
         <DialogHeader>
           <DialogTitle>{ buttonAction }</DialogTitle>
           <DialogDescription>

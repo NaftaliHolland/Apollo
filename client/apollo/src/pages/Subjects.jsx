@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import Layout from "@/components/layouts/Layout";
 import { getSubjects } from "@/Api/services";
 import SubjectList from "@/components/SubjectList";
+import FormDialog from "@/components/FormDialog"
+import CreateSubject from "@/components/forms/CreateSubject";
 
 const Subjects = () => {
   const [subjects, setSubjects] = useState([
@@ -40,7 +42,7 @@ const Subjects = () => {
 		<Layout>
       <div className="flex flex-col gap-8">
         <header className="sticky top-0 z-30 flex flex-col border-b bg-background">
-          <div className="container flex items-center gap-4 px-4 py-3 md:px-6 md:py-4">
+          <div className="container flex items-center gap-4 px-4 py-3 hidden md:inline-flex md:px-6 md:py-4">
             <Breadcrumb className="flex-1">
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -53,7 +55,7 @@ const Subjects = () => {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link to="/dashboard" prefetch={false}>
+                    <Link to="/dashboard">
                       Academics
                     </Link>
                   </BreadcrumbLink>
@@ -73,10 +75,7 @@ const Subjects = () => {
                 <ImportIcon className="h-4 w-4" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
               </Button>
-              <Button size="sm" className="h-8 gap-1">
-                <PlusIcon className="h-4 w-4" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Course</span>
-              </Button>
+              <FormDialog buttonAction={"Add subject"} form={ <CreateSubject setSubjects={setSubjects} /> } />
             </div>
           </div>
           <div className="container flex items-center gap-4 border-t bg-muted px-4 py-3 md:px-6 md:py-4">

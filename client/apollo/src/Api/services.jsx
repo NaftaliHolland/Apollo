@@ -171,3 +171,12 @@ export const uploadProfilePhoto = (file) => {
 export const getSubjects = (schoolId) => {
   return axiosInstance.get(`/grades/subjects/?school_id=${schoolId}`)
 }
+
+export const AddSubject = (name, code, description, schoolId) => {
+  return axiosInstance.post(`/grades/subjects/`, {
+    "name": name,
+    "code": code,
+    "description": description,
+    "school": schoolId
+  })
+}
