@@ -180,3 +180,7 @@ export const AddSubject = (name, code, description, schoolId) => {
     "school": schoolId
   })
 }
+
+export const DeleteSubject = (subjectId) => {
+  return axiosInstance.delete(`/grades/subjects/${subjectId}/`)
+}

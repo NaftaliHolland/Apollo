@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -19,9 +20,28 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+  DialogClose,
+} from "@/components/ui/dialog";
+import { DeleteSubject } from "@/Api/services";
 
-const SubjectList = ({ subjects }) => {
+const SubjectList = ({ subjects, setSubjects }) => {
+
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async (subjectId) => {
+    try {
+      setDeleting(true);
+      const response = await DeleteSubject(subjectId);
+      const new_subjects = subjects.filter(subject => subject.id !=subjectId);
+      setSubjects(new_subjects);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
 	return (
 		<div className="border rounded-lg overflow-hidden md:mx-8">
 			<Table>
@@ -69,8 +89,10 @@ const SubjectList = ({ subjects }) => {
                     </DialogHeader>
                     <DialogFooter>
                       <div className="flex gap-4">
-                        <Button variant="outline">Cancel</Button>
-                        <Button variant="destructive">Delete</Button>
+                        <DialogClose asChild>
+                          <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <Button variant="destructive" onClick={() => handleDelete(subject.id)}>Delete</Button>
                       </div>
                     </DialogFooter>
                   </DialogContent>

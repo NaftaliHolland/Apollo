@@ -39,7 +39,7 @@ const Subjects = () => {
   }, [])
 
   return (
-		<Layout>
+	  <Layout>
       <div className="flex flex-col gap-8">
         <header className="sticky top-0 z-30 flex flex-col border-b bg-background">
           <div className="container flex items-center gap-4 px-4 py-3 hidden md:inline-flex md:px-6 md:py-4">
@@ -91,7 +91,7 @@ const Subjects = () => {
           </div>
         </header>
         <main>
-          <SubjectList subjects={ subjects }/>
+          <SubjectList subjects={ subjects } setSubjects={ setSubjects }/>
         </main>
       </div>
 		</Layout>
