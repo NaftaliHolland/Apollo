@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { useAuth} from "@/contexts/AuthContext";
 import { getStudentCount, getTeacherCount } from "@/Api/services";
+import { Calendar } from "@/components/ui/calendar";
  
 const StudentCount = () => {
   const [studentCount, setStudentCount] = useState(0);
@@ -109,16 +110,13 @@ const AdminDashboard = () => {
 								</CardContent>
 							</Card>
 					 </div>
-						<div className="flex items-center">
-							<h1 className="text-lg font-semibold md:text-2xl">TBD</h1>
-						</div>
-            <div className="flex flex-col gap-4 w-full md:flex-row md:w-auto">
+            <div className="flex flex-col gap-4 w-full md:flex-row md:w-auto mt-4">
               <div
                 className="flex items-center justify-center rounded-lg border border-dashed shadow-sm h-96 w-full md:w-1/4"
               >
                 <div className="flex flex-col items-center gap-1 text-center">
                   <h3 className="text-2xl font-bold tracking-tight">
-                    We will have some data here soon
+                    Calander
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     We will be able to see everything abou Transtar just wait.
@@ -141,18 +139,21 @@ const AdminDashboard = () => {
 				</div>
 				{ /* Second grid */ }
         <div className="flex flex-col gap-4">
-          <div
-            className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm h-96"
-          >
-            <div className="flex flex-col items-center gap-1 text-center">
-              <h3 className="text-2xl font-bold tracking-tight">
-                We will have some data here soon
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                We will be able to see everything abou Transtar just wait.
-              </p>
-            </div>
-           </div>
+        <div>
+          <Calendar 
+            mode="single"
+            selected="date"
+            className="rounded-md border"
+            classNames={{
+              months:
+                "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
+              month: "space-y-4 w-full flex flex-col",
+              table: "w-full h-full border-collapse space-y-1",
+              head_row: "",
+              row: "w-full mt-2",
+            }}
+          />
+        </div>
           <div
             className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm h-96"
           >
