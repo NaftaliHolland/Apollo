@@ -19,6 +19,7 @@ const Subjects = () => {
   ])
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -83,15 +84,19 @@ const Subjects = () => {
             <div className="relative ml-auto flex-1 md:grow-0">
               <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                type="search"
-                placeholder="Search courses..."
                 className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+                type="search"
+                placeholder="Search subjects..."
+                value={search.toLowerCase()}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
           </div>
         </header>
         <main>
-          <SubjectList subjects={ subjects } setSubjects={ setSubjects }/>
+          <SubjectList subjects={ subjects.filter((subject) =>{
+            return search.toLowerCase() === '' ? subject : subject.name.toLowerCase().includes(search) || subject.code.toLowerCase().includes(search)
+          })} setSubjects={ setSubjects }/>
         </main>
       </div>
 		</Layout>

@@ -23,7 +23,7 @@ const StudentsList = ({ students }) => {
           <Input
             type="search"
             placeholder="Search..."
-	    value={search}
+	          value={search}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
             className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
            />

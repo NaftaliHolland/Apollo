@@ -9,7 +9,6 @@ import {
 	Menu,
 	Package,
 	Package2,
-	Search,
 	ShoppingCart,
 	Users,
 	BookOpenCheck,
