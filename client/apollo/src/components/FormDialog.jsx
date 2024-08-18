@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-const FormDialog = ({ buttonAction, buttonVariant="default", form }) => {
+const FormDialog = ({ buttonAction, buttonVariant="default", form}) => {
   return (
     <Dialog>
 	    <DialogTitle></DialogTitle>

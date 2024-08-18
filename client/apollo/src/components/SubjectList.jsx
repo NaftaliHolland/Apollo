@@ -22,7 +22,9 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { DeleteSubject } from "@/Api/services";
+import { deleteSubject, patchSubject } from "@/Api/services";
+import FormDialog from "@/components/FormDialog";
+import CreateSubject from "@/components/forms/CreateSubject";
 
 const SubjectList = ({ subjects, setSubjects }) => {
 
@@ -31,7 +33,7 @@ const SubjectList = ({ subjects, setSubjects }) => {
   const handleDelete = async (subjectId) => {
     try {
       setDeleting(true);
-      const response = await DeleteSubject(subjectId);
+      const response = await deleteSubject(subjectId);
       const new_subjects = subjects.filter(subject => subject.id !=subjectId);
       setSubjects(new_subjects);
       console.log(response);
@@ -53,8 +55,8 @@ const SubjectList = ({ subjects, setSubjects }) => {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-          { subjects.map(subject => 
-					<TableRow key={subject.id}>
+          { subjects.map((subject, index) => 
+					<TableRow key={index}>
 						<TableCell>
 							<div className="flex items-center gap-3">
 								<div className="bg-muted rounded-md flex items-center justify-center aspect-square w-8 md:w-10">
@@ -69,9 +71,7 @@ const SubjectList = ({ subjects, setSubjects }) => {
 						<TableCell>{ subject.code }</TableCell>
 						<TableCell className="text-right">
 							<div className="flex items-center justify-end gap-2">
-								<Button size="sm" variant="outline">
-									<span className="font-normal"> Edit </span>
-								</Button>
+                <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateSubject subject={subject} setSubjects={setSubjects} />} />
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button size="sm" variant="outline">

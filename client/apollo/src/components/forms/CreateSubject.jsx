@@ -3,29 +3,59 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { AddSubject } from "@/Api/services";
+import { addSubject, patchSubject } from "@/Api/services";
 
-const CreateSubject = ({setSubjects}) => {
-  const [name, setName] = useState('');
-  const [code, setCode] = useState('');
-  const [description, setDescription] = useState('');
+const CreateSubject = ({subject=null, setSubjects}) => {
+  const [name, setName] = useState(subject?.name);
+  const [code, setCode] = useState(subject?.code);
+  const [description, setDescription] = useState(subject?.description);
+  const [patching, setPatching] = useState(false);
+
+
+  const handlePatch = async (subjectId) => {
+    try {
+      setPatching(true);
+      const response = await patchSubject(subjectId, name, code, description);
+      setName(response.data.name);
+      setCode(response.data.code);
+      setDescription(response.data.description);
+      setSubjects(prevState => prevState.map(subject =>
+        subject.id === subjectId?
+          { ...subject, name, code, description}
+            : subject
+        ));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPatching(false);
+    }
+  }
 
   const handleSubmit = async (e) => {
       e.preventDefault();
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
-    try {
-      const response = await AddSubject(name, code, description, schoolId);
-      console.log(response)
-      setSubjects(prevState => [
-        response.data, ...prevState
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-    console.log(name);
-    console.log(code);
-    console.log(description);
-  }
+    if(subject) {
+      try {
+        console.log("Patching");
+        handlePatch(subject.id);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        console.log("Finally");
+      }
+    } else {
+      try {
+        const response = await addSubject(name, code, description, schoolId);
+        console.log(response)
+        setSubjects(prevState => [
+          response.data, ...prevState
+        ]);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        console.log("Finally");
+      }
+    }}
   //a useeffect to create a subject and the add it to the state
 
   return (
