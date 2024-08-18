@@ -172,7 +172,7 @@ export const getSubjects = (schoolId) => {
   return axiosInstance.get(`/grades/subjects/?school_id=${schoolId}`)
 }
 
-export const AddSubject = (name, code, description, schoolId) => {
+export const addSubject = (name, code, description, schoolId) => {
   return axiosInstance.post(`/grades/subjects/`, {
     "name": name,
     "code": code,
@@ -181,6 +181,14 @@ export const AddSubject = (name, code, description, schoolId) => {
   })
 }
 
-export const DeleteSubject = (subjectId) => {
-  return axiosInstance.delete(`/grades/subjects/${subjectId}/`)
+export const deleteSubject = (subjectId) => {
+  return axiosInstance.delete(`/grades/subjects/${subjectId}/`);
+}
+
+export const patchSubject = (subjectId, name, code, description) => {
+  return axiosInstance.patch(`/grades/subjects/${subjectId}/`,{
+    "name": name,
+    "code": code,
+    "description": description,
+  });
 }
