@@ -8,7 +8,7 @@ const CLOUDINARY_API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY;
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: BACKEND_URL,
   timeout: 1000,
 });
 
