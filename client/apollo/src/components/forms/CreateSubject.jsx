@@ -6,9 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { addSubject, patchSubject } from "@/Api/services";
 
 const CreateSubject = ({subject=null, setSubjects}) => {
-  const [name, setName] = useState(subject?.name);
-  const [code, setCode] = useState(subject?.code);
-  const [description, setDescription] = useState(subject?.description);
+  const [name, setName] = useState(subject?.name || '');
+  const [code, setCode] = useState(subject?.code || '');
+  const [description, setDescription] = useState(subject?.description || '');
   const [patching, setPatching] = useState(false);
 
 
@@ -56,7 +56,6 @@ const CreateSubject = ({subject=null, setSubjects}) => {
         console.log("Finally");
       }
     }}
-  //a useeffect to create a subject and the add it to the state
 
   return (
     <div>
@@ -75,8 +74,8 @@ const CreateSubject = ({subject=null, setSubjects}) => {
           <Input
             id="code"
             placeholder="Enter subject code"
-            value={ code }
-            onChange={ (e) => setCode(e.target.value) }
+            value={ code.toUpperCase() }
+            onChange={ (e) => setCode(e.target.value.toUpperCase()) }
           />
         </div>
         <div className="grid gap-2">

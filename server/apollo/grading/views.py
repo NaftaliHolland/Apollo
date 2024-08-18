@@ -22,7 +22,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
         except School.DoesNotExist:
             return Response({"message": "School with provided id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-        queryset = Subject.objects.filter(school=school)
+        queryset = Subject.objects.filter(school=school).order_by('-id')
         serializer = self.get_serializer(queryset, many=True)
         return Response({"subjects": serializer.data}, status=status.HTTP_200_OK)
 
