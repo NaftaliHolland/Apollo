@@ -65,7 +65,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
     "http://127.0.0.1:3000",
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:8000",
+    "https://apollo-27x2wpdjm-holland-naftali-nyadimos-projects.vercel.app",
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
