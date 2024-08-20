@@ -9,7 +9,7 @@ const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 const axiosInstance = axios.create({
   baseURL: BACKEND_URL,
-  timeout: 1000,
+  timeout: 10000,
 });
 
 axiosInstance.interceptors.request.use(
@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refreshToken = localStorage.getItem('refreshToken');

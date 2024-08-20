@@ -16,7 +16,9 @@ export const AuthProvider = ({ children }) => {
         const decoded = jwtDecode(token);
         const roles = decoded.roles;
         const storedSchool = localStorage.getItem('schoolInfo');
-				const response = await getUserDetails()
+        console.log("Here before getting user details");
+				const response = await getUserDetails();
+        console.log("Here after getting user details");
 				const userDetails = response.data.user
         if (storedSchool) {
           setSchool(storedSchool);
