@@ -9,6 +9,7 @@ import Teachers from "@/pages/Teachers";
 import Students from "@/pages/Students";
 import LandingPage from "@/pages/LandingPage";
 import Subjects from "@/pages/Subjects"
+import AcademicYears from "@/pages/AcademicYears";
 import Setup from "@/pages/Setup";
 import Dashboards from "@/components/Dashboards";
 import RegisterInstitution from "@/pages/RegisterInstitution";
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
         { path: "/students", element: <Students />},
         { path: "/setup", element: <Setup />},
         { path: "/subjects", element: <Subjects />},
+	{ path: "/academic_years", element: <AcademicYears />},
       ]
     },
     { path: "/login", element: <Login />},

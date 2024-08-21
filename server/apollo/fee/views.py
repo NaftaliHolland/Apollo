@@ -3,11 +3,22 @@ from .models import *
 from .serializers import *
 from rest_framework import status
 from rest_framework.response import Response
+from schools.models import School
 
 
 class AcademicYearViewSet(viewsets.ModelViewSet):
     queryset = AcademicYear.objects.all()
     serializer_class = AcademicYearSerializer
+
+    def list(self, request, *args, **kwargs):
+        school_id = request.GET.get("school_id")
+        try:
+            school = School.objects.get(pk=school_id)
+        except School.DoesNotExist:
+            return Response({"message": "School with provided id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        queryset = AcademicYear.objects.filter(school=school).order_by('-id')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"academic_years": serializer.data}, status=status.HTTP_200_OK)
 
 class TermViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]

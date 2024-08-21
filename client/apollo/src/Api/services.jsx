@@ -192,3 +192,7 @@ export const patchSubject = (subjectId, name, code, description) => {
     "description": description,
   });
 }
+
+export const getAcademicYears = (schoolId) => {
+  return axiosInstance.get(`/fees/academic_years/?school_id=${schoolId}`)
+}

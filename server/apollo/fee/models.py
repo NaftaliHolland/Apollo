@@ -2,10 +2,15 @@ from django.db import models
 from students.models import Student
 
 class AcademicYear(models.Model):
+    STATUS = {
+            "CURRENT": "current",
+            "UPCOMING": "upcoming",
+            "COMPLETED": "completed"
+        }
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
-    is_current = models.BooleanField(default=False)
+    status = models.CharField(max_length=12, default="current", choices=STATUS)
     school = models.ForeignKey("schools.School", on_delete=models.CASCADE, related_name="academic_years")
 
     def __str__(self):

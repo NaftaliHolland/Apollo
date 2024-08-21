@@ -31,6 +31,8 @@ import {
   PieChart,
   ChevronRight,
   ChevronDown,
+  Calendar as CalendarIcon,
+  CalendarX
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -164,6 +166,24 @@ const Layout = ({children}) => {
                     >
                       <ClipboardCheck className="h-5 w-5" />
                     Results 
+                    </NavLink>
+                    <NavLink
+                      to="/terms"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <CalendarX className="h-5 w-5" />
+                     Terms 
+                    </NavLink>
+                    <NavLink
+                      to="/academic_years"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <CalendarIcon className="h-5 w-5" />
+                     Academic Years 
                     </NavLink>
                     <NavLink
                       to="/reports"

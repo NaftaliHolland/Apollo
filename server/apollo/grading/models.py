@@ -41,6 +41,10 @@ class SubjectGrade(models.Model):
 class Exam(models.Model):
     _name = ''
     term = models.ForeignKey(Term, on_delete=models.CASCADE, default=1)# Remove default
+    start_date = models.DateField(null=True, blank=True);
+    end_date = models.DateField(null=True, blank=True);
+    done = models.BooleanField(default=False)
+    ongoing = models.BooleanField(default=False)
 
     @property
     def name(self):
