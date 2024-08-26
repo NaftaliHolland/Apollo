@@ -19,6 +19,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const { login: authLogin, user, loading } = useAuth();
   const navigate = useNavigate()
 
@@ -35,10 +36,13 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
+      setLoginLoading(true);
       await authLogin(username, password);
       navigate('/dashboard');
     } catch (error) {
       console.error('LoginFailed', error);
+    } finally {
+      setLoginLoading(false);
     }
   }
 
@@ -77,8 +81,8 @@ const Login = () => {
             </div>
             <Input id="password" type="password" value={password} required onChange={(e) => setPassword(e.target.value)}/>
           </div>
-          <Button type="submit" className="w-full" onClick={handleLogin}>
-            Login
+          <Button type="submit" disabled={ loginLoading } className="w-full" onClick={handleLogin}>
+	    { loginLoading? "...Loading" : "Login" }
           </Button>
         </div>
         <div className="mt-4 text-center text-sm">
