@@ -4,15 +4,31 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import DatePicker from "@/components/DatePicker";
+import { addAcademicYear } from "@/Api/services";
 
-const CreateAcademicYear = () => {
+const CreateAcademicYear = ({ academicYear=null, setAcademicYears }) => {
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submited");
+    console.log(name, startDate, endDate);
+    const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+    if (academicYear) {
+    } else {
+      try {
+        const response = await addAcademicYear(name, startDate, endDate, schoolId)
+        setAcademicYears(prevState => [
+          response.data, ...prevState
+        ]);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        //Set loading to false
+        console.log("Finally");
+      }
+    }
   };
 
   return (

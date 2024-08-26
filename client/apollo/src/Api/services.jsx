@@ -196,3 +196,12 @@ export const patchSubject = (subjectId, name, code, description) => {
 export const getAcademicYears = (schoolId) => {
   return axiosInstance.get(`/fees/academic_years/?school_id=${schoolId}`)
 }
+
+export const addAcademicYear = (name, startDate, endDate, schoolId) => {
+  return axiosInstance.post(`/fees/academic_years/`, {
+    "name": name,
+    "start_date": startDate,
+    "end_date": endDate,
+    "school": schoolId
+  })
+}

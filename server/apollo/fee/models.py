@@ -2,11 +2,11 @@ from django.db import models
 from students.models import Student
 
 class AcademicYear(models.Model):
-    STATUS = {
-            "CURRENT": "current",
-            "UPCOMING": "upcoming",
-            "COMPLETED": "completed"
-        }
+    STATUS = (
+            ("current", "Current"),
+            ("upcoming", "Upcoming"),
+            ("completed", "Completed"),
+        )
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()

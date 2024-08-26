@@ -32,7 +32,6 @@ const AcademicYears = () => {
         setAcademicYears(response.data.academic_years);
         setLoading(false);
         setSuccess(true);
-        console.log(subjects)
       } catch (error) {
         console.log(error);
         setLoading(false);
@@ -78,7 +77,7 @@ const AcademicYears = () => {
                 <ImportIcon className="h-4 w-4" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
               </Button>
-              <FormDialog buttonAction={"Add subject"} form={ <CreateAcademicYear /> } />
+              <FormDialog buttonAction={"Add Academic Year"} form={ <CreateAcademicYear setAcademicYears={ setAcademicYears }/> } />
             </div>
           </div>
           <div className="container flex items-center gap-4 border-t bg-muted px-4 py-3 md:px-6 md:py-4">
