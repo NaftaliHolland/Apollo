@@ -232,69 +232,123 @@ const Layout = ({children}) => {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
-              <nav className="grid gap-2 text-lg font-medium">
-                <Link
-                  href="#"
-                  className="flex items-center gap-2 text-lg font-semibold"
-                >
-                  <Package2 className="h-6 w-6" />
-                  <span className="sr-only">Acme Inc</span>
-                </Link>
-                <Link
-                  href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Home className="h-5 w-5" />
-                  Dashboard
-                </Link>
-                <Link
-                  href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                  <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                    6
-                  </Badge>
-                </Link>
-                <Link
-                  href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Users className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Analytics
-                </Link>
+            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+	  	        >
+                <Home className="h-4 w-4" />
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/teachers"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <Users className="h-5 w-5" />
+                Teachers
+              </NavLink>
+              <NavLink
+                to="/students"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <Users className="h-4 w-4" />
+                Students/Classes{" "}
+              </NavLink>
+              <NavLink
+                to="/analytics"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <LineChart className="h-4 w-4" />
+                Analytics/Fee
+              </NavLink>
+              <div onClick={() => setAcademicsToggled(!academicsToggled)}
+>
+                <div
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 ${ academicsToggled ? ("text-foreground bg-muted") : ("text-muted-foreground") } transition-all hover:text-primary hover:cursor-pointer`}>
+                  <GraduationCap size={16}/>
+                  <span>Academics</span>
+                  <div className="ml-auto">
+                    { !academicsToggled? (<ChevronRight size={18} />) : (<ChevronDown size={18}/>) }
+                  </div>
+                </div>
+                { academicsToggled? (
+                   <div className="ml-4">
+                    <NavLink
+                      to="/subjects"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <Home className="h-4 w-4" />
+                     Subjects 
+                    </NavLink>
+                    <NavLink
+                      to="/exams"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <BookOpenCheck className="h-5 w-5" />
+                     Exams 
+                    </NavLink>
+                    <NavLink
+                      to="/grades"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <Medal className="h-5 w-5" />
+                    Grades 
+                    </NavLink>
+                    <NavLink
+                      to="/results"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <ClipboardCheck className="h-5 w-5" />
+                    Results 
+                    </NavLink>
+                    <NavLink
+                      to="/terms"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <CalendarX className="h-5 w-5" />
+                     Terms 
+                    </NavLink>
+                    <NavLink
+                      to="/academic_years"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <CalendarIcon className="h-5 w-5" />
+                     Academic Years 
+                    </NavLink>
+                    <NavLink
+                      to="/reports"
+                      className={({ isActive }) =>
+                        isActive? navStyleActive : navStyle
+                      }
+                    >
+                      <PieChart className="h-5 w-5" />
+                    Reports 
+                    </NavLink>
+                  </div>
+                ) : 
+                  (null)}
+               </div>
               </nav>
-              <div className="mt-auto">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Upgrade to Pro</CardTitle>
-                    <CardDescription>
-                      Unlock all features and get unlimited access to our
-                      support team.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button size="sm" className="w-full">
-                      Upgrade
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1">

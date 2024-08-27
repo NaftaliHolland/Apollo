@@ -43,31 +43,32 @@ const Subjects = () => {
 	  <Layout>
       <div className="flex flex-col gap-8">
         <header className="sticky top-0 z-30 flex flex-col border-b bg-background">
-          <div className="container flex items-center gap-4 px-4 py-3 hidden md:inline-flex md:px-6 md:py-4">
-            <Breadcrumb className="flex-1">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/dashboard">
-                      Dashboard
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/dashboard">
-                      Academics
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Subjects</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <div className="flex items-center gap-2">
+          <Breadcrumb className="flex-1">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/dashboard">
+                    Dashboard
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/dashboard">
+                    Academics
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Subjects</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <div className="container flex items-center gap-4 px-4 py-3 inline-flex md:px-6 md:py-4">
+            <div className="flex items-center ml-auto gap-2">
+              {/*
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <FilterIcon className="h-4 w-4" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filter</span>
@@ -75,7 +76,7 @@ const Subjects = () => {
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <ImportIcon className="h-4 w-4" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
-              </Button>
+              </Button>*/}
               <FormDialog buttonAction={"Add subject"} form={ <CreateSubject setSubjects={setSubjects} /> } />
             </div>
           </div>
