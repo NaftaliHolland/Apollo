@@ -25,10 +25,14 @@ import {
 import { deleteSubject, patchSubject } from "@/Api/services";
 import FormDialog from "@/components/FormDialog";
 import CreateSubject from "@/components/forms/CreateSubject";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 const SubjectList = ({ subjects, setSubjects }) => {
 
   const [deleting, setDeleting] = useState(false);
+  const { toast } = useToast();
 
   const handleDelete = async (subjectId) => {
     try {
@@ -36,9 +40,19 @@ const SubjectList = ({ subjects, setSubjects }) => {
       const response = await deleteSubject(subjectId);
       const new_subjects = subjects.filter(subject => subject.id !=subjectId);
       setSubjects(new_subjects);
+      toast({
+        title: "Deleted",
+        description: "Subject deleted successfully"
+      });
       console.log(response);
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Not Deleted",
+        description: "Could not delete subject",
+        variant: "destructive",
+        action: <ToastAction altText="Try Again">Try Again</ToastAction>,
+      });
     } finally {
       setDeleting(false);
     }
@@ -74,7 +88,7 @@ const SubjectList = ({ subjects, setSubjects }) => {
                 <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateSubject subject={subject} setSubjects={setSubjects} />} />
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" >
                       <span className="text-red-500 font-normal">Delete</span>
 										</Button>
                   </DialogTrigger>
@@ -92,7 +106,7 @@ const SubjectList = ({ subjects, setSubjects }) => {
                         <DialogClose asChild>
                           <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button variant="destructive" onClick={() => handleDelete(subject.id)}>Delete</Button>
+                        <Button variant="destructive" disabled={deleting} onClick={() => handleDelete(subject.id)}>{deleting? "..Deleting": "Delete"}</Button>
                       </div>
                     </DialogFooter>
                   </DialogContent>
