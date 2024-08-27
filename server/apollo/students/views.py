@@ -46,7 +46,7 @@ def add_student(request, id):
     if serializer.is_valid():
         student = serializer.save()
         # Create student account
-        account_serializer = StudentAccountSerializer(data={"student": student.id})
+        """account_serializer = StudentAccountSerializer(data={"student": student.id})
         if account_serializer.is_valid():
             student_account = account_serializer.save()
             print(account_serializer.data)
@@ -71,7 +71,7 @@ def add_student(request, id):
         student_account.year_balance = account_year_balance
         student_account.term_balance = account_term_balance
         student_account.save()
-        print(StudentAccountSerializer(student_account).data)
+        print(StudentAccountSerializer(student_account).data)"""
 
         return Response({"message": "Student added successfully", "student": serializer.data}, status=status.HTTP_201_CREATED)
     print(serializer.errors)
