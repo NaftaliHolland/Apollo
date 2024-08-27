@@ -4,17 +4,21 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { addSubject, patchSubject } from "@/Api/services";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 const CreateSubject = ({subject=null, setSubjects}) => {
   const [name, setName] = useState(subject?.name || '');
   const [code, setCode] = useState(subject?.code || '');
   const [description, setDescription] = useState(subject?.description || '');
-  const [patching, setPatching] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast()
 
 
   const handlePatch = async (subjectId) => {
     try {
-      setPatching(true);
+      setLoading(true);
       const response = await patchSubject(subjectId, name, code, description);
       setName(response.data.name);
       setCode(response.data.code);
@@ -27,12 +31,13 @@ const CreateSubject = ({subject=null, setSubjects}) => {
     } catch (error) {
       console.log(error);
     } finally {
-      setPatching(false);
     }
   }
 
   const handleSubmit = async (e) => {
       e.preventDefault();
+      setLoading(true);
+      console.log(loading)
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
     if(subject) {
       try {
@@ -41,18 +46,30 @@ const CreateSubject = ({subject=null, setSubjects}) => {
       } catch (error) {
         console.log(error);
       } finally {
+        setLoading(false);
         console.log("Finally");
       }
     } else {
       try {
         const response = await addSubject(name, code, description, schoolId);
         console.log(response)
-        setSubjects(prevState => [
+        toast({
+          title: "Subject Added",
+          description: "Subject added succesfully"
+        });
+          setSubjects(prevState => [
           response.data, ...prevState
         ]);
       } catch (error) {
         console.log(error);
+        toast({
+          title: "Subject not added",
+          description: "There was an error trying to add the subject",
+          variant: "destructive",
+          action: <ToastAction altText="Try Again">Try Again</ToastAction>,
+        });
       } finally {
+        setLoading(false);
         console.log("Finally");
       }
     }}
@@ -87,8 +104,8 @@ const CreateSubject = ({subject=null, setSubjects}) => {
               onChange={ (e) => setDescription(e.target.value) }
               className="min-h-[100px]" />
         </div>
-        <Button type="submit" onClick={ handleSubmit } className="w-full">
-          Save Subject
+        <Button type="submit" disabled={loading} onClick={ handleSubmit } className="w-full">
+          { loading? "... loading": "Save Subject" }
         </Button>
       </form>
    </div>

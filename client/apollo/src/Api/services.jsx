@@ -203,5 +203,11 @@ export const addAcademicYear = (name, startDate, endDate, schoolId) => {
     "start_date": startDate,
     "end_date": endDate,
     "school": schoolId
-  })
-}
+  });
+};
+
+export const createClass = (name, schoolId) => {
+  return axiosInstance.post(`/schools/${schoolId}/classes`, {
+    "name": name,
+  });
+};

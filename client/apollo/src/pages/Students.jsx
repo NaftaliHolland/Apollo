@@ -15,16 +15,16 @@ import {
 	File,
   ListFilter,
   Plus,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -33,17 +33,18 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import Layout from "@/components/layouts/Layout"
-import AddStudentForm from "@/components/forms/AddStudentForm"
-import FormDialog from "@/components/FormDialog"
-import StudentsList from "@/components/StudentsList"
-import { getStudents, getClasses } from "@/Api/services"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import Layout from "@/components/layouts/Layout";
+import AddStudentForm from "@/components/forms/AddStudentForm";
+import CreateClass from "@/components/forms/CreateClass";
+import FormDialog from "@/components/FormDialog";
+import StudentsList from "@/components/StudentsList";
+import { getStudents, getClasses } from "@/Api/services";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 const Students = () => {
@@ -54,6 +55,7 @@ const Students = () => {
   const [classes, setClasses] = useState([])
 
 	useEffect(() => {
+    setStudents([]);
 		const fetchStudents= async () => {
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
 			try {
@@ -103,7 +105,7 @@ const Students = () => {
 					  <TabsTrigger key={ value.id } value={ value.id } onClick={() => setClass_( value.id )}>{value.name}</TabsTrigger>
             )
           }
-          <FormDialog buttonAction={ <Plus className="h-4 w-4"/> } buttonVariant="outline" form={<AddStudentForm addToState={addToState} />} />
+          <FormDialog buttonAction={ <Plus className="h-4 w-4"/> } buttonVariant="outline" form={<CreateClass setClasses={ setClasses }/>} />
     {/*<Button variant="outline" size="icon">
             <Plus className="h-4 w-4"/>
           </Button>*/}
