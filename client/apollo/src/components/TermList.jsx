@@ -22,23 +22,37 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { deleteAcademicYear, patchSubject } from "@/Api/services";
+import { deleteSubject, patchSubject } from "@/Api/services";
 import FormDialog from "@/components/FormDialog";
-import CreateAcademicYear from "@/components/forms/CreateAcademicYear";
+import CreateSubject from "@/components/forms/CreateSubject";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
-const AcademicYearList = ({ academicYears, setAcademicYears }) => {
+const TermList = ({ terms, setTerms}) => {
 
   const [deleting, setDeleting] = useState(false);
+  const { toast } = useToast();
 
-  const handleDelete = async (academicYearId) => {
+  const handleDelete = async (subjectId) => {
     try {
       setDeleting(true);
-      const response = await deleteAcademicYear(academicYearId);
-      const newAcademicYears = academicYears.filter(academicYear => academicYear.id !=academicYearId);
-      setAcademicYears(newAcademicYears);
+      const response = await deleteSubject(subjectId);
+      const new_subjects = subjects.filter(subject => subject.id !=subjectId);
+      setSubjects(new_subjects);
+      toast({
+        title: "Deleted",
+        description: "Subject deleted successfully"
+      });
       console.log(response);
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Not Deleted",
+        description: "Could not delete subject",
+        variant: "destructive",
+        action: <ToastAction altText="Try Again">Try Again</ToastAction>,
+      });
     } finally {
       setDeleting(false);
     }
@@ -49,38 +63,38 @@ const AcademicYearList = ({ academicYears, setAcademicYears }) => {
 			<Table>
 				<TableHeader>
 					<TableRow>
-						<TableHead>Year</TableHead>
+						<TableHead>Term</TableHead>
 						<TableHead>Start Date</TableHead>
 						<TableHead>End Date</TableHead>
-						<TableHead>Status</TableHead>
+            <TableHead>AcademicYear</TableHead>
 						<TableHead className="text-right">Actions</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-          { academicYears.map((academicYear, index) => 
+          { terms.map((term, index) => 
 					<TableRow key={index}>
 						<TableCell>
-              { academicYear.name }
+							<div className="font-medium">{ term.name }</div>
 						</TableCell>
-						<TableCell>{ academicYear.start_date }</TableCell>
-						<TableCell>{ academicYear.end_date }</TableCell>
-						<TableCell>{ academicYear.status }</TableCell>
+						<TableCell>{ term.start_date}</TableCell>
+						<TableCell>{ term.end_date }</TableCell>
+						<TableCell>{ term.academic_year.name }</TableCell>
 						<TableCell className="text-right">
 							<div className="flex items-center justify-end gap-2">
-                <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateAcademicYear academicYear={ academicYear } setAcademicYears={setAcademicYears} />} />
+                <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateSubject subject={term} setSubjects={setTerms} />} />
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" >
                       <span className="text-red-500 font-normal">Delete</span>
 										</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>
-                        Are you sure you want to delete this academic year ?
+                        Are you sure you want to delete this subject ?
                       </DialogTitle>
                       <DialogDescription>
-                        {academicYear.name}
+                        {term.name}
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -88,7 +102,7 @@ const AcademicYearList = ({ academicYears, setAcademicYears }) => {
                         <DialogClose asChild>
                           <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button variant="destructive" disabled={deleting} onClick={() => handleDelete(academicYear.id)}>{deleting? "...Deleting": "Delete"}</Button>
+                        <Button variant="destructive" disabled={deleting} onClick={() => handleDelete(term.id)}>{deleting? "..Deleting": "Delete"}</Button>
                       </div>
                     </DialogFooter>
                   </DialogContent>
@@ -102,4 +116,4 @@ const AcademicYearList = ({ academicYears, setAcademicYears }) => {
 	)
 }
 
-export default AcademicYearList;
+export default TermList;

@@ -23,7 +23,29 @@ class AcademicYearViewSet(viewsets.ModelViewSet):
 class TermViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Term.objects.all()
-    serializer_class = TermSerializer
+
+    def get_serializer_class(self):
+        if self.action in ['create', 'update', 'partial_update']:
+            return TermCreateSerializer
+        return TermSerializer
+    def list(self, request, *args, **kwargs):
+        academic_year_id = request.GET.get("academic_year")
+        school_id = request.GET.get("school")
+        if school_id:
+            try:
+                school = School.objects.get(pk=school_id)
+            except School.DoesNotExist:
+                return Response({"message": "School with the provided id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+            queryset = Term.objects.filter(academic_year__school=school).order_by('-id')
+        else:
+            try:
+                academic_year = AcademicYear.objects.get(pk=academic_year_id)
+            except AcademicYear.DoesNotExist:
+                return Response({"message": "Academic Year with provided id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+            queryset = Term.objects.filter(academic_year=academic_year).order_by('-id')
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"terms": serializer.data}, status=status.HTTP_200_OK)
 
 class FeeCategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]

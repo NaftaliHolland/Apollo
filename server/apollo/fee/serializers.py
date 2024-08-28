@@ -7,7 +7,12 @@ class AcademicYearSerializer(serializers.ModelSerializer):
         model = AcademicYear
         fields = '__all__'
 
+class TermCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Term
+        fields = '__all__'
 class TermSerializer(serializers.ModelSerializer):
+    academic_year = AcademicYearSerializer(read_only=True)
     class Meta:
         model = Term
         fields = '__all__'

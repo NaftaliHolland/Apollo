@@ -4,64 +4,65 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Layout from "@/components/layouts/Layout";
-import { getAcademicYears } from "@/Api/services";
-import AcademicYearList from "@/components/AcademicYearList";
+import { getSubjects, getTerms } from "@/Api/services";
+import TermList from "@/components/TermList";
 import FormDialog from "@/components/FormDialog"
-import CreateAcademicYear from "@/components/forms/CreateAcademicYear";
+import CreateSubject from "@/components/forms/CreateSubject";
 
-const AcademicYears = () => {
-  const [academicYears, setAcademicYears] = useState([
-  ])
+const Terms = () => {
+  const [terms, setTerms] = useState([])
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    const fetchAcademicYears= async () => {
+    const fetchTerms= async () => {
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
       try {
-        const response = await getAcademicYears(schoolId);
+        const response = await getTerms(schoolId);
         console.log(response)
-        setAcademicYears(response.data.academic_years);
+        setTerms(response.data.terms);
         setLoading(false);
         setSuccess(true);
+        console.log(terms)
       } catch (error) {
         console.log(error);
         setLoading(false);
       }
     }
-    fetchAcademicYears();
+    fetchTerms();
   }, [])
 
   return (
 	  <Layout>
       <div className="flex flex-col gap-8">
         <header className="sticky top-0 z-30 flex flex-col border-b bg-background">
-          <div className="container flex items-center gap-4 px-4 py-3 hidden md:inline-flex md:px-6 md:py-4">
-            <Breadcrumb className="flex-1">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/dashboard">
-                      Dashboard
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/dashboard">
-                      Academics
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>AcademicYears</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <div className="flex items-center gap-2">
+          <Breadcrumb className="flex-1">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/dashboard">
+                    Dashboard
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/dashboard">
+                    Academics
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Terms</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <div className="container flex items-center gap-4 px-4 py-3 inline-flex md:px-6 md:py-4">
+            <div className="flex items-center ml-auto gap-2">
+              {/*
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <FilterIcon className="h-4 w-4" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filter</span>
@@ -69,30 +70,28 @@ const AcademicYears = () => {
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <ImportIcon className="h-4 w-4" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
-              </Button>
-              <FormDialog buttonAction={"Add Academic Year"} form={ <CreateAcademicYear setAcademicYears={ setAcademicYears }/> } />
+              </Button>*/}
+              <FormDialog buttonAction={"Add Term"} form={ <CreateSubject setSubjects={setTerms} /> } />
             </div>
           </div>
           <div className="container flex items-center gap-4 border-t bg-muted px-4 py-3 md:px-6 md:py-4">
-            <h1 className="text-2xl font-bold">AcademicYears</h1>
+            <h1 className="text-2xl font-bold">Terms</h1>
             <div className="relative ml-auto flex-1 md:grow-0">
               <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-	  	id="name"
                 className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                 type="search"
-                placeholder="Search subjects..."
+                placeholder="Search terms..."
                 value={search.toLowerCase()}
                 onChange={(e) => setSearch(e.target.value)}
-	  	autoComplete="off"
               />
             </div>
           </div>
         </header>
         <main>
-          <AcademicYearList academicYears={ academicYears.filter((academicYear) =>{
-            return search.toLowerCase() === '' ? academicYear : academicYear.name.toLowerCase().includes(search)
-          })} setAcademicYears={ setAcademicYears } />
+          <TermList terms={ terms.filter((term) =>{
+            return search.toLowerCase() === '' ? term : term.name.toLowerCase().includes(search) || term.code.toLowerCase().includes(search)
+          })} setTerms={ setTerms}/>
         </main>
       </div>
 		</Layout>
@@ -182,4 +181,4 @@ function SearchIcon(props) {
   )
 }
 
-export default AcademicYears;
+export default Terms;

@@ -10,13 +10,7 @@ import FormDialog from "@/components/FormDialog"
 import CreateSubject from "@/components/forms/CreateSubject";
 
 const Subjects = () => {
-  const [subjects, setSubjects] = useState([
-    {
-      name: '',
-      code: '',
-      description: '',
-    }
-  ])
+  const [subjects, setSubjects] = useState([])
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [search, setSearch] = useState('')
