@@ -145,7 +145,7 @@ const RegisterInstitutionForm = () => {
 	];
 
   return (
-    <Card className="max-w-4xl w-[800px] mt-10">
+    <Card className="w-full md:w-[800px] mt-10">
       <CardHeader>
         <CardTitle>Register Your Institution</CardTitle>
         <CardDescription>Fill out the form below to register your institution on our platform.</CardDescription>
@@ -193,7 +193,7 @@ const RegisterInstitutionForm = () => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="county">County</Label>
               <Input
@@ -350,7 +350,7 @@ const RegisterInstitutionForm = () => {
         </form>
       </CardContent>
       <CardFooter>
-        <Button  type="submit" className="ml-auto" onClick={handleSubmit}>
+        <Button  type="submit" disabled={loading} className="ml-auto" onClick={handleSubmit}>
           { loading ? "loading..." : "Register Institution" }
         </Button>
       </CardFooter>

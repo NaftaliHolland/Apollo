@@ -193,6 +193,10 @@ export const patchSubject = (subjectId, name, code, description) => {
   });
 }
 
+export const deleteAcademicYear= (academicYearId) => {
+  return axiosInstance.delete(`/fees/academic_years/${academicYearId}/`);
+}
+
 export const getAcademicYears = (schoolId) => {
   return axiosInstance.get(`/fees/academic_years/?school_id=${schoolId}`)
 }
@@ -211,3 +215,15 @@ export const createClass = (name, schoolId) => {
     "name": name,
   });
 };
+
+export const getTerms= (schoolId=null, academicYearId) => {
+  if (schoolId) {
+    return axiosInstance.get(`fees/terms/?school=${schoolId}`)
+  } else {
+    return axiosInstance.get(`/fees/terms/?academic_year=${academicYearId}`)
+  }
+}
+
+export const createTerm = (name, startDate, endDate) => {
+  return axiosInstance.post(`/`)
+}

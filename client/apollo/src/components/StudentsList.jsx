@@ -12,7 +12,17 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Search } from 'lucide-react'
+import FormDialog from "@/components/FormDialog";
+import AddStudentForm from "@/components/forms/AddStudentForm";
 
+const NoStudents = () => {
+  return (
+    <div>
+      <h3 className="text-md font-semibold md:text-2xl">No student added to this class yet</h3>
+      <p className="text-lg text-primary">Use the button at the top right to admitt a student</p>
+    </div>
+  )
+}
 const StudentsList = ({ students }) => {
   const [search, setSearch] = useState('')
 
@@ -35,15 +45,14 @@ const StudentsList = ({ students }) => {
             <TableHead className="hidden sm:table-cell">Student ID</TableHead>
             <TableHead className="hidden sm:table-cell">
               Class
-            </TableHead>
-            <TableHead className="hidden sm:table-cell">Gender</TableHead>
+            </TableHead> <TableHead className="hidden sm:table-cell">Gender</TableHead>
             <TableHead className="hidden md:table-cell">
               isActive 
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-        { students.filter((student) => {
+        { students.length > 0? (students.filter((student) => {
           return search.toLowerCase() === '' ? student : student.first_name.toLowerCase().includes(search) || student.last_name.toLowerCase().includes(search) || search.includes(student.id)
           }).map(student => 
           <TableRow key={ student.id }>
@@ -73,7 +82,7 @@ const StudentsList = ({ students }) => {
               </Badge>
             </TableCell>
           </TableRow>
-        )}
+          )): <NoStudents />}
         </TableBody>
       </Table>
     </div>

@@ -17,7 +17,8 @@ const DatePicker = ({setDateState}) => {
   const [date, setDate] = React.useState(null)
 
 	React.useEffect(() => {
-		setDateState(date)
+    
+		setDateState(date?.toISOString().split('T')[0]);
   }, [date])
 
   return (
