@@ -67,6 +67,7 @@ const TermList = ({ terms, setTerms}) => {
 						<TableHead>Start Date</TableHead>
 						<TableHead>End Date</TableHead>
             <TableHead>AcademicYear</TableHead>
+            <TableHead>Status</TableHead>
 						<TableHead className="text-right">Actions</TableHead>
 					</TableRow>
 				</TableHeader>
@@ -79,6 +80,7 @@ const TermList = ({ terms, setTerms}) => {
 						<TableCell>{ term.start_date}</TableCell>
 						<TableCell>{ term.end_date }</TableCell>
 						<TableCell>{ term.academic_year.name }</TableCell>
+            <TableCell>{ term.status } </TableCell>
 						<TableCell className="text-right">
 							<div className="flex items-center justify-end gap-2">
                 <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateSubject subject={term} setSubjects={setTerms} />} />

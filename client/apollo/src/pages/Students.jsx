@@ -49,23 +49,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Students = () => {
 	const [students, setStudents] = useState([])
-	const [isLoading, setIsLoading] = useState(true)
+	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(false)
 	const [class_, setClass_] = useState(0)
   const [classes, setClasses] = useState([])
 
 	useEffect(() => {
     setStudents([]);
+    setLoading(true);
 		const fetchStudents= async () => {
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
 			try {
 				const response = await getStudents(class_, schoolId);
 				setStudents(response.data.students)
-				setIsLoading(false)
 			} catch (error) {
 				setError(error)
-				setIsLoading(false)
-			}
+			} finally {
+				setLoading(false)
+      }
 		}
 		fetchStudents();
 	}, [class_]);
@@ -151,12 +152,35 @@ const Students = () => {
       <CardHeader className="px-7">
       </CardHeader>
 		  <CardContent>
-        { isLoading? (
-          <div className="flex items-center space-x-4">
-            <Skeleton className="h-12 w-12 rounded-full" />
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-[250px]" />
-              <Skeleton className="h-4 w-[200px]" />
+        { loading? (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center space-x-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
             </div>
           </div>
         ) : (

@@ -1,5 +1,5 @@
-//import a from "react-router-dom"
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import {
     User,
     Users,
@@ -7,30 +7,34 @@ import {
     FileText,
     School,
 		BarChart,
+    Menu,
+    X,
 } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Hero from "@/assets/dashboard02.png";
 import { buttonVariants } from "@/components/ui/button";
 
 const LandingPage = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="sticky top-0 mx-16 lg:px-6 h-16 flex items-center bg-white">
+      <header className="sticky top-0 mx-4 lg:mx-16 h-16 flex items-center bg-white">
         <Link to="/" className="flex items-center gap-2 justify-center">
           <School className="h-10 w-10" />
           <span className="text-xl font-bold">SchoolHub</span>
         </Link>
-        <nav className="ml-auto items-center flex gap-4 sm:gap-6">
-          <Link href="#" className="text-md font-medium hover:underline underline-offset-4" >
+        <nav className="items-center gap-4 sm:gap-6 hidden md:inline-flex ml-auto">
+          <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
             Features
           </Link>
-          <Link href="#" className="text-md font-medium hover:underline underline-offset-4" >
+          <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
             Pricing
           </Link>
-          <Link href="#" className="text-md font-medium hover:underline underline-offset-4" >
+          <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
             About
           </Link>
-          <Link href="#" className="text-md font-medium hover:underline underline-offset-4" >
+          <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
             Contact
           </Link>
           <Link
@@ -40,12 +44,46 @@ const LandingPage = () => {
             Login
           </Link>
           <Link
-            to="/"
+            to="/register_institution"
             className={buttonVariants({size: "lg"})}
           >
             Sign Up
           </Link>
         </nav>
+        <div className="md:hidden ml-auto" onClick={() => setMenuOpen(!menuOpen)}>
+          { menuOpen? <X />: <Menu /> }
+        </div>
+        {/* Navigation for mobile */}
+				{menuOpen && (
+					<div className="absolute top-16 left-0 w-full bg-white shadow-lg p-4">
+						<nav className="flex flex-col gap-4">
+							<Link to="/" className="text-md font-medium hover:underline underline-offset-4">
+								Features
+							</Link>
+							<Link to="/" className="text-md font-medium hover:underline underline-offset-4">
+								Pricing
+							</Link>
+							<Link to="/" className="text-md font-medium hover:underline underline-offset-4">
+								About
+							</Link>
+							<Link to="/" className="text-md font-medium hover:underline underline-offset-4">
+								Contact
+							</Link>
+							<Link
+								to="/login"
+								className={buttonVariants({ size: "lg", variant: "outline" })}
+							>
+								Login
+							</Link>
+							<Link
+								to="/register_institution"
+								className={buttonVariants({ size: "lg" })}
+							>
+								Sign Up
+							</Link>
+						</nav>
+					</div>
+				)}
       </header>
       <main className="flex-1">
         <section className="w-full py-8 md:py-12 lg:py-16">
@@ -225,10 +263,10 @@ const LandingPage = () => {
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-muted-foreground">&copy; 2024 School Management System. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link href="#" className="text-xs hover:underline underline-offset-4">
+          <Link to="/" className="text-xs hover:underline underline-offset-4">
             Terms of Service
           </Link>
-          <Link href="#" className="text-xs hover:underline underline-offset-4"> 
+          <Link to="/" className="text-xs hover:underline underline-offset-4"> 
             Privacy Policy
           </Link>
         </nav>

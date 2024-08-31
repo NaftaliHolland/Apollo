@@ -90,7 +90,7 @@ const Terms = () => {
         </header>
         <main>
           <TermList terms={ terms.filter((term) =>{
-            return search.toLowerCase() === '' ? term : term.name.toLowerCase().includes(search) || term.code.toLowerCase().includes(search)
+            return search.toLowerCase() === '' ? term : term.name.toLowerCase().includes(search) || term.start_date.toLowerCase().includes(search) || term.end_date.toLowerCase().includes(search)
           })} setTerms={ setTerms}/>
         </main>
       </div>
