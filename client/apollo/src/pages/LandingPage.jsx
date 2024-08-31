@@ -107,7 +107,7 @@ const LandingPage = () => {
                     Request Demo
                   </Link>
                   <Link
-                    to="/"
+                    to="/register_institution"
                     className={buttonVariants({size: "lg"})}
                   >
                     Sign Up
@@ -251,7 +251,7 @@ const LandingPage = () => {
                 Request Demo
               </Link>
               <Link
-                to="/"
+                to="/register_institution"
                 className={buttonVariants({size: "lg"})}
               >
                 Sign Up

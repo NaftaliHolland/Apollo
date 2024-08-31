@@ -34,7 +34,13 @@ import {
 	DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Layout from "@/components/layouts/Layout";
@@ -98,56 +104,80 @@ const Students = () => {
         <FormDialog buttonAction="Admit student" form={<AddStudentForm addToState={addToState} />} />
       </div>
 		</div>
-    <Tabs defaultValue={0}>
-			<div className="flex items-center">
-				<TabsList>
-					<TabsTrigger value={ 0 } onClick={() => setClass_(0)}>All</TabsTrigger>
-          { classes.map(value =>
-					  <TabsTrigger key={ value.id } value={ value.id } onClick={() => setClass_( value.id )}>{value.name}</TabsTrigger>
-            )
-          }
-          <FormDialog buttonAction={ <Plus className="h-4 w-4"/> } buttonVariant="outline" form={<CreateClass setClasses={ setClasses }/>} />
-    {/*<Button variant="outline" size="icon">
-            <Plus className="h-4 w-4"/>
-          </Button>*/}
-				</TabsList>
-				<div className="ml-auto flex items-center gap-2">
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								variant="outline"
-								size="sm"
-								className="h-7 gap-1 text-sm"
-							>
-							<ListFilter className="h-3.5 w-3.5" />
-							<span className="sr-only sm:not-sr-only">Filter</span>
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>Filter by</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuCheckboxItem checked>
-								Fulfilled
-							</DropdownMenuCheckboxItem>
-							<DropdownMenuCheckboxItem>
-								Declined
-							</DropdownMenuCheckboxItem>
-							<DropdownMenuCheckboxItem>
-								Refunded
-							</DropdownMenuCheckboxItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-					<Button
-						size="sm"
-						variant="outline"
-						className="h-7 gap-1 text-sm"
-					>
-						<File className="h-3.5 w-3.5" />
-						<span className="sr-only sm:not-sr-only">Export</span>
-					</Button>
-				</div>
-			</div>
-		</Tabs>
+    <div className="flex flex-col">
+      <p>Class</p>
+      <Tabs defaultValue={0} className="hidden lg:block">
+        <div className="flex items-center">
+          <TabsList>
+            <TabsTrigger value={ 0 } onClick={() => setClass_(0)}>All</TabsTrigger>
+            { classes.map(value =>
+              <TabsTrigger key={ value.id } value={ value.id } onClick={() => setClass_( value.id )}>{value.name}</TabsTrigger>
+              )
+            }
+            <FormDialog buttonAction={ <Plus className="h-4 w-4"/> } buttonVariant="outline" form={<CreateClass setClasses={ setClasses }/>} />
+      {/*<Button variant="outline" size="icon">
+              <Plus className="h-4 w-4"/>
+            </Button>*/}
+          </TabsList>
+          <div className="ml-auto flex items-center gap-2">
+          {/*<DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 gap-1 text-sm"
+                >
+                <ListFilter className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only">Filter</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem checked>
+                  Fulfilled
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>
+                  Declined
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>
+                  Refunded
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>*/}
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-7 gap-1 text-sm"
+            >
+              <File className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only">Export</span>
+            </Button>
+          </div>
+        </div>
+      </Tabs>
+      <div className="flex">
+        <Select defaultValue={0} onValueChange={(value) => setClass_(value)}>
+          <SelectTrigger className="w-[120px] lg:hidden">
+            <SelectValue/>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={0}>All</SelectItem>
+            {classes.map(c => 
+              <SelectItem value={c.id}>{c.name}</SelectItem>
+            )}
+          </SelectContent>
+        </Select>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-7 gap-1 text-sm ml-auto"
+        >
+          <File className="h-3.5 w-3.5" />
+          <span className="sr-only sm:not-sr-only">Export</span>
+        </Button>
+      </div>
+    </div>
 		<Card x-chunk="dashboard-05-chunk-3">
       <CardHeader className="px-7">
       </CardHeader>

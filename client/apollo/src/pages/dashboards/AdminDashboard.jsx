@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -36,17 +37,18 @@ const StudentCount = () => {
   }, []);
 
   return (
-    <Card className="bg-red-50">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-        <UsersIcon className="w-4 h-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{ studentCount }</div>
-        <p className="text-xs text-muted-foreground">+5.2% from last year</p>
-      </CardContent>
-    </Card>
-
+    <Link to="/students">
+      <Card className="bg-red-50">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+          <UsersIcon className="w-8 h-8 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{ studentCount }</div>
+          <p className="text-xs text-muted-foreground">+5.2% from last year</p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 
@@ -67,16 +69,18 @@ const TeacherCount = () => {
   }, []);
   
   return (
-    <Card className="bg-orange-50">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
-        <SchoolIcon className="w-4 h-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{ teacherCount }</div>
-        <p className="text-xs text-muted-foreground">+3.1% from last year</p>
-      </CardContent>
-    </Card>
+    <Link to="/teachers">
+      <Card className="bg-orange-50">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
+          <UsersIcon className="w-8 h-8 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{ teacherCount }</div>
+          <p className="text-xs text-muted-foreground">+3.1% from last year</p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 const AdminDashboard = () => {
