@@ -9,6 +9,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -20,9 +31,11 @@ import {
 } from "@/components/ui/select"
 import { addStudent, getClasses, uploadProfilePhoto } from "@/Api/services"
 import { Separator } from "@/components/ui/separator"
+import FormDialog from "@/components/FormDialog";
+import CreateClass from "@/components/forms/CreateClass";
 import DatePicker from "@/components/DatePicker"
 
-const AddStudentForm = ({ addToState }) => {
+const AddStudentForm = ({ addToState, classes }) => {
 
   const [firstName, setFirstName] = useState('');
   const [validFirstName, setValidFirstName] = useState(false);
@@ -43,7 +56,6 @@ const AddStudentForm = ({ addToState }) => {
   const [success, setSuccess] = useState(false);
 
   const [date, setDate] = useState('');
-  const [classes, setClasses] = useState([]);
 
 	const [uploading, setUploading] = useState(true);
 
@@ -64,21 +76,6 @@ const AddStudentForm = ({ addToState }) => {
       ...prevDetails, [name]: value,
     }));
   }
-
-  useEffect(() => {
-    const fetchClasses = async () => {
-      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
-      try {
-        const response = await getClasses(schoolId);
-        console.log(response)
-        setClasses(response.data.classes)
-        console.log(classes)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchClasses();
-	}, []);
 
 	const handleProfilePhotoChange = (event) => {
 		const file = event.target.files[0];
@@ -160,8 +157,13 @@ const AddStudentForm = ({ addToState }) => {
   const successClassName = "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
   const errClassName = "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
 
-  return (
-		<Card className="w-full max-w-2xl">
+  return classes.length === 0 ? (
+    <div>
+      <div>No classes found create class first</div>
+      <FormDialog buttonAction={"Create class"} buttonVariant="outline" form={<CreateClass setClasses={ setClasses }/>} />
+    </div>
+) :
+    (<Card className="w-full max-w-2xl">
     {message? (<div className={success? successClassName : errClassName} role="alert">
         <p className="sm:inline">{message}</p>
       </div>) : <></>}

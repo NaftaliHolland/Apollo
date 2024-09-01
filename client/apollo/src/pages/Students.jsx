@@ -52,7 +52,6 @@ import { getStudents, getClasses } from "@/Api/services";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-
 const Students = () => {
 	const [students, setStudents] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -101,7 +100,7 @@ const Students = () => {
 		<div className="flex justify-between">
       <h1 className="text-md font-semibold md:text-2xl">Students</h1>
       <div className="flex justify-between">
-        <FormDialog buttonAction="Admit student" form={<AddStudentForm addToState={addToState} />} />
+        <FormDialog buttonAction="Admit student" form={<AddStudentForm addToState={addToState} classes={classes}/>} />
       </div>
 		</div>
     <div className="flex flex-col">
