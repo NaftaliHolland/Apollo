@@ -59,6 +59,7 @@ const classesData = [
 const Classes = () => {
   const [classes, setClasses] = useState([]);
   const [deleting, setDeleting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const handleDelete = async (classId) => {
@@ -85,6 +86,7 @@ const Classes = () => {
 	useEffect(() => {
 			const fetchClasses = async () => {
 				const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+        setLoading(true);
 				try {
 					const response = await getClasses(schoolId);
 					console.log(response)
@@ -92,13 +94,15 @@ const Classes = () => {
 					console.log(classes)
 				} catch (error) {
 					console.log(error)
-				}
+				} finally {
+          setLoading(false);
+        }
 			}
 			fetchClasses();
 		}, []);
 
 
-  return classes.length === 0 ? (
+  return (classes.length === 0 && !loading) ? (
     <Layout>
       <div className="flex flex-col items-center justify-center min-h-[400px] p-4 bg-background text-center">
           <PencilRuler className="w-16 h-16 mb-4 text-muted-foreground" />
