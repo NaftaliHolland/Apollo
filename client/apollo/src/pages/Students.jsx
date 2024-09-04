@@ -155,9 +155,9 @@ const Students = () => {
           </div>
         </div>
       </Tabs>
-      <div className="flex">
+      <div className="flex lg:hidden">
         <Select defaultValue={0} onValueChange={(value) => setClass_(value)}>
-          <SelectTrigger className="w-[120px] lg:hidden">
+          <SelectTrigger className="w-[120px]">
             <SelectValue/>
           </SelectTrigger>
           <SelectContent>
@@ -173,7 +173,7 @@ const Students = () => {
           className="h-7 gap-1 text-sm ml-auto"
         >
           <File className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only">Export</span>
+          <span className="sm:not-sr-only">Export</span>
         </Button>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { PencilIcon, TrashIcon, UsersIcon, BookOpenIcon, DoorOpenIcon } from "lucide-react"
+import { PencilIcon, TrashIcon, UsersIcon, BookOpenIcon, DoorOpenIcon, PencilRuler } from "lucide-react"
 import Layout from "@/components/layouts/Layout";
 import FormDialog from "@/components/FormDialog";
 import CreateClass from "@/components/forms/CreateClass";
@@ -96,8 +97,20 @@ const Classes = () => {
 			fetchClasses();
 		}, []);
 
-  return (
-		<Layout>
+
+  return classes.length === 0 ? (
+    <Layout>
+      <div className="flex flex-col items-center justify-center min-h-[400px] p-4 bg-background text-center">
+          <PencilRuler className="w-16 h-16 mb-4 text-muted-foreground" />
+          <h2 className="text-2xl font-bold mb-2">No Classes Available</h2>
+          <p className="text-sm text-muted-foreground mb-6 max-w-[250px]">
+            It looks like you haven't created any classes yet. Start by creating your first class!
+          </p>
+          <FormDialog buttonAction={"Create class"} form={<CreateClass setClasses={ setClasses }/>} />
+      </div>
+    </Layout>
+  ) :
+   (<Layout>
 			<div className="container mx-auto p-0">
 				<div className="flex justify-between">
 					<h1 className="text-3xl font-bold mb-6">Classes</h1>
