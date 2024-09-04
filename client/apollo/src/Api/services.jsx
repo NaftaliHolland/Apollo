@@ -149,7 +149,7 @@ export const getStudents = (_class, schoolId) => {
 }
 
 export const getClasses = (schoolId) => {
-  return axiosInstance.get(`/schools/${schoolId}/classes`);
+  return axiosInstance.get(`/classes/?school=${schoolId}`);
 }
 
 export const getStudentCount = (schoolId) => {
@@ -211,10 +211,20 @@ export const addAcademicYear = (name, startDate, endDate, schoolId) => {
 };
 
 export const createClass = (name, schoolId) => {
-  return axiosInstance.post(`/schools/${schoolId}/classes`, {
+  return axiosInstance.post(`/classes/?school=${schoolId}`, {
     "name": name,
   });
 };
+
+export const deleteClass = (classId) => {
+  return axiosInstance.delete(`/classes/${classId}`);
+}
+
+export const updateClass = (classId, field, value) => {
+  return axiosInstance.patch(`/classes/${classId}/`, {
+    [field]: value
+  });
+}
 
 export const getTerms= (schoolId=null, academicYearId) => {
   if (schoolId) {
