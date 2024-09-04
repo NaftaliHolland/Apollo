@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
- 
+import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -158,9 +158,11 @@ const AddStudentForm = ({ addToState, classes }) => {
   const errClassName = "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
 
   return classes.length === 0 ? (
-    <div>
+    <div className="flex flex-col">
       <div>No classes found create class first</div>
-      <FormDialog buttonAction={"Create class"} buttonVariant="outline" form={<CreateClass setClasses={ setClasses }/>} />
+      <Button asChild className="ml-auto">
+        <Link to="/classes">Create Class</Link>
+      </Button>
     </div>
 ) :
     (<Card className="w-full max-w-2xl">

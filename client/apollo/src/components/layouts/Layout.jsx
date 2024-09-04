@@ -32,7 +32,8 @@ import {
   ChevronRight,
   ChevronDown,
   Calendar as CalendarIcon,
-  CalendarX
+  CalendarX,
+  PencilRuler,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -108,7 +109,16 @@ const Layout = ({children}) => {
 		            }
               >
                 <Users className="h-4 w-4" />
-                Students/Classes{" "}
+                Students{" "}
+              </NavLink>
+              <NavLink
+                to="/classes"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <PencilRuler className="h-4 w-4" />
+                Classes
               </NavLink>
               <NavLink
                 to="/analytics"
@@ -258,7 +268,16 @@ const Layout = ({children}) => {
 		            }
               >
                 <Users className="h-4 w-4" />
-                Students/Classes{" "}
+                Students{" "}
+              </NavLink>
+              <NavLink
+                to="/classes"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <PencilRuler className="h-4 w-4" />
+                Classes
               </NavLink>
               <NavLink
                 to="/analytics"

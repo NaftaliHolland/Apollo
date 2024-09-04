@@ -42,7 +42,8 @@ const CreateClass = ({ classItem=null, setClasses }) => {
     } else {
       try {
         const response = await createClass(name, schoolId);
-      setClasses(prevState => [response.data.class, ...prevState]);
+        setClasses(prevState => [response.data.class, ...prevState]);
+
       } catch (error) {
         console.log("Error creating class")
       } finally {
