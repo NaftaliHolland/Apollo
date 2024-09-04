@@ -37,7 +37,6 @@ const CreateSubject = ({subject=null, setSubjects}) => {
   const handleSubmit = async (e) => {
       e.preventDefault();
       setLoading(true);
-      console.log(loading)
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
     if(subject) {
       try {
