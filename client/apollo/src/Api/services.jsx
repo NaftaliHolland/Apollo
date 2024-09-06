@@ -169,7 +169,11 @@ export const uploadProfilePhoto = (file) => {
 }
 
 export const getSubjects = (schoolId) => {
-  return axiosInstance.get(`/grades/subjects/?school_id=${schoolId}`)
+  return axiosInstance.get(`/grades/subjects/?school_id=${schoolId}`);
+}
+
+export const getSubject = (subjectId) => {
+  return axiosInstance.get(`/grades/subjects/${subjectId}/`);
 }
 
 export const addSubject = (name, code, description, schoolId) => {
@@ -191,6 +195,32 @@ export const patchSubject = (subjectId, name, code, description) => {
     "code": code,
     "description": description,
   });
+}
+
+export const createGrade = (name, code, comments, schoolId) => {
+  return axiosInstance.post(`/grades/grades/`,
+    {
+      "name": name,
+      "code": code,
+      "comments": comments,
+      "school": schoolId
+    });
+}
+export const updateGrade = (gradeId, name, code, comments) => {
+  return axiosInstance.patch(`/grades/grades/${gradeId}/`,
+    {
+      "name": name,
+      "code": code,
+      "comments": comments,
+    });
+}
+
+export const deleteGrade = (gradeId) => {
+  return axiosInstance.delete(`/grades/grades/${gradeId}/`)
+}
+
+export const getGrades = (schoolId) => {
+  return axiosInstance.get(`/grades/grades/?school=${schoolId}`);
 }
 
 export const deleteAcademicYear= (academicYearId) => {

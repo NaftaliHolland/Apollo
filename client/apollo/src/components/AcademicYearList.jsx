@@ -45,7 +45,7 @@ const AcademicYearList = ({ academicYears, setAcademicYears }) => {
   };
 
 	return (
-		<div className="border rounded-lg overflow-hidden md:mx-8">
+		<div className="border rounded-lg overflow-hidden md:mx-8 hidden lg:block">
 			<Table>
 				<TableHeader>
 					<TableRow>

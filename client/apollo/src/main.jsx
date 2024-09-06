@@ -15,7 +15,9 @@ import Setup from "@/pages/Setup";
 import Dashboards from "@/components/Dashboards";
 import RegisterInstitution from "@/pages/RegisterInstitution";
 import CreateClass from "@/pages/CreateClass";
+import SubjectPage from "@/pages/SubjectPage";
 import Terms from "@/pages/Terms";
+import Grades from "@/pages/Grades";
 import ProtectedRoutes from "@/utils/ProtectedRoutes";
 import { AuthProvider } from '@/contexts/AuthContext'
 
@@ -29,8 +31,10 @@ const router = createBrowserRouter([
         { path: "/students", element: <Students />},
         { path: "/setup", element: <Setup />},
         { path: "/subjects", element: <Subjects /> },
+        { path: "/subjects/:id", element: <SubjectPage /> },
         { path: "/classes", element: <Classes /> },
-        { path: "/terms", element : <Terms />},
+        { path: "/terms", element: <Terms />},
+        { path: "/grades", element: <Grades />},
 	      { path: "/academic_years", element: <AcademicYears />},
       ]
     },

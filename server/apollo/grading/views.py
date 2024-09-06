@@ -26,6 +26,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response({"subjects": serializer.data}, status=status.HTTP_200_OK)
 
+
 class ExamViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Exam.objects.all()
@@ -35,6 +36,17 @@ class GradeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Grade.objects.all()
     serializer_class = GradeSerializer
+
+    def list(self, request, *args, **kwargs):
+        school_id = request.GET.get("school")
+        try:
+            school = School.objects.get(pk=school_id)
+        except School.DoesNotExist:
+            return Response({"error": "School does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+        queryset = Grade.objects.filter(school=school)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class SubjectGradeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]

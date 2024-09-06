@@ -31,34 +31,34 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { deleteSubject, patchSubject } from "@/Api/services";
+import { deleteGrade } from "@/Api/services";
 import FormDialog from "@/components/FormDialog";
-import CreateSubject from "@/components/forms/CreateSubject";
+import CreateGrade from "@/components/forms/CreateGrade";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
-const TermList = ({ terms, setTerms}) => {
+const GradeList = ({ grades, setGrades}) => {
 
   const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
 
-  const handleDelete = async (subjectId) => {
+  const handleDelete = async (gradeId) => {
     try {
       setDeleting(true);
-      const response = await deleteSubject(subjectId);
-      const new_subjects = subjects.filter(subject => subject.id !=subjectId);
-      setSubjects(new_subjects);
+      const response = await deleteGrade(gradeId);
+      const newGrades = grades.filter(grade => grade.id !=gradeId);
+      setGrades(newGrades);
       toast({
         title: "Deleted",
-        description: "Subject deleted successfully"
+        description: "Grade deleted successfully"
       });
       console.log(response);
     } catch (error) {
       console.log(error);
       toast({
         title: "Not Deleted",
-        description: "Could not delete subject",
+        description: "Could not delete grade",
         variant: "destructive",
         action: <ToastAction altText="Try Again">Try Again</ToastAction>,
       });
@@ -71,25 +71,19 @@ const TermList = ({ terms, setTerms}) => {
 		<div>
     {/* Mobile */}
 			<div className="grid gap-3 md:hidden w-full">
-			{ terms.map((term, index) => (
+			{ grades.map((grade, index) => (
 				<Card className="w-full">
 					<CardContent className="pt-6">
 						<div className="flex justify-between items-start mb-4">
 							<div>
-								<h2 className="text-xl font-semibold mb-1">{term.name}</h2>
-								<p className="text-sm text-gray-600">Academic Year: {term.academic_year.name}</p>
+								<h2 className="text-xl font-semibold mb-1">{grade.name}</h2>
+								<p className="text-sm text-gray-600">Code: {grade.code}</p>
 							</div>
-							<Badge>
-								{term.status}
-							</Badge>
 						</div>
-						<div className="flex items-center text-sm text-gray-600 mt-4">
-							<CalendarIcon className="w-4 h-4 mr-2" />
-							<span>{term.start_date} - {term.end_date}</span>
-						</div>
+						<div className="flex items-center text-sm text-gray-600 mt-4">{grade.comments}</div>
 					</CardContent>
 					<CardFooter className="flex justify-end space-x-2">
-            <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateSubject subject={term} setSubjects={setTerms} />} />
+            <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateGrade grade={grade} setGrades={setGrades} />} />
             <Dialog>
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline" >
@@ -99,18 +93,18 @@ const TermList = ({ terms, setTerms}) => {
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>
-                    Are you sure you want to delete this subject ?
+                    Are you sure you want to delete this grade ?
                   </DialogTitle>
                   <DialogDescription>
-                    {term.name}
+                    {grade.name}
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 ml-auto">
                     <DialogClose asChild>
                       <Button variant="outline">Cancel</Button>
                     </DialogClose>
-                    <Button variant="destructive" disabled={deleting} onClick={() => handleDelete(term.id)}>{deleting? "..Deleting": "Delete"}</Button>
+                    <Button variant="destructive" disabled={deleting} onClick={() => handleDelete(grade.id)}>{deleting? "..Deleting": "Delete"}</Button>
                   </div>
                 </DialogFooter>
               </DialogContent>
@@ -123,27 +117,23 @@ const TermList = ({ terms, setTerms}) => {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead>Term</TableHead>
-							<TableHead>Start Date</TableHead>
-							<TableHead>End Date</TableHead>
-							<TableHead>AcademicYear</TableHead>
-							<TableHead>Status</TableHead>
+							<TableHead>Grade</TableHead>
+							<TableHead>Code</TableHead>
+							<TableHead>Comments</TableHead>
 							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{ terms.map((term, index) => 
+						{ grades.map((grade, index) => 
 						<TableRow key={index}>
 							<TableCell>
-								<div className="font-medium">{ term.name }</div>
+								<div className="font-medium">{ grade.name }</div>
 							</TableCell>
-							<TableCell>{ term.start_date}</TableCell>
-							<TableCell>{ term.end_date }</TableCell>
-							<TableCell>{ term.academic_year.name }</TableCell>
-							<TableCell>{ term.status } </TableCell>
+							<TableCell>{ grade.code }</TableCell>
+							<TableCell>{ grade.comments }</TableCell>
 							<TableCell className="text-right">
 								<div className="flex items-center justify-end gap-2">
-									<FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateSubject subject={term} setSubjects={setTerms} />} />
+									<FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateGrade grade={grade} setGrades={setGrades } />} />
 									<Dialog>
 										<DialogTrigger asChild>
 											<Button size="sm" variant="outline" >
@@ -153,10 +143,10 @@ const TermList = ({ terms, setTerms}) => {
 										<DialogContent>
 											<DialogHeader>
 												<DialogTitle>
-													Are you sure you want to delete this subject ?
+													Are you sure you want to delete this grade ?
 												</DialogTitle>
 												<DialogDescription>
-													{term.name}
+													{grade.name}
 												</DialogDescription>
 											</DialogHeader>
 											<DialogFooter>
@@ -164,7 +154,7 @@ const TermList = ({ terms, setTerms}) => {
 													<DialogClose asChild>
 														<Button variant="outline">Cancel</Button>
 													</DialogClose>
-													<Button variant="destructive" disabled={deleting} onClick={() => handleDelete(term.id)}>{deleting? "..Deleting": "Delete"}</Button>
+													<Button variant="destructive" disabled={deleting} onClick={() => handleDelete(grade.id)}>{deleting? "..Deleting": "Delete"}</Button>
 												</div>
 											</DialogFooter>
 										</DialogContent>
@@ -179,4 +169,4 @@ const TermList = ({ terms, setTerms}) => {
 	)
 }
 
-export default TermList;
+export default GradeList;
