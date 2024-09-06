@@ -15,9 +15,12 @@ class Subject(models.Model):
 
 class Grade(models.Model):
     name = models.CharField(max_length=100)
+    code = models.CharField(max_length=20, null=True, blank=True)
+    comments = models.CharField(max_length=200, null=True, blank=True)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} {self.school.name}"
 
 class SubjectGrade(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)

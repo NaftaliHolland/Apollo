@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -57,6 +58,10 @@ const SubjectList = ({ subjects, setSubjects }) => {
       setDeleting(false);
     }
   };
+  const navigate = useNavigate();
+  const handleRowClick = (subjectId) => {
+    navigate(`/subjects/${subjectId}`);
+  };
 
 	return (
 		<div className="border rounded-lg overflow-hidden md:mx-8">
@@ -70,7 +75,7 @@ const SubjectList = ({ subjects, setSubjects }) => {
 				</TableHeader>
 				<TableBody>
           { subjects.map((subject, index) => 
-					<TableRow key={index}>
+					<TableRow key={index} onClick={() => handleRowClick(subject.id)} className="cursor-pointer">
 						<TableCell>
 							<div className="flex items-center gap-3">
 								<div className="bg-muted rounded-md flex items-center justify-center aspect-square w-8 md:w-10">
