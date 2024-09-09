@@ -8,7 +8,7 @@ router = DefaultRouter()
 router.register(r'subjects', SubjectViewSet)
 router.register(r'exams', ExamViewSet)
 router.register(r'grades', GradeViewSet)
-router.register(r'subject-grades', SubjectGradeViewSet)
+router.register(r'subject_grades', SubjectGradeViewSet)
 router.register(r'grade_exam', StudentSubjectGradeViewSet)
 
 urlpatterns = [

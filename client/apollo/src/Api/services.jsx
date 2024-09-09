@@ -223,6 +223,10 @@ export const getGrades = (schoolId) => {
   return axiosInstance.get(`/grades/grades/?school=${schoolId}`);
 }
 
+export const getSubjectGrades = (subjectId) => {
+  return axiosInstance.get(`/grades/subject_grades/?subject=${subjectId}`);
+}
+
 export const deleteAcademicYear= (academicYearId) => {
   return axiosInstance.delete(`/fees/academic_years/${academicYearId}/`);
 }

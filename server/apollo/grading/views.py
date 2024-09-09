@@ -57,6 +57,16 @@ class SubjectGradeViewSet(viewsets.ModelViewSet):
 
         return SubjectGradeSerializer
 
+    def list(self, request, *args, **kwargs):
+        subject_id = request.GET.get("subject")
+        try:
+            subject = Subject.objects.get(pk=subject_id)
+        except Subject.DoesNotExist:
+            return Response({"error": "Subject does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        queryset = SubjectGrade.objects.filter(subject = subject)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 class StudentSubjectGradeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = StudentSubjectGrade.objects.all()
