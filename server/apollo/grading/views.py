@@ -9,6 +9,7 @@ from .serializers import (
     SubjectSerializer, ExamSerializer, GradeSerializer, SubjectGradeSerializer, SubjectGradeCreateSerializer, StudentSubjectGradeSerializer, StudentSubjectGradeCreateSerializer
 )
 from .utils import grade_student
+from django.db import transaction
 
 class SubjectViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -66,6 +67,24 @@ class SubjectGradeViewSet(viewsets.ModelViewSet):
         queryset = SubjectGrade.objects.filter(subject = subject)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['PATCH'])
+    def batch_update(self, request):
+        updates = request.data.get('updates', [])
+
+        with transaction.atomic():
+            updated_instances = []
+            for update in updates:
+                instance_id = update.pop('id', None)
+                if instance_id is None:
+                    continue
+                instance = self.get_queryset().filter(id=instance_id).first()
+                if instance:
+                    serializer = self.get_serializer(instance, data=update, partial=True)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+                    updated_instances.append(serializer.data)
+        return Response(updated_instances)
 
 class StudentSubjectGradeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]

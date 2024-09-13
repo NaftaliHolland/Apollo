@@ -3,8 +3,9 @@ import { Input } from "@/components/ui/input"
 import Layout from "@/components/layouts/Layout";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getSubject, getSubjectGrades } from "@/Api/services";
+import { getSubject, getSubjectGrades, updateSubjectGrades } from "@/Api/services";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 const SubjectPage = () => {
 	const { id } = useParams();
@@ -12,35 +13,58 @@ const SubjectPage = () => {
   const [loading, setLoading] = useState(true);
   const [subjectGradesLoading, setSubjectGradesLoading] = useState(true);
   const [subjectGrades, setSubjectGrades] = useState([]);
+  const [changed, setChanged] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
-  useEffect(() => {
-    const fetchSubject = async () => {
-      try {
-        const response = await getSubject(id);
-        setSubject(response.data);
-      } catch (error){
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSubject();
-  }, [])
-
-  useEffect(() => {
-    const fetchSubjectGrades = async () => {
-      try{
-        const response = await getSubjectGrades(id);
-        setSubjectGrades(response.data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setSubjectGradesLoading(false);
-      }
+  const fetchSubjectGrades = async () => {
+    try{
+      const response = await getSubjectGrades(id);
+      setSubjectGrades(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSubjectGradesLoading(false);
     }
+  }
+  
+  const fetchSubject = async () => {
+    try {
+      const response = await getSubject(id);
+      setSubject(response.data);
+    } catch (error){
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    fetchSubject();
     fetchSubjectGrades();
   }, [])
+
+  const handleInputChange = (subjectGradeId, field, value) => {
+    setChanged(true);
+    setSubjectGrades((prevValue) =>  
+      subjectGrades.map(subjectGrade =>
+        subjectGrade.id === subjectGradeId ? {...subjectGrade, [field]: value} : subjectGrade
+    )
+   );
+    console.log(subjectGrades);
+  };
+
+  const handleSubmit = async () => {
+    setUpdating(true)
+    try {
+      const response = await updateSubjectGrades(subjectGrades);
+      setSubjectGrades(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setChanged(false);
+      setUpdating(false);
+    }
+  }
 
   return (
 		<Layout>
@@ -80,16 +104,31 @@ const SubjectPage = () => {
 								<TableRow key={ subjectGrade.id }>
 									<TableCell>{subjectGrade.grade.name} ({subjectGrade.grade.code})</TableCell>
 									<TableCell>
-										<Input type="number" defaultValue={subjectGrade.min_score} className="w-full" />
+										<Input
+                      type="number"
+                      max={ 100 }
+                      min={ 0 }
+                      defaultValue={subjectGrade.min_score}
+                      onChange={ (e) => handleInputChange(subjectGrade.id, "min_score", e.target.value) }
+                      className="w-full" />
 									</TableCell>
 									<TableCell>
-										<Input type="number" defaultValue={subjectGrade.max_score} className="w-full" />
+										<Input
+                      type="number"
+                      max={ 100 }
+                      min={ 0 }
+                      defaultValue={subjectGrade.max_score}
+                      onChange={ (e) => handleInputChange(subjectGrade.id, "max_score", e.target.value) }
+                      className="w-full" />
 									</TableCell>
                 </TableRow> ) }
 							</TableBody>
 						</Table> )}
 					</div>
 				</div>
+        <div className="flex gap-3 justify-end mt-8">
+           <Button disabled={ !changed || updating } onClick={handleSubmit}>{ updating? "...Updating": "Save Changes" }</Button>
+        </div>
 			</div>
 		</Layout>
   )
