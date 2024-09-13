@@ -10,6 +10,13 @@ class Subject(models.Model):
     code = models.CharField(max_length=50, null=True, blank=True)
     description = models.CharField(max_length=100, null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            super().save(*args, **kwargs)
+            grades = Grade.objects.filter(school=self.school)
+            for grade in grades:
+                SubjectGrade.objects.create(subject=self, grade=grade, min_score=0, max_score=0)
+
     def __str__(self):
         return self.name
 
@@ -18,6 +25,13 @@ class Grade(models.Model):
     code = models.CharField(max_length=20, null=True, blank=True)
     comments = models.CharField(max_length=200, null=True, blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            super().save(*args, **kwargs)
+            subjects = Subject.objects.filter(school=self.school)
+            for subject in subjects:
+                SubjectGrade.objects.create(subject=subject, grade=self, min_score=0, max_score=0)
 
     def __str__(self):
         return f"{self.name} {self.school.name}"
