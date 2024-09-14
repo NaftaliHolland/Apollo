@@ -75,8 +75,8 @@ const SubjectList = ({ subjects, setSubjects }) => {
 				</TableHeader>
 				<TableBody>
           { subjects.map((subject, index) => 
-					<TableRow key={index} onClick={() => handleRowClick(subject.id)} className="cursor-pointer">
-						<TableCell>
+					<TableRow key={index} >
+						<TableCell onClick={() => handleRowClick(subject.id)} className="cursor-pointer">
 							<div className="flex items-center gap-3">
 								<div className="bg-muted rounded-md flex items-center justify-center aspect-square w-8 md:w-10">
 									<Book className="w-5 h-5" />
