@@ -4,33 +4,32 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Layout from "@/components/layouts/Layout";
-import { getSubjects } from "@/Api/services";
-import SubjectList from "@/components/SubjectList";
+import { getExams } from "@/Api/services";
+import ExamList from "@/components/ExamList";
 import FormDialog from "@/components/FormDialog"
 import CreateSubject from "@/components/forms/CreateSubject";
 
 const Exams = () => {
-  const [subjects, setSubjects] = useState([])
+  const [exams, setExams] = useState([])
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    const fetchSubjects = async () => {
+    const fetchExams = async () => {
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
       try {
-        const response = await getSubjects(schoolId);
+        const response = await getExams(schoolId);
         console.log(response)
-        setSubjects(response.data.subjects);
+        setExams(response.data);
         setLoading(false);
         setSuccess(true);
-        console.log(subjects)
       } catch (error) {
         console.log(error);
         setLoading(false);
       }
     }
-    fetchSubjects();
+    fetchExams();
   }, [])
 
   return (
@@ -56,7 +55,7 @@ const Exams = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Subjects</BreadcrumbPage>
+                <BreadcrumbPage>Exams</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -71,17 +70,17 @@ const Exams = () => {
                 <ImportIcon className="h-4 w-4" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
               </Button>*/}
-              <FormDialog buttonAction={"Add subject"} form={ <CreateSubject setSubjects={setSubjects} /> } />
+              <FormDialog buttonAction={"Add subject"} form={ <CreateSubject setSubjects={setExams} /> } />
             </div>
           </div>
           <div className="container flex items-center gap-4 border-t bg-muted px-4 py-3 md:px-6 md:py-4">
-            <h1 className="text-2xl font-bold">Subjects</h1>
+            <h1 className="text-2xl font-bold">Exams</h1>
             <div className="relative ml-auto flex-1 md:grow-0">
               <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                 type="search"
-                placeholder="Search subjects..."
+                placeholder="Search exams..."
                 value={search.toLowerCase()}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -89,9 +88,9 @@ const Exams = () => {
           </div>
         </header>
         <main>
-          <SubjectList subjects={ subjects.filter((subject) =>{
-            return search.toLowerCase() === '' ? subject : subject.name.toLowerCase().includes(search) || subject.code.toLowerCase().includes(search)
-          })} setSubjects={ setSubjects }/>
+          <ExamList exams={ exams.filter((exam) =>{
+            return search.toLowerCase() === '' ? exam : exam.name.toLowerCase().includes(search) || exam.start_date.includes(search) || exam.end_date.includes(search)
+          })} setExams={ setExams }/>
         </main>
       </div>
 		</Layout>

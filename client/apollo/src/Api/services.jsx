@@ -275,3 +275,7 @@ export const getTerms= (schoolId=null, academicYearId) => {
 export const createTerm = (name, startDate, endDate) => {
   return axiosInstance.post(`/`)
 }
+
+export const getExams = (schoolId) => {
+  return axiosInstance.get(`/grades/exams/?school=${schoolId}`)
+}
