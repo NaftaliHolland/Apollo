@@ -7,7 +7,7 @@ import Layout from "@/components/layouts/Layout";
 import { getExams } from "@/Api/services";
 import ExamList from "@/components/ExamList";
 import FormDialog from "@/components/FormDialog"
-import CreateSubject from "@/components/forms/CreateSubject";
+import CreateExam from "@/components/forms/CreateExam";
 
 const Exams = () => {
   const [exams, setExams] = useState([])
@@ -70,7 +70,7 @@ const Exams = () => {
                 <ImportIcon className="h-4 w-4" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
               </Button>*/}
-              <FormDialog buttonAction={"Add subject"} form={ <CreateSubject setSubjects={setExams} /> } />
+              <FormDialog buttonAction={"Create New Exam"} form={ <CreateExam setExams={setExams} /> } />
             </div>
           </div>
           <div className="container flex items-center gap-4 border-t bg-muted px-4 py-3 md:px-6 md:py-4">

@@ -3,34 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { addSubject, patchSubject } from "@/Api/services";
+import { createExam, updateExam} from "@/Api/services";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import DatePicker from "@/components/DatePicker";
 
-const CreateSubject = ({subject=null, setSubjects}) => {
-  const [name, setName] = useState(subject?.name || '');
-  const [code, setCode] = useState(subject?.code || '');
-  const [description, setDescription] = useState(subject?.description || '');
+const CreateExam = ({exam=null, setExams}) => {
+  const [name, setName] = useState(exam?.name || '');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast()
 
 
-  const handlePatch = async (subjectId) => {
+  const handleUpdate = async (examId) => {
     try {
       setLoading(true);
-      const response = await patchSubject(subjectId, name, code, description);
+      const response = await updateExam(examId, name, startDate, endDate);
       setName(response.data.name);
-      setCode(response.data.code);
-      setDescription(response.data.description);
-      setSubjects(prevState => prevState.map(subject =>
-        subject.id === subjectId?
-          { ...subject, name, code, description}
-            : subject
+      setStartDate(response.data.start_date);
+      setEndDate(response.data.end_date);
+      setExams(prevState => prevState.map(exam =>
+        exam.id === examId?
+          { ...exam, name: name, start_date: startDate, end_date: endDate}
+            : exam
         ));
     } catch (error) {
       console.log(error);
     } finally {
+      setLoading(false);
     }
   }
 
@@ -38,38 +40,34 @@ const CreateSubject = ({subject=null, setSubjects}) => {
       e.preventDefault();
       setLoading(true);
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
-    if(subject) {
+    if(exam) {
       try {
-        console.log("Patching");
-        handlePatch(subject.id);
+        handleUpdate(exam.id);
       } catch (error) {
         console.log(error);
       } finally {
         setLoading(false);
-        console.log("Finally");
       }
     } else {
       try {
-        const response = await addSubject(name, code, description, schoolId);
-        console.log(response)
+        const response = await createExam(name, startDate, endDate, schoolId);
         toast({
-          title: "Subject Added",
+          title: "Exam Created",
           description: "Subject added succesfully"
         });
-          setSubjects(prevState => [
+          setExams(prevState => [
           response.data, ...prevState
         ]);
       } catch (error) {
         console.log(error);
         toast({
-          title: "Subject not added",
-          description: "There was an error trying to add the subject",
+          title: "Exam not created",
+          description: "There was an error trying to add the exam",
           variant: "destructive",
           action: <ToastAction altText="Try Again">Try Again</ToastAction>,
         });
       } finally {
         setLoading(false);
-        console.log("Finally");
       }
     }}
 
@@ -77,37 +75,29 @@ const CreateSubject = ({subject=null, setSubjects}) => {
     <div>
       <form className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="name">Subject Name</Label>
+          <Label htmlFor="name">Exam Name</Label>
           <Input
             id="name"
-            placeholder="Enter subject name"
+            placeholder="Enter exam name"
             value={ name }
             onChange={ (e) => setName(e.target.value) }
           />
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="code">Subject Code</Label>
-          <Input
-            id="code"
-            placeholder="Enter subject code"
-            value={ code.toUpperCase() }
-            onChange={ (e) => setCode(e.target.value.toUpperCase()) }
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-              id="description"
-              placeholder="Provide a description"
-              value={ description }
-              onChange={ (e) => setDescription(e.target.value) }
-              className="min-h-[100px]" />
+        <div className="grid gap-2 grid-cols-2">
+          <div>
+            <Label htmlFor="startDate">Start Date</Label>
+            <DatePicker date={ exam?.start_date } setDateState={ setStartDate }/>
+          </div>
+          <div>
+            <Label htmlFor="endDate">End Date</Label>
+            <DatePicker date={ exam?.end_date } setDateState={ setEndDate }/>
+          </div>
         </div>
         <Button type="submit" disabled={loading} onClick={ handleSubmit } className="w-full">
-          { loading? "... loading": "Save Subject" }
+          { loading? "... loading": "Save Exam" }
         </Button>
       </form>
    </div>
 	);
 };
-export default CreateSubject;
+export default CreateExam;

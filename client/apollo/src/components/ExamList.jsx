@@ -23,9 +23,9 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { deleteSubject, patchSubject } from "@/Api/services";
+import { deleteExam, updateExam } from "@/Api/services";
 import FormDialog from "@/components/FormDialog";
-import CreateSubject from "@/components/forms/CreateSubject";
+import CreateExam from "@/components/forms/CreateExam";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -38,12 +38,12 @@ const ExamList = ({ exams, setExams }) => {
   const handleDelete = async (examId) => {
     try {
       setDeleting(true);
-      const response = await deleteSubject(examId);
+      const response = await deleteExam(examId);
       const new_exams = exams.filter(exam => exam.id !=examId);
       setExams(new_exams);
       toast({
         title: "Deleted",
-        description: "Subject deleted successfully"
+        description: "Exam deleted successfully"
       });
       console.log(response);
     } catch (error) {
@@ -96,7 +96,7 @@ const ExamList = ({ exams, setExams }) => {
 						</TableCell>
 						<TableCell className="text-right">
 							<div className="flex items-center justify-end gap-2">
-                <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateSubject subject={exam} setSubjects={setExams} />} />
+                <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateExam exam={exam} setExams={setExams} />} />
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button size="sm" variant="outline" >

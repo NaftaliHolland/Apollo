@@ -279,3 +279,24 @@ export const createTerm = (name, startDate, endDate) => {
 export const getExams = (schoolId) => {
   return axiosInstance.get(`/grades/exams/?school=${schoolId}`)
 }
+
+export const createExam = (name, startDate, endDate, schoolId) => {
+  return axiosInstance.post(`/grades/exams/`, {
+    "name": name,
+    "start_date": startDate,
+    "end_date": endDate,
+    "school": schoolId
+  })
+}
+
+export const updateExam = (examId, name, startDate, endDate) => {
+  return axiosInstance.patch(`/grades/exams/${examId}/`, {
+    "name": name,
+    "start_date": startDate,
+    "end_date": endDate
+  });
+}
+
+export const deleteExam = (examId) => {
+  return axiosInstance.delete(`/grades/exams/${examId}/`)
+}
