@@ -9,7 +9,6 @@ const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 const axiosInstance = axios.create({
   baseURL: BACKEND_URL,
-  timeout: 10000,
 });
 
 axiosInstance.interceptors.request.use(
@@ -176,11 +175,12 @@ export const getSubject = (subjectId) => {
   return axiosInstance.get(`/grades/subjects/${subjectId}/`);
 }
 
-export const addSubject = (name, code, description, schoolId) => {
+export const addSubject = (name, code, description, classes, schoolId) => {
   return axiosInstance.post(`/grades/subjects/`, {
     "name": name,
     "code": code,
     "description": description,
+    "classes": classes,
     "school": schoolId
   })
 }
@@ -299,4 +299,8 @@ export const updateExam = (examId, name, startDate, endDate) => {
 
 export const deleteExam = (examId) => {
   return axiosInstance.delete(`/grades/exams/${examId}/`)
+}
+
+export const getStudentsWithGrades = (examId) => {
+  return axiosInstance.get(`/students/students_with_grades/?exam=${examId}`)
 }

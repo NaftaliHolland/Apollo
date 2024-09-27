@@ -57,24 +57,42 @@ class SubjectGrade(models.Model):
 
 
 class Exam(models.Model):
-	name = models.CharField(max_length=255)
-	school = models.ForeignKey(School, on_delete=models.CASCADE)
-	start_date = models.DateField(null=True, blank=True);
-	end_date = models.DateField(null=True, blank=True);
-	is_completed = models.BooleanField(default=False)
-	is_ongoing= models.BooleanField(default=False)
+    name = models.CharField(max_length=255)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    start_date = models.DateField(null=True, blank=True);
+    end_date = models.DateField(null=True, blank=True);
+    is_completed = models.BooleanField(default=False)
+    is_ongoing= models.BooleanField(default=False)
 
+    def update_is_ongoing(self):
+        now = timezone.now().date()
+        self.is_ongoing = self.start_date <= now <= self.end_date if self.start_date and self.end_date else False
 
-	def update_is_ongoing(self):
-		now = timezone.now().date()
-		self.is_ongoing = self.start_date <= now <= self.end_date if self.start_date and self.end_date else False
+    def initialize_student_subject_grades(self):
+        students = Student.objects.filter(_class__school=self.school)
+        student_subject_grades = []
+        for student in students:
+            subjects = student._class.subjects.all()
+            for subject in subjects:
+                student_subject_grades.append(
+                    StudentSubjectGrade(
+                        student=student,
+                        exam=self,
+                        subject=subject,
+                        score=0
+                        )
+                    )
+        StudentSubjectGrade.objects.bulk_create(student_subject_grades)
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        self.update_is_ongoing()
+        super().save(*args, **kwargs)
 
-	def save(self, *args, **kwargs):
-		self.update_is_ongoing()
-		super().save(*args, **kwargs)
+        if is_new:
+            self.initialize_student_subject_grades()
 
-	def __str__(self):
-		return f"{self.name}"
+    def __str__(self):
+        return f"{self.name}"
 
 class StudentSubjectGrade(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)

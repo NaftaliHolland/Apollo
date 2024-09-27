@@ -6,7 +6,7 @@ from students.models import Student
 from schools.models import School
 from students.serializers import StudentSerializer
 from .serializers import (
-    SubjectSerializer, ExamSerializer, GradeSerializer, SubjectGradeSerializer, SubjectGradeCreateSerializer, StudentSubjectGradeSerializer, StudentSubjectGradeCreateSerializer
+    SubjectSerializer, ExamSerializer, GradeSerializer, SubjectGradeSerializer, SubjectGradeCreateSerializer, StudentSubjectGradeSerializer, StudentSubjectGradeCreateSerializer, SubjectGetSerializer, 
 )
 from .utils import grade_student
 from django.db import transaction
@@ -15,6 +15,12 @@ class SubjectViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+
+    def get_serializer_class(self):
+        if self.action in ['create', 'update', 'partial_upadate']:
+            return SubjectSerializer
+
+        return SubjectGetSerializer
 
     def list(self, request, *args, **kwargs):
         school_id = request.GET.get("school_id")
@@ -43,6 +49,7 @@ class ExamViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    
 class GradeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Grade.objects.all()
@@ -99,36 +106,42 @@ class SubjectGradeViewSet(viewsets.ModelViewSet):
 class StudentSubjectGradeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = StudentSubjectGrade.objects.all()
+    serializer_class = StudentSubjectGradeSerializer
 
     def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
+        if self.action in ['create', 'update', 'partial_upadate']:
             return StudentSubjectGradeCreateSerializer
-        return StudentSubjectGradeSerializer
+        return StudentSubjectGradeSerializer 
 
     def create(self, request, *args, **kwargs):
-        if 'subject_marks' in request.data:
-            return self.grade_exam(request)
-        return super().create(request, *args, **kwargs)
+        print(request.data);
+        student = Student.objects.get(pk=request.data["student"])
+        exam = Exam.objects.get(pk=request.data["exam"])
+        subject_marks = request.data["subject_marks"]
+        student_subject_marks = []
+        for subject_id, subject_score in subject_marks.items():
+            print(subject_id, subject_score)
+            subject = Subject.objects.get(pk=subject_id)
+            student_subject_grade, created = StudentSubjectGrade.objects.update_or_create(
+                student=student,
+                exam=exam,
+                subject=subject,
+                defaults={'score': subject_score}
+                )
+            student_subject_marks.append(student_subject_grade)
+        serializer = self.get_serializer(student_subject_marks, many=True)
 
-    @action(detail=False, methods=['post'])
-    def grade_exam(self, request):
-        student = request.data.get('student')
-        exam = request.data.get('exam')
-        subject_marks = request.data.get('subject_marks')
+        return Response(serializer.data)
 
-        if not all([student, exam, subject_marks]):
-            return Response(
-                {"error": "Provide student_id, exam_id, and subject_marks"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
+    @action(detail=False, methods=["GET"])
+    def students_by_exam(self, request):
+        print("here")
+        exam_id = request.GET.get("exam")
         try:
-            grades = grade_student(student, exam, subject_marks)
-            return Response(grades, status=status.HTTP_200_OK)
-        except ValueError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response(
-                {"error": "An unexpected error occurred"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            exam = Exam.objects.get(pk=exam_id)
+        except Exam.DoesNotExist:
+            return Response({"error": "Exam does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+        students = Student.objects.filter(studentsubjectgrade__exam = exam).distinct()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)

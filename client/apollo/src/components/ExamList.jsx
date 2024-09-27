@@ -60,7 +60,7 @@ const ExamList = ({ exams, setExams }) => {
   };
   const navigate = useNavigate();
   const handleRowClick = (examId) => {
-    navigate(`/exams/${subjectId}`);
+    navigate(`/exams/${examId}`);
   };
 
 	return (
