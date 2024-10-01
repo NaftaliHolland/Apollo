@@ -1,6 +1,6 @@
-//import Link from "next/link"
-import { Link, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import {
 	Bell,
 	CircleUser,
@@ -47,36 +47,37 @@ import Layout from "@/components/layouts/Layout";
 import AddStudentForm from "@/components/forms/AddStudentForm";
 import CreateClass from "@/components/forms/CreateClass";
 import FormDialog from "@/components/FormDialog";
-import StudentsList from "@/components/StudentsList";
-import { getStudents, getClasses } from "@/Api/services";
+import StudentScoreList from "@/components/StudentScoreList";
+import { getStudents, getClasses, getStudentsWithScores } from "@/Api/services";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const Students = () => {
-	const [students, setStudents] = useState([])
+const ExamPage = () => {
+	const { id } = useParams();
+	const [studentsWithScores, setStudentsWithScores] = useState([])
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(false)
-	const [class_, setClass_] = useState(0)
-  const [classes, setClasses] = useState([])
+	//const [class_, setClass_] = useState(0)
+  //const [classes, setClasses] = useState([])
 
 	useEffect(() => {
-    setStudents([]);
+    setStudentsWithScores([]);
     setLoading(true);
-		const fetchStudents= async () => {
+		const fetchStudentsWithScores= async () => {
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
 			try {
-				const response = await getStudents(class_, schoolId);
-				setStudents(response.data.students)
+				const response = await getStudentsWithScores(id);
+				setStudentsWithScores(response.data)
 			} catch (error) {
 				setError(error)
 			} finally {
 				setLoading(false)
       }
 		}
-		fetchStudents();
-	}, [class_]);
+		fetchStudentsWithScores();
+	}, []);
 
-	useEffect(() => {
+	/*useEffect(() => {
     const fetchClasses = async () => {
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
       try {
@@ -90,82 +91,16 @@ const Students = () => {
     }
     fetchClasses();
 
-	}, []);
+	}, []);*/
 
-	const addToState = (student) => {
-		setStudents(prevState => [student, ...prevState]);
+	const addToState = (studentWithGrades) => {
+		setStudentsWithScores(prevState => [studentWithGrades, ...prevState]);
 	}
 	return (
   <Layout>
 		<div className="flex justify-between">
       <h1 className="text-md font-semibold md:text-2xl">Students</h1>
 		</div>
-    <div className="flex flex-col">
-      <p>Class</p>
-      <Tabs defaultValue={0} className="hidden lg:block">
-        <div className="flex items-center">
-          <TabsList>
-            <TabsTrigger value={ 0 } onClick={() => setClass_(0)}>All</TabsTrigger>
-            { classes.map(value =>
-              <TabsTrigger key={ value.id } value={ value.id } onClick={() => setClass_( value.id )}>{value.name}</TabsTrigger>
-              )
-            }
-            <FormDialog buttonAction={ <Plus className="h-4 w-4"/> } buttonVariant="outline" form={<CreateClass setClasses={ setClasses }/>} />
-      {/*<Button variant="outline" size="icon">
-              <Plus className="h-4 w-4"/>
-            </Button>*/}
-          </TabsList>
-          <div className="ml-auto flex items-center gap-2">
-          {/*<DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 gap-1 text-sm"
-                >
-                <ListFilter className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only">Filter</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem checked>
-                  Fulfilled
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem>
-                  Declined
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem>
-                  Refunded
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuContent>
-            </DropdownMenu>*/}
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-7 gap-1 text-sm"
-            >
-              <File className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only">Export</span>
-            </Button>
-          </div>
-        </div>
-      </Tabs>
-      <div className="flex lg:hidden">
-        <Select defaultValue={0} onValueChange={(value) => setClass_(value)}>
-          <SelectTrigger className="w-[120px]">
-            <SelectValue/>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={0}>All</SelectItem>
-            {classes.map(c => 
-              <SelectItem value={c.id}>{c.name}</SelectItem>
-            )}
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
 		<Card x-chunk="dashboard-05-chunk-3">
       <CardHeader className="px-7">
       </CardHeader>
@@ -202,7 +137,7 @@ const Students = () => {
             </div>
           </div>
         ) : (
-          <StudentsList students={ students } />
+          <StudentScoreList studentsWithScores={ studentsWithScores } />
         )
         }
 		  </CardContent>
@@ -210,4 +145,4 @@ const Students = () => {
 	</Layout>
 	)
 }
-export default Students;
+export default ExamPage;

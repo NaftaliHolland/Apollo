@@ -93,15 +93,13 @@ def get_students_with_grades(request):
         )
     data = []
     for student in students:
-        subject_scores = []
         subject_score = StudentSubjectGrade.objects.filter(
             student=student,
             exam=exam
             ).values('subject__name', 'score')
-        subject_scores.append(subject_score)
 
         student_data = StudentSerializer(student).data
-        student_data["subject_scores"] = subject_scores
+        student_data["subject_scores"] = subject_score
         if student_data['subject_scores']:
             data.append(student_data)
     return Response({

@@ -421,7 +421,7 @@ const Layout = ({children}) => {
             </div>
           </div>
          </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 h-screen">
+        <main className="gap-4 p-4 lg:gap-6 lg:p-6 h-screen">
 	        {children}
         </main>
 	      <Toaster />

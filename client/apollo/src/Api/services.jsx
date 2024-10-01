@@ -301,6 +301,15 @@ export const deleteExam = (examId) => {
   return axiosInstance.delete(`/grades/exams/${examId}/`)
 }
 
-export const getStudentsWithGrades = (examId) => {
+export const getStudentsWithScores = (examId) => {
   return axiosInstance.get(`/students/students_with_grades/?exam=${examId}`)
+}
+
+export const gradeStudent = (student, exam, subjectMarks) => {
+  return axiosInstance.post(`/grades/student_subject_grades/`,
+    {
+      "student": student,
+      "exam": exam,
+      "subject_marks": subjectMarks
+    })
 }

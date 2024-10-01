@@ -14,6 +14,24 @@ import { Input } from "@/components/ui/input"
 import { Search } from 'lucide-react'
 import FormDialog from "@/components/FormDialog";
 import AddStudentForm from "@/components/forms/AddStudentForm";
+import { getSubjects } from "@/Api/services";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"
+import {
+  FileSpreadsheet,
+  Printer,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const NoStudents = () => {
   return (
@@ -23,70 +41,107 @@ const NoStudents = () => {
     </div>
   )
 }
-const StudentScoreList = ({ studentScores }) => {
-  const [search, setSearch] = useState('')
+const StudentScoreList = ({ studentsWithScores }) => {
+  const [search, setSearch] = useState('');
+  const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedStudent, setExpandedStudent] = useState(null);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getSubjects(schoolId);
+        console.log(response)
+        setSubjects(response.data.subjects);
+        console.log(subjects)
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchSubjects();
+  }, [])
 
   return (
-    <div>
-        <div className="relative ml-auto flex-1 md:grow-0 mr-4">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search..."
-	          value={search}
-            onChange={(e) => setSearch(e.target.value.toLowerCase())}
-            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-           />
-        </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead className="hidden sm:table-cell">Student ID</TableHead>
-            <TableHead className="hidden sm:table-cell">
-              Class
-            </TableHead> <TableHead className="hidden sm:table-cell">Gender</TableHead>
-            <TableHead className="hidden md:table-cell">
-              isActive 
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-        { students.length > 0? (students.filter((student) => {
-          return search.toLowerCase() === '' ? student : student.first_name.toLowerCase().includes(search) || student.last_name.toLowerCase().includes(search) || search.includes(student.id)
-          }).map(student => 
-          <TableRow key={ student.id }>
-            <TableCell >
-              <div className="flex items-center space-x-2">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src={student.profile_photo} />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <div className="font-medium">{ `${student.first_name} ${student.last_name}` } </div>
-              </div>
-            </TableCell>
-            <TableCell>
-              { student.id }
-            </TableCell>
-            <TableCell>
-                <div className="hidden text-sm text-muted-foreground md:inline">
-                  { student._class.name } 
+		<div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Student Grading System</h1>
+      
+      <div className="mb-4 flex justify-between items-center">
+    {/*<div className="w-64">
+          <Label htmlFor="class-filter">Filter by Class</Label>
+          <Select onValueChange={setSelectedClass} defaultValue={selectedClass}>
+            <SelectTrigger id="class-filter">
+              <SelectValue placeholder="Select Class" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Classes</SelectItem>
+              <SelectItem value="10A">Class 10A</SelectItem>
+              <SelectItem value="10B">Class 10B</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>*/}
+        <Button>
+          <FileSpreadsheet className="w-4 h-4 mr-2" />
+          Generate Merit List
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Student List and Grading</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[calc(100vh-300px)]">
+            {studentsWithScores.students.map(student => (
+              <div key={student.id} className="mb-6 border-b pb-6">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-lg font-temibold">{student.first_name + " " + student.last_name}</h3>
+                    <p className="text-sm text-gray-500">Class: {student._class.name}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm">
+                      <Printer className="w-4 h-4 mr-2" />
+                      Print Report
+                    </Button>
+                    <Button 
+                      onClick={() => setExpandedStudent(expandedStudent === student.id ? null : student.id)} 
+                      size="sm" 
+                      variant="outline"
+                    >
+                      {expandedStudent === student.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </Button>
+                  </div>
                 </div>
-            </TableCell>
-            <TableCell className="hidden sm:table-cell">
-              { student.gender } 
-            </TableCell>
-            <TableCell className="hidden sm:table-cell">
-              <Badge className="text-xs" variant="secondary">
-                { student.is_active? "Active" : "absent" } 
-              </Badge>
-            </TableCell>
-          </TableRow>
-          )): <NoStudents />}
-        </TableBody>
-      </Table>
+                {expandedStudent === student.id && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {student.subject_scores.map(subject => (
+                      <div key={subject.subject__name} className="flex flex-col items-center">
+                        <Label htmlFor={`${student.id}-${subject.subject__name}`} className="mb-1 text-center">
+                          {subject.subject__name}
+                        </Label>
+                        <Input
+                          id={`${student.id}-${subject.subject__name}`}
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={subject.score}
+                          className="w-16 text-center"
+                        />
+                      </div>
+                    ))}
+                    <Button>Save Changes</Button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </ScrollArea>
+        </CardContent>
+      </Card>
     </div>
   );
-};
+}
 
-export default StudentsList;
+export default StudentScoreList;
