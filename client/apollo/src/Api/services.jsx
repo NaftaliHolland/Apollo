@@ -305,7 +305,7 @@ export const getStudentsWithScores = (examId) => {
   return axiosInstance.get(`/students/students_with_grades/?exam=${examId}`)
 }
 
-export const gradeStudent = (student, exam, subjectMarks) => {
+export const createOrUpdateStudentGrades = (student, exam, subjectMarks) => {
   return axiosInstance.post(`/grades/student_subject_grades/`,
     {
       "student": student,

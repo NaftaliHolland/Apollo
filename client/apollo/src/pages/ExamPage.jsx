@@ -137,7 +137,7 @@ const ExamPage = () => {
             </div>
           </div>
         ) : (
-          <StudentScoreList studentsWithScores={ studentsWithScores } />
+          <StudentScoreList studentsWithScores={ studentsWithScores } setStudentsWithScores = { setStudentsWithScores } />
         )
         }
 		  </CardContent>

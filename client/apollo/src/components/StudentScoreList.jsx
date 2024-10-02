@@ -14,9 +14,10 @@ import { Input } from "@/components/ui/input"
 import { Search } from 'lucide-react'
 import FormDialog from "@/components/FormDialog";
 import AddStudentForm from "@/components/forms/AddStudentForm";
-import { getSubjects } from "@/Api/services";
+import { getSubjects, createOrUpdateStudentGrades } from "@/Api/services";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
+import { useParams } from "react-router-dom";
 import {
   FileSpreadsheet,
   Printer,
@@ -41,11 +42,78 @@ const NoStudents = () => {
     </div>
   )
 }
-const StudentScoreList = ({ studentsWithScores }) => {
+const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
+	const { id } = useParams();
   const [search, setSearch] = useState('');
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedStudent, setExpandedStudent] = useState(null);
+  const [expandedStudentSubjectScores, setExpandedStudentSubjectScores] = useState(null);
+  const [studentSubjectScores, setStudentSubjectScores] = useState([]);
+  const [input, setInput] = useState({
+    studentId: '',
+    subjectName: '',
+    score: ''
+  });
+
+   // Create a function to handle value change
+  // Update studentsWithScores state with new values in the input
+  // Check for change, toggle button inactivity incase there is a change
+  // Only one student's marks can be changed at a time
+  
+  const handleInputChange = (subjectName, value) => {
+    setStudentSubjectScores(prevState =>
+      prevState.map(subjectScore =>
+        subjectScore.subject__name === subjectName? {
+          ...subjectScore, score: value
+        } : subjectScore
+      ))
+
+  };
+
+  useEffect(() => {
+    setStudentSubjectScores(expandedStudent?.subject_scores)
+  }, [expandedStudent])
+
+  const updateScore = (studentId, subjectScores) => {
+    setStudentsWithScores(prevState => ({
+      ...prevState,
+      students: prevState.students.map(student => 
+        student.id === studentId
+          ? {
+              ...student,
+              subject_scores: student.subject_scores.map(subject =>
+              subject.subject__name === subjectName
+                ? { ...subject, score: newScore }
+              : subject
+            )
+          }
+        : student
+      )
+    }));
+  };
+  
+  const handleSubmit = async () => {
+
+    const newSubjectScores = subjects.reduce((acc, item) => {
+      const scoreEntry = studentSubjectScores.find(entry => entry.subject__name === item.name);
+      acc[item.id] = scoreEntry.score
+      console.log(acc)
+      return acc;
+    }, {});
+
+    console.log(newSubjectScores);
+    try{
+      const updatedStudent = {
+      ...expandedStudent,
+      subject_scores: studentSubjectScores};
+
+      setExpandedStudent(updatedStudent);
+      const response = await createOrUpdateStudentGrades(updatedStudent.id, id, newSubjectScores);
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -107,17 +175,17 @@ const StudentScoreList = ({ studentsWithScores }) => {
                       Print Report
                     </Button>
                     <Button 
-                      onClick={() => setExpandedStudent(expandedStudent === student.id ? null : student.id)} 
+                      onClick={() => setExpandedStudent(expandedStudent?.id === student.id ? null : student)} 
                       size="sm" 
                       variant="outline"
                     >
-                      {expandedStudent === student.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      {expandedStudent?.id === student.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </Button>
                   </div>
                 </div>
-                {expandedStudent === student.id && (
+                {expandedStudent?.id === student.id && (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                    {student.subject_scores.map(subject => (
+                    {studentSubjectScores?.map(subject => (
                       <div key={subject.subject__name} className="flex flex-col items-center">
                         <Label htmlFor={`${student.id}-${subject.subject__name}`} className="mb-1 text-center">
                           {subject.subject__name}
@@ -128,11 +196,16 @@ const StudentScoreList = ({ studentsWithScores }) => {
                           min="0"
                           max="100"
                           value={subject.score}
+                          onChange={ (e) => handleInputChange(subject.subject__name, e.target.value) }
                           className="w-16 text-center"
                         />
                       </div>
                     ))}
-                    <Button>Save Changes</Button>
+                    <Button
+                      onClick = { () => handleSubmit() }
+                      >
+                      Save Changes
+                    </Button>
                   </div>
                 )}
               </div>

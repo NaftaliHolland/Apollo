@@ -109,7 +109,7 @@ class StudentSubjectGradeViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSubjectGradeSerializer
 
     def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_upadate']:
+        if self.action in ['create', 'update', 'partial_update']:
             return StudentSubjectGradeCreateSerializer
         return StudentSubjectGradeSerializer 
 
