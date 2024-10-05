@@ -9,7 +9,6 @@ const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 const axiosInstance = axios.create({
   baseURL: BACKEND_URL,
-  timeout: 10000,
 });
 
 axiosInstance.interceptors.request.use(
@@ -176,11 +175,12 @@ export const getSubject = (subjectId) => {
   return axiosInstance.get(`/grades/subjects/${subjectId}/`);
 }
 
-export const addSubject = (name, code, description, schoolId) => {
+export const addSubject = (name, code, description, classes, schoolId) => {
   return axiosInstance.post(`/grades/subjects/`, {
     "name": name,
     "code": code,
     "description": description,
+    "classes": classes,
     "school": schoolId
   })
 }
@@ -274,4 +274,42 @@ export const getTerms= (schoolId=null, academicYearId) => {
 
 export const createTerm = (name, startDate, endDate) => {
   return axiosInstance.post(`/`)
+}
+
+export const getExams = (schoolId) => {
+  return axiosInstance.get(`/grades/exams/?school=${schoolId}`)
+}
+
+export const createExam = (name, startDate, endDate, schoolId) => {
+  return axiosInstance.post(`/grades/exams/`, {
+    "name": name,
+    "start_date": startDate,
+    "end_date": endDate,
+    "school": schoolId
+  })
+}
+
+export const updateExam = (examId, name, startDate, endDate) => {
+  return axiosInstance.patch(`/grades/exams/${examId}/`, {
+    "name": name,
+    "start_date": startDate,
+    "end_date": endDate
+  });
+}
+
+export const deleteExam = (examId) => {
+  return axiosInstance.delete(`/grades/exams/${examId}/`)
+}
+
+export const getStudentsWithScores = (examId) => {
+  return axiosInstance.get(`/students/students_with_grades/?exam=${examId}`)
+}
+
+export const createOrUpdateStudentGrades = (student, exam, subjectMarks) => {
+  return axiosInstance.post(`/grades/student_subject_grades/`,
+    {
+      "student": student,
+      "exam": exam,
+      "subject_marks": subjectMarks
+    })
 }

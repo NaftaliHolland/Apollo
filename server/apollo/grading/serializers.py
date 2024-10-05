@@ -1,8 +1,27 @@
 from rest_framework import serializers
 from .models import Subject, Exam, Grade, SubjectGrade, StudentSubjectGrade
+from classes.models import Class
 from students.serializers import StudentSerializer
+from students.models import Student
+from classes.serializers import ClassSerializer
 
 class SubjectSerializer(serializers.ModelSerializer):
+    classes = serializers.PrimaryKeyRelatedField(many=True, queryset=Class.objects.all(), required=False)
+
+    class Meta:
+        model = Subject
+        fields = '__all__'
+
+    def create(self, validated_data):
+        classes_data = validated_data.pop('classes', [])
+        subject = Subject.objects.create(**validated_data)
+        for class_data in classes_data:
+            class_data.subjects.add(subject)
+        return subject
+
+class SubjectGetSerializer(serializers.ModelSerializer):
+    classes = ClassSerializer(many=True, read_only=True)
+
     class Meta:
         model = Subject
         fields = '__all__'
@@ -42,3 +61,4 @@ class StudentSubjectGradeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentSubjectGrade
         fields = ['student', 'exam', 'subject', 'score']
+

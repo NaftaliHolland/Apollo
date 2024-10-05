@@ -18,9 +18,12 @@ class StudentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         class_data = validated_data.pop("_class")
+        print(class_data, "Here")
         parent_data = validated_data.pop("parent")
         parent = Parent.objects.get(**parent_data)
-        _class = Class.objects.get(**class_data)
+        _class = Class.objects.get(
+            name=class_data["name"],
+            school=class_data["school"].id)
         student = Student.objects.create(_class=_class, parent=parent, **validated_data)
         return student
 

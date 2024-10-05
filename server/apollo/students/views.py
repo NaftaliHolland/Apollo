@@ -8,6 +8,10 @@ from classes.serializers import ClassSerializer
 from fee.serializers import StudentAccountSerializer
 from fee.models import AcademicYear, TermCategory, FeeStructure, StudentFeeBalance
 from schools.models import School
+from django.shortcuts import get_object_or_404
+from grading.models import Exam, StudentSubjectGrade
+from grading.serializers import StudentSubjectGradeSerializer
+from django.db.models import Prefetch
 
 @api_view(['POST'])
 def create_parent(request):
@@ -27,7 +31,6 @@ def create_parent(request):
 @api_view(['POST'])
 def add_student(request, id):
     data = request.data
-    print(data)
     date = data["date_of_birth"].split("T")
     data["date_of_birth"] = date[0]
     # Check if parent exists, if not, create parent
@@ -45,6 +48,7 @@ def add_student(request, id):
     serializer = StudentSerializer(data=data)
     if serializer.is_valid():
         student = serializer.save()
+        print("Here3")
         # Create student account
         """account_serializer = StudentAccountSerializer(data={"student": student.id})
         if account_serializer.is_valid():
@@ -76,6 +80,32 @@ def add_student(request, id):
         return Response({"message": "Student added successfully", "student": serializer.data}, status=status.HTTP_201_CREATED)
     print(serializer.errors)
     return Response({"message": "Student could not be created", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_students_with_grades(request):
+    exam = get_object_or_404(Exam, id=request.GET.get("exam"))
+    students = Student.objects.select_related('_class').prefetch_related(
+        Prefetch(
+            'studentsubjectgrade_set',
+            queryset=StudentSubjectGrade.objects.filter(exam=exam).select_related('subject'),
+            to_attr='exam_grades'
+            )
+        )
+    data = []
+    for student in students:
+        subject_score = StudentSubjectGrade.objects.filter(
+            student=student,
+            exam=exam
+            ).values('subject__name', 'score')
+
+        student_data = StudentSerializer(student).data
+        student_data["subject_scores"] = subject_score
+        if student_data['subject_scores']:
+            data.append(student_data)
+    return Response({
+            'exam_name': exam.name,
+            'students': data
+        })
 
 @api_view(['GET'])
 def get_students(request, class_id, school_id):

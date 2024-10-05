@@ -26,35 +26,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 
-const classesData = [
-  { 
-    id: 1, 
-    name: "Class 1A", 
-    totalStudents: 25, 
-    boys: 12, 
-    girls: 13, 
-    classTeacher: "Ms. Johnson", 
-    roomNumber: "101"
-  },
-  { 
-    id: 2, 
-    name: "Class 2B", 
-    totalStudents: 28, 
-    boys: 15, 
-    girls: 13, 
-    classTeacher: "Mr. Smith", 
-    roomNumber: "202"
-  },
-  { 
-    id: 3, 
-    name: "Class 3C", 
-    totalStudents: 22, 
-    boys: 10, 
-    girls: 12, 
-    classTeacher: "Mrs. Davis", 
-    roomNumber: "303"
-  },
-]
 
 const Classes = () => {
   const [classes, setClasses] = useState([]);

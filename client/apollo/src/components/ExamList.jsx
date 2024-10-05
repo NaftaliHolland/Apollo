@@ -23,34 +23,34 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { deleteSubject, patchSubject } from "@/Api/services";
+import { deleteExam, updateExam } from "@/Api/services";
 import FormDialog from "@/components/FormDialog";
-import CreateSubject from "@/components/forms/CreateSubject";
+import CreateExam from "@/components/forms/CreateExam";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
-const SubjectList = ({ subjects, setSubjects }) => {
+const ExamList = ({ exams, setExams }) => {
 
   const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
 
-  const handleDelete = async (subjectId) => {
+  const handleDelete = async (examId) => {
     try {
       setDeleting(true);
-      const response = await deleteSubject(subjectId);
-      const new_subjects = subjects.filter(subject => subject.id !=subjectId);
-      setSubjects(new_subjects);
+      const response = await deleteExam(examId);
+      const new_exams = exams.filter(exam => exam.id !=examId);
+      setExams(new_exams);
       toast({
         title: "Deleted",
-        description: "Subject deleted successfully"
+        description: "Exam deleted successfully"
       });
       console.log(response);
     } catch (error) {
       console.log(error);
       toast({
         title: "Not Deleted",
-        description: "Could not delete subject",
+        description: "Could not delete exam",
         variant: "destructive",
         action: <ToastAction altText="Try Again">Try Again</ToastAction>,
       });
@@ -59,8 +59,8 @@ const SubjectList = ({ subjects, setSubjects }) => {
     }
   };
   const navigate = useNavigate();
-  const handleRowClick = (subjectId) => {
-    navigate(`/subjects/${subjectId}`);
+  const handleRowClick = (examId) => {
+    navigate(`/exams/${examId}`);
   };
 
 	return (
@@ -68,29 +68,35 @@ const SubjectList = ({ subjects, setSubjects }) => {
 			<Table>
 				<TableHeader>
 					<TableRow>
-						<TableHead>Subject</TableHead>
-						<TableHead>Code</TableHead>
+						<TableHead>Exam</TableHead>
+						<TableHead>Start Date</TableHead>
+						<TableHead>End Date</TableHead>
+						<TableHead>Status</TableHead>
 						<TableHead className="text-right">Actions</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-          { subjects.map((subject, index) => 
+          { exams.map((exam, index) => 
 					<TableRow key={index} >
-						<TableCell onClick={() => handleRowClick(subject.id)} className="cursor-pointer">
+						<TableCell onClick={() => handleRowClick(exam.id)} className="cursor-pointer">
 							<div className="flex items-center gap-3">
-								<div className="bg-muted rounded-md flex items-center justify-center aspect-square w-8 md:w-10">
-									<Book className="w-5 h-5" />
-								</div>
-								<div>
-									<div className="font-medium">{ subject.name }</div>
-									<div className="text-sm text-muted-foreground">{ subject.description }</div>
-								</div>
+							<div className="font-medium">{ exam.name }</div>
 							</div>
 						</TableCell>
-						<TableCell>{ subject.code }</TableCell>
+						<TableCell>{ exam.start_date }</TableCell>
+						<TableCell>{ exam.end_date }</TableCell>
+						<TableCell>{
+							<p>
+        				{exam.is_completed 
+								? 'Completed' 
+								: exam.is_ongoing
+								? 'Ongoing' 
+								: 'Upcoming'}
+						</p>}
+						</TableCell>
 						<TableCell className="text-right">
 							<div className="flex items-center justify-end gap-2">
-                <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateSubject subject={subject} setSubjects={setSubjects} />} />
+                <FormDialog buttonAction={"Edit"} buttonVariant={"outline"} form={<CreateExam exam={exam} setExams={setExams} />} />
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button size="sm" variant="outline" >
@@ -100,10 +106,10 @@ const SubjectList = ({ subjects, setSubjects }) => {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>
-                        Are you sure you want to delete this subject ?
+                        Are you sure you want to delete this exam ?
                       </DialogTitle>
                       <DialogDescription>
-                        {subject.name}
+                        {exam.name}
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -111,7 +117,7 @@ const SubjectList = ({ subjects, setSubjects }) => {
                         <DialogClose asChild>
                           <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button variant="destructive" disabled={deleting} onClick={() => handleDelete(subject.id)}>{deleting? "..Deleting": "Delete"}</Button>
+                        <Button variant="destructive" disabled={deleting} onClick={() => handleDelete(exam.id)}>{deleting? "..Deleting": "Delete"}</Button>
                       </div>
                     </DialogFooter>
                   </DialogContent>
@@ -125,4 +131,4 @@ const SubjectList = ({ subjects, setSubjects }) => {
 	)
 }
 
-export default SubjectList;
+export default ExamList;
