@@ -59,17 +59,23 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
   const [expandedStudentSubjectScores, setExpandedStudentSubjectScores] = useState(null);
   const [studentSubjectScores, setStudentSubjectScores] = useState([]);
   const { toast } = useToast()
+	const [printClicked, setPrintClicked] = useState(false);
 
    // Create a function to handle value change
   // Update studentsWithScores state with new values in the input
   // Check for change, toggle button inactivity incase there is a change
   // Only one student's marks can be changed at a time
   
-  const handlePrint = useReactToPrint({
+  const print = useReactToPrint({
     contentRef: componentRef,
-    documentTitle: "Cool document"
   });
 
+  const handlePrint = () => {
+    console.log(printClicked);
+    setPrintClicked(true);
+    console.log(printClicked);
+    print()
+  }
 
   const handleInputChange = (subjectName, value) => {
     setInputChanged(true);
@@ -79,7 +85,6 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
           ...subjectScore, score: value
         } : subjectScore
       ))
-
   };
 
   useEffect(() => {
@@ -193,13 +198,15 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
                     <h3 className="text-lg font-temibold">{student.first_name + " " + student.last_name}</h3>
                     <p className="text-sm text-gray-500">Class: {student._class.name}</p>
                   </div>
+
                   <div style={{ display: "none" }}>
-                     <StudentReportForm ref={componentRef} />
+                     <StudentReportForm student={student} ref={componentRef} />
                   </div>
+
                   <div className="flex gap-2">
                     <Button
                       size="sm"
-                      onClick={handlePrint}>
+                      onClick={() => handlePrint() }>
                       <Printer className="w-4 h-4 mr-2" />
                       Print Report
                     </Button>
