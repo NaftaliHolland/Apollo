@@ -98,9 +98,6 @@ const ExamPage = () => {
 	}
 	return (
   <Layout>
-		<div className="flex justify-between">
-      <h1 className="text-md font-semibold md:text-2xl">Students</h1>
-		</div>
 		<Card x-chunk="dashboard-05-chunk-3">
       <CardHeader className="px-7">
       </CardHeader>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -15,9 +15,13 @@ import { Search } from 'lucide-react'
 import FormDialog from "@/components/FormDialog";
 import AddStudentForm from "@/components/forms/AddStudentForm";
 import { getSubjects, createOrUpdateStudentGrades } from "@/Api/services";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
 import { useParams } from "react-router-dom";
+import StudentReportForm from "@/components/StudentReportForm";
 import {
   FileSpreadsheet,
   Printer,
@@ -33,6 +37,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useReactToPrint } from "react-to-print";
 
 const NoStudents = () => {
   return (
@@ -42,26 +47,32 @@ const NoStudents = () => {
     </div>
   )
 }
+
 const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
+  const componentRef = useRef(null);
 	const { id } = useParams();
   const [search, setSearch] = useState('');
   const [subjects, setSubjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [inputChanged, setInputChanged] = useState(false);
   const [expandedStudent, setExpandedStudent] = useState(null);
   const [expandedStudentSubjectScores, setExpandedStudentSubjectScores] = useState(null);
   const [studentSubjectScores, setStudentSubjectScores] = useState([]);
-  const [input, setInput] = useState({
-    studentId: '',
-    subjectName: '',
-    score: ''
-  });
+  const { toast } = useToast()
 
    // Create a function to handle value change
   // Update studentsWithScores state with new values in the input
   // Check for change, toggle button inactivity incase there is a change
   // Only one student's marks can be changed at a time
   
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
+    documentTitle: "Cool document"
+  });
+
+
   const handleInputChange = (subjectName, value) => {
+    setInputChanged(true);
     setStudentSubjectScores(prevState =>
       prevState.map(subjectScore =>
         subjectScore.subject__name === subjectName? {
@@ -72,6 +83,7 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
   };
 
   useEffect(() => {
+    setInputChanged(false);
     setStudentSubjectScores(expandedStudent?.subject_scores)
   }, [expandedStudent])
 
@@ -103,6 +115,7 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
     }, {});
 
     console.log(newSubjectScores);
+    setLoading(true);
     try{
       const updatedStudent = {
       ...expandedStudent,
@@ -110,8 +123,21 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
 
       setExpandedStudent(updatedStudent);
       const response = await createOrUpdateStudentGrades(updatedStudent.id, id, newSubjectScores);
+      toast({
+        title: "Scores updated succesfully",
+        description: "Student subjects updated succesfully"
+      })
       } catch (error) {
         console.log(error);
+      
+        toast({
+          title: "Scores could not be updated",
+          description: "Student scores could not be updated",
+          variant: "desctructive",
+          action: <ToastAction altText="Try Again"> Try Again</ToastAction>,
+        })
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -125,8 +151,6 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
         console.log(subjects)
       } catch (error) {
         console.log(error);
-      } finally {
-        setLoading(false);
       }
     }
     fetchSubjects();
@@ -134,7 +158,7 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
 
   return (
 		<div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Student Grading System</h1>
+      <h1 className="text-2xl font-bold mb-4">Grading</h1>
       
       <div className="mb-4 flex justify-between items-center">
     {/*<div className="w-64">
@@ -169,8 +193,13 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
                     <h3 className="text-lg font-temibold">{student.first_name + " " + student.last_name}</h3>
                     <p className="text-sm text-gray-500">Class: {student._class.name}</p>
                   </div>
+                  <div style={{ display: "none" }}>
+                     <StudentReportForm ref={componentRef} />
+                  </div>
                   <div className="flex gap-2">
-                    <Button size="sm">
+                    <Button
+                      size="sm"
+                      onClick={handlePrint}>
                       <Printer className="w-4 h-4 mr-2" />
                       Print Report
                     </Button>
@@ -203,8 +232,9 @@ const StudentScoreList = ({ studentsWithScores, setStudentsWithScores }) => {
                     ))}
                     <Button
                       onClick = { () => handleSubmit() }
+                      disabled = { !inputChanged }
                       >
-                      Save Changes
+                      { loading? "... Loading" : "Save Changes" }
                     </Button>
                   </div>
                 )}
