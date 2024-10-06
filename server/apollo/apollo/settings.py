@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'users',
     'fee',
     'grading',
+    'communications',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
