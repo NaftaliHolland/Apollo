@@ -21,8 +21,8 @@ const LandingPage = () => {
     <div className="flex flex-col min-h-[100dvh]">
       <header className="sticky top-0 mx-4 lg:mx-16 h-16 flex items-center bg-white">
         <Link to="/" className="flex items-center gap-2 justify-center">
-          <School className="h-10 w-10" />
-          <span className="text-xl font-bold">SchoolHub</span>
+          <School className="h-8 w-8" />
+          <span className="text-xl font-bold">Apollo</span>
         </Link>
         <nav className="items-center gap-4 sm:gap-6 hidden md:inline-flex ml-auto">
           <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
