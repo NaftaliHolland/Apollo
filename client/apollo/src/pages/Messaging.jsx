@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,15 +6,8 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Layout from "@/components/layouts/Layout";
+import { getClasses } from "@/Api/services";
 
-	const recipients = [
-  { id: 1, name: "All Students" },
-  { id: 2, name: "All Teachers" },
-  { id: 3, name: "All Parents" },
-  { id: 4, name: "Grade 1" },
-  { id: 5, name: "Grade 2" },
-  { id: 6, name: "Grade 3" },
-	]
 	
 	const initialMessages = [
   { id: 1, recipients: "All Students", content: "Welcome to the new school year!", status: "Sent" },
@@ -25,6 +18,20 @@ import Layout from "@/components/layouts/Layout";
 const Messaging = () => {
 
 	const [messages, setMessages] = useState(initialMessages)
+  const [recipients, setRecipients] = useState([])
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getClasses(schoolId);
+        setRecipients(response.data.classes)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchClasses();
+  }, [])
 
   return (
 		<Layout>
@@ -36,7 +43,7 @@ const Messaging = () => {
 					<CardContent className="space-y-4">
 						<div>
 							<h2 className="text-lg font-semibold mb-2">Select Recipients:</h2>
-							<ScrollArea className="h-40 border rounded-md p-4">
+							<ScrollArea className="border rounded-md p-4">
 								{recipients.map((recipient) => (
 									<div key={recipient.id} className="flex items-center space-x-2 mb-2">
 										<Checkbox
@@ -46,7 +53,7 @@ const Messaging = () => {
 											htmlFor={`recipient-${recipient.id}`}
 											className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 										>
-											{recipient.name}
+											{recipient.name} parents
 										</label>
 									</div>
 								))}

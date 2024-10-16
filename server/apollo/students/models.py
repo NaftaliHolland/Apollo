@@ -14,7 +14,7 @@ class Student(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=10)
     profile_photo = models.CharField(max_length=250, null=True, blank=True)
-    parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
+    parent = models.ForeignKey(Parent, on_delete=models.CASCADE, related_name="children")
     _class = models.ForeignKey(Class, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
