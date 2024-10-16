@@ -20,6 +20,7 @@ import Terms from "@/pages/Terms";
 import Exams from "@/pages/Exams";
 import ExamPage from "@/pages/ExamPage";
 import Grades from "@/pages/Grades";
+import Messaging from "@/pages/Messaging";
 import ProtectedRoutes from "@/utils/ProtectedRoutes";
 import { AuthProvider } from '@/contexts/AuthContext'
 
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
 	      { path: "/academic_years", element: <AcademicYears />},
         { path: "/exams", element: <Exams /> },
         { path: "/exams/:id", element: <ExamPage /> },
+        { path: "/messages/", element: <Messaging /> },
       ]
     },
     { path: "/login", element: <Login />},

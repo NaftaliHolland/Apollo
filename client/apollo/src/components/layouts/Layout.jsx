@@ -34,6 +34,7 @@ import {
   Calendar as CalendarIcon,
   CalendarX,
   PencilRuler,
+  MessagesSquare,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -208,6 +209,15 @@ const Layout = ({children}) => {
                 ) : 
                   (null)}
                </div>
+              <NavLink
+                to="/messages"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <MessagesSquare className="h-4 w-4" />
+                Messaging 
+              </NavLink>
               </nav>
             </div>
     {/*<div className="mt-auto p-4">
@@ -367,6 +377,15 @@ const Layout = ({children}) => {
                 ) : 
                   (null)}
                </div>
+              <NavLink
+                to="/messages"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <MessagesSquare className="h-4 w-4" />
+                Messaging 
+              </NavLink>
               </nav>
             </SheetContent>
           </Sheet>
