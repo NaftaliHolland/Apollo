@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Layout from "@/components/layouts/Layout";
 import { getClasses } from "@/Api/services";
+import { sendMessage } from "@/Api/services";
 
 	
 	const initialMessages = [
@@ -17,21 +18,50 @@ import { getClasses } from "@/Api/services";
 
 const Messaging = () => {
 
-	const [messages, setMessages] = useState(initialMessages)
-  const [recipients, setRecipients] = useState([])
+	const [messages, setMessages] = useState(initialMessages);
+  const [classes, setClasses] = useState([]);
+  const [content, setContent] = useState(null);
+  const [recipients, setRecipients] = useState([]);
+  const [sending, setSending] = useState(false);
+
+
+  const handleRecipientToggle = (classId) => {
+    setRecipients((prevState) =>
+      prevState.includes(classId)
+      ? prevState.filter(id => id !== classId)
+      : [...prevState, classId]
+    )
+  }
 
   useEffect(() => {
     const fetchClasses = async () => {
       const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
       try {
         const response = await getClasses(schoolId);
-        setRecipients(response.data.classes)
+        setClasses(response.data.classes)
       } catch (error) {
         console.log(error);
       }
     }
+    // Fetch messages here
     fetchClasses();
   }, [])
+
+  const handleSubmit = async () => {
+    const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+    try {
+      setSending(true);
+      const response = await sendMessage(schoolId, recipients, content);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // Clear all fields
+      setSending(false);
+      setRecipients([]);
+      setContent([]);
+    }
+  }
 
   return (
 		<Layout>
@@ -44,16 +74,18 @@ const Messaging = () => {
 						<div>
 							<h2 className="text-lg font-semibold mb-2">Select Recipients:</h2>
 							<ScrollArea className="border rounded-md p-4">
-								{recipients.map((recipient) => (
-									<div key={recipient.id} className="flex items-center space-x-2 mb-2">
+								{classes.map((classItem) => (
+									<div key={classItem.id} className="flex items-center space-x-2 mb-2">
 										<Checkbox
-											id={`recipient-${recipient.id}`}
+											id={`recipient-${classItem.id}`}
+                      checked={recipients.includes(classItem.id)}
+                      onCheckedChange={() => handleRecipientToggle(classItem.id)}
 										/>
 										<label
-											htmlFor={`recipient-${recipient.id}`}
+											htmlFor={`recipient-${classItem.id}`}
 											className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 										>
-											{recipient.name} parents
+											{classItem.name} parents
 										</label>
 									</div>
 								))}
@@ -62,14 +94,20 @@ const Messaging = () => {
 						<div>
 							<h2 className="text-lg font-semibold mb-2">Message:</h2>
 							<Textarea
+                name="content"
 								placeholder="Type your message here..."
 								className="min-h-[100px]"
+                value={content}
+                onChange = {(e) => setContent(e.target.value)}
 							/>
 						</div>
-						<Button onClick={(e) => console.log('sent')}>Send Message</Button>
+						<Button
+              onClick={handleSubmit}
+              disabled={
+                (!content || recipients.length === 0 || sending)
+              }>{sending? "... Loading": "Send Message"}</Button>
 					</CardContent>
 				</Card>
-
 				<Card>
 					<CardHeader>
 						<CardTitle>Sent Messages</CardTitle>

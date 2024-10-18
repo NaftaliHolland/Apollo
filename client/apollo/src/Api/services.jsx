@@ -313,3 +313,13 @@ export const createOrUpdateStudentGrades = (student, exam, subjectMarks) => {
       "subject_marks": subjectMarks
     })
 }
+
+export const sendMessage = (schoolId, classes, content) => {
+  return axiosInstance.post(`/messages/`,
+    {
+      "classes": classes,
+      "content": content,
+      "school": schoolId,
+    }
+  )
+}

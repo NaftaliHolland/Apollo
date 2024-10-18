@@ -12,7 +12,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
 
     def create(self, request):
-        # Create the message object
         school = request.data.get("school")
         content = request.data.get("content")
         classes = request.data.get("classes")
@@ -27,7 +26,7 @@ class MessageViewSet(viewsets.ModelViewSet):
             "school": school,
             "recipients": recipients,
             "content": content,
-            "type": request.data.get("type")
+            "type": request.data.get("type", "notification")
             })
         serializer.is_valid()
         print(serializer.errors)
