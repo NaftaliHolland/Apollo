@@ -34,6 +34,7 @@ import {
   Calendar as CalendarIcon,
   CalendarX,
   PencilRuler,
+  MessagesSquare,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -120,7 +121,7 @@ const Layout = ({children}) => {
                 <PencilRuler className="h-4 w-4" />
                 Classes
               </NavLink>
-              <NavLink
+    {/*<NavLink
                 to="/analytics"
                 className={({ isActive }) =>
                   isActive? navStyleActive : navStyle
@@ -128,7 +129,7 @@ const Layout = ({children}) => {
               >
                 <LineChart className="h-4 w-4" />
                 Analytics/Fee
-              </NavLink>
+              </NavLink>*/}
               <div onClick={() => setAcademicsToggled(!academicsToggled)}
 >
                 <div
@@ -195,7 +196,7 @@ const Layout = ({children}) => {
                       <CalendarIcon className="h-5 w-5" />
                      Academic Years 
                     </NavLink>
-                    <NavLink
+                  {/*<NavLink
                       to="/reports"
                       className={({ isActive }) =>
                         isActive? navStyleActive : navStyle
@@ -203,11 +204,20 @@ const Layout = ({children}) => {
                     >
                       <PieChart className="h-5 w-5" />
                     Reports 
-                    </NavLink>
+                    </NavLink>*/}
                   </div>
                 ) : 
                   (null)}
                </div>
+              <NavLink
+                to="/messages"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <MessagesSquare className="h-4 w-4" />
+                Messaging 
+              </NavLink>
               </nav>
             </div>
     {/*<div className="mt-auto p-4">
@@ -327,7 +337,7 @@ const Layout = ({children}) => {
                       <Medal className="h-5 w-5" />
                     Grades 
                     </NavLink>
-                    <NavLink
+                  {/*<NavLink
                       to="/results"
                       className={({ isActive }) =>
                         isActive? navStyleActive : navStyle
@@ -335,7 +345,7 @@ const Layout = ({children}) => {
                     >
                       <ClipboardCheck className="h-5 w-5" />
                     Results 
-                    </NavLink>
+                    </NavLink>*/}
                     <NavLink
                       to="/terms"
                       className={({ isActive }) =>
@@ -367,6 +377,15 @@ const Layout = ({children}) => {
                 ) : 
                   (null)}
                </div>
+              <NavLink
+                to="/messages"
+                className={({ isActive }) =>
+                  isActive? navStyleActive : navStyle
+		            }
+              >
+                <MessagesSquare className="h-4 w-4" />
+                Messaging 
+              </NavLink>
               </nav>
             </SheetContent>
           </Sheet>

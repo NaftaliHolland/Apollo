@@ -194,7 +194,7 @@ const AdminDashboard = () => {
 									<BookIcon className="w-4 h-4 text-muted-foreground" />
 								</CardHeader>
 								<CardContent>
-									<div className="text-2xl font-bold">45</div>
+									<div className="text-2xl font-bold">10</div>
     {/*<p className="text-xs text-muted-foreground">+2.4% from last year</p>*/}
 								</CardContent>
 							</Card>

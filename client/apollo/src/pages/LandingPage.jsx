@@ -88,7 +88,7 @@ const LandingPage = () => {
       <main className="flex-1">
         <section className="w-full py-8 md:py-12 lg:py-16">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-4 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+            <div className="grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-6">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
@@ -115,11 +115,11 @@ const LandingPage = () => {
                 </div>
               </div>
               <img
-                src={Hero}
+                src="https://res.cloudinary.com/dympk8yhv/image/upload/v1728495296/screenshot1_sya0df.png"
                 width="550"
                 height="550"
                 alt="Hero"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom sm:w-full lg:order-last lg:aspect-square"
+                className="mx-auto aspect-video overflow-hidden rounded-xl object-contain sm:w-full lg:order-last lg:aspect-square"
               />
             </div>
           </div>
@@ -138,11 +138,9 @@ const LandingPage = () => {
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
               <img
-                src={Hero}
-                width="550"
-                height="310"
+                src="https://res.cloudinary.com/dympk8yhv/image/upload/v1728495296/screenshot1_sya0df.png"
                 alt="Features"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
+                className="mx-auto aspect-video overflow-hidden rounded-xl object-contain object-center sm:w-full lg:order-last"
               />
               <div className="flex flex-col justify-center space-y-4">
                 <ul className="grid gap-6">
@@ -195,7 +193,7 @@ const LandingPage = () => {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
+    {/*<div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
               <div className="bg-background rounded-lg p-6 shadow-lg">
                 <blockquote className="text-lg font-semibold leading-snug">
                   "The school management system has been a game-changer for\n our school. It has streamlined our
@@ -229,7 +227,8 @@ const LandingPage = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div>a*/}
+            <div>None yet</div>
           </div>
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32">
@@ -261,7 +260,7 @@ const LandingPage = () => {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 School Management System. All rights reserved.</p>
+        <p className="text-xs text-muted-foreground">&copy; 2024 Apollo. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link to="/" className="text-xs hover:underline underline-offset-4">
             Terms of Service
