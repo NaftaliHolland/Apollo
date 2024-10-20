@@ -323,3 +323,7 @@ export const sendMessage = (schoolId, classes, content) => {
     }
   )
 }
+
+export const getMessages = (schoolId) => {
+  return axiosInstance.get(`/messages/?school=${schoolId}`)
+}

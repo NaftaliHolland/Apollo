@@ -10,7 +10,7 @@ class Message(models.Model):
     ]
 
     STATUS_CHOICES = [
-        ('pending', 'Pending'),
+        ('sending', 'Sending'),
         ('sent', 'Sent'),
         ('delivered', 'Delivered'),
         ('failed', 'Failed'),
