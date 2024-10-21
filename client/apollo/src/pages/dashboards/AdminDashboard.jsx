@@ -28,6 +28,42 @@ import { useAuth} from "@/contexts/AuthContext";
 import { getStudentCount, getTeacherCount } from "@/Api/services";
 import { Calendar } from "@/components/ui/calendar";
 
+const GenderDistribution = ({studentCount}) => {
+  const total = studentCount["male_count"] + studentCount["female_count"]
+  const maleCount = studentCount["male_count"]
+  const femaleCount = studentCount["female_count"]
+  const malePercentage = (maleCount * 100) / total
+  const femalePercentage = (femaleCount * 100) / total
+
+  return (
+    <Card className="md:col-span-2">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">Gender Distribution</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex items-center">
+            <User className="h-4 w-4 text-blue-500 mr-2" />
+            <div className="text-sm font-medium">Male</div>
+            <div className="ml-auto text-sm font-medium">{maleCount}</div>
+          </div>
+          <div className="w-full bg-blue-100 rounded-full h-2.5">
+            <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: malePercentage }} aria-label="male students count"></div>
+          </div>
+          <div className="flex items-center">
+            <UserCircle className="h-4 w-4 text-pink-500 mr-2" />
+            <div className="text-sm font-medium">Female</div>
+            <div className="ml-auto text-sm font-medium">{femaleCount}</div>
+          </div>
+          <div className="w-full bg-pink-100 rounded-full h-2.5">
+            <div className="bg-pink-500 h-2.5 rounded-full" style={{ width: femalePercentage }} aria-label="48% female students"></div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 const Messages = () => {
 	return (
 		<Card className="col-span-full">
@@ -114,22 +150,7 @@ const RecentActivities = () => {
 		</Card>)
 }
  
-const StudentCount = () => {
-  const [studentCount, setStudentCount] = useState(0);
-
-  useEffect(() => {
-    const fetchStudentCount = async () => {
-      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
-      try {
-        const response = await getStudentCount(schoolId);
-        setStudentCount(response.data.student_count);
-      } catch (error) {
-        console.log(error);
-      };
-    }
-    fetchStudentCount();
-  }, []);
-
+const StudentCount = ({studentCount}) => {
   return (
     <Link to="/students">
       <Card className="bg-red-100">
@@ -138,7 +159,7 @@ const StudentCount = () => {
           <UsersIcon className="w-8 h-8 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{ studentCount }</div>
+          <div className="text-2xl font-bold">{ studentCount["male_count"] + studentCount["female_count"] }</div>
       {/*<p className="text-xs text-muted-foreground">+5.2% from last year</p>*/}
         </CardContent>
       </Card>
@@ -180,13 +201,27 @@ const TeacherCount = () => {
 
 const AdminDashboard = () => {
   const { user, logout, school } = useAuth();
+  const [studentCount, setStudentCount] = useState(0);
+
+  useEffect(() => {
+    const fetchStudentCount = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getStudentCount(schoolId);
+        setStudentCount(response.data);
+      } catch (error) {
+        console.log(error);
+      };
+    }
+    fetchStudentCount();
+  }, []);
 
   return (
 	  <Layout>
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 h-full">
 				<div className="col-span2 md:col-span-2 lg:col-span-2 xl:col-span-2">
 					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <StudentCount />
+              <StudentCount studentCount={studentCount}/>
               <TeacherCount />
 							<Card className="bg-lime-100">
 								<CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -210,31 +245,7 @@ const AdminDashboard = () => {
 							</Card>
 					 </div>
             <div className="flex flex-col gap-4 w-full md:flex-row md:w-auto mt-4">
-							<Card className="md:col-span-2 w-1/3">
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">Gender Distribution</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div className="space-y-4">
-										<div className="flex items-center">
-											<User className="h-4 w-4 text-blue-500 mr-2" />
-											<div className="text-sm font-medium">Male</div>
-											<div className="ml-auto text-sm font-medium"></div>
-										</div>
-										<div className="w-full bg-blue-100 rounded-full h-2.5">
-											<div className="bg-blue-500 h-2.5 rounded-full" style={{ width: '52%' }} aria-label="52% male students"></div>
-										</div>
-										<div className="flex items-center">
-											<UserCircle className="h-4 w-4 text-pink-500 mr-2" />
-											<div className="text-sm font-medium">Female</div>
-											<div className="ml-auto text-sm font-medium"></div>
-										</div>
-										<div className="w-full bg-pink-100 rounded-full h-2.5">
-											<div className="bg-pink-500 h-2.5 rounded-full" style={{ width: '66%' }} aria-label="48% female students"></div>
-										</div>
-									</div>
-								</CardContent>
-							</Card>
+              <GenderDistribution studentCount={studentCount}/>
 							<Card className="md:col-span-2 lg:col-span-1 flex-grow">
 								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 									<CardTitle className="text-sm font-medium">Announcements</CardTitle>
