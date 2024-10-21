@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Layout from "@/components/layouts/Layout";
 import { getClasses } from "@/Api/services";
-import { sendMessage } from "@/Api/services";
+import { sendMessage, getMessages } from "@/Api/services";
 
 	
 	const initialMessages = [
@@ -20,9 +20,10 @@ const Messaging = () => {
 
 	const [messages, setMessages] = useState(initialMessages);
   const [classes, setClasses] = useState([]);
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState("");
   const [recipients, setRecipients] = useState([]);
   const [sending, setSending] = useState(false);
+  const [loadingMessages, setLoadingMessages] = useState(true);
 
 
   const handleRecipientToggle = (classId) => {
@@ -43,8 +44,21 @@ const Messaging = () => {
         console.log(error);
       }
     }
-    // Fetch messages here
+
+    const fetchMessages = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getMessages(schoolId);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoadingMessages(false);
+      }
+
+    }
     fetchClasses();
+    fetchMessages();
   }, [])
 
   const handleSubmit = async () => {
@@ -110,7 +124,7 @@ const Messaging = () => {
 				</Card>
 				<Card>
 					<CardHeader>
-						<CardTitle>Sent Messages</CardTitle>
+						<CardTitle>Messages</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<ScrollArea className="h-[300px]">

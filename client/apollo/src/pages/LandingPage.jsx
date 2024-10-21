@@ -17,76 +17,80 @@ import { buttonVariants } from "@/components/ui/button";
 const LandingPage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const date = new Date().getFullYear()
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="sticky top-0 mx-4 lg:mx-16 h-16 flex items-center bg-white">
-        <Link to="/" className="flex items-center gap-2 justify-center">
-          <School className="h-8 w-8" />
-          <span className="text-xl font-bold">Apollo</span>
-        </Link>
-        <nav className="items-center gap-4 sm:gap-6 hidden md:inline-flex ml-auto">
-          <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
-            Features
+      <div className="sticky top-0 bg-white">
+        <header className="sticky top-0 mx-4 lg:mx-16 h-16 flex items-center bg-white">
+          <Link to="/" className="flex items-center gap-2 justify-center">
+            <School className="h-8 w-8" />
+            <span className="text-xl font-bold">Apollo</span>
           </Link>
-          <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
-            Pricing
-          </Link>
-          <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
-            About
-          </Link>
-          <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
-            Contact
-          </Link>
-          <Link
-            to="/login"
-            className={buttonVariants({size: "lg", variant: "outline"})}
-          >
-            Login
-          </Link>
-          <Link
-            to="/register_institution"
-            className={buttonVariants({size: "lg"})}
-          >
-            Sign Up
-          </Link>
-        </nav>
-        <div className="md:hidden ml-auto" onClick={() => setMenuOpen(!menuOpen)}>
-          { menuOpen? <X />: <Menu /> }
-        </div>
-        {/* Navigation for mobile */}
-				{menuOpen && (
-					<div className="absolute top-16 left-0 w-full bg-white shadow-lg p-4">
-						<nav className="flex flex-col gap-4">
-							<Link to="/" className="text-md font-medium hover:underline underline-offset-4">
-								Features
-							</Link>
-							<Link to="/" className="text-md font-medium hover:underline underline-offset-4">
-								Pricing
-							</Link>
-							<Link to="/" className="text-md font-medium hover:underline underline-offset-4">
-								About
-							</Link>
-							<Link to="/" className="text-md font-medium hover:underline underline-offset-4">
-								Contact
-							</Link>
-							<Link
-								to="/login"
-								className={buttonVariants({ size: "lg", variant: "outline" })}
-							>
-								Login
-							</Link>
-							<Link
-								to="/register_institution"
-								className={buttonVariants({ size: "lg" })}
-							>
-								Sign Up
-							</Link>
-						</nav>
-					</div>
-				)}
-      </header>
+          <nav className="items-center gap-4 sm:gap-6 hidden md:inline-flex ml-auto">
+            <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
+              Features
+            </Link>
+            <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
+              Pricing
+            </Link>
+            <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
+              About
+            </Link>
+            <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
+              Contact
+            </Link>
+            <Link
+              to="/login"
+              className={buttonVariants({size: "lg", variant: "outline"})}
+            >
+              Login
+            </Link>
+            <Link
+              to="/register_institution"
+              className={buttonVariants({size: "lg"})}
+            >
+              Sign Up
+            </Link>
+          </nav>
+          <div className="md:hidden ml-auto" onClick={() => setMenuOpen(!menuOpen)}>
+            { menuOpen? <X />: <Menu /> }
+          </div>
+          {/* Navigation for mobile */}
+          {menuOpen && (
+            <div className="absolute top-16 left-0 w-full bg-white shadow-lg p-4">
+              <nav className="flex flex-col gap-4">
+                <Link to="/" className="text-md font-medium hover:underline underline-offset-4">
+                  Features
+                </Link>
+                <Link to="/" className="text-md font-medium hover:underline underline-offset-4">
+                  Pricing
+                </Link>
+                <Link to="/" className="text-md font-medium hover:underline underline-offset-4">
+                  About
+                </Link>
+                <Link to="/" className="text-md font-medium hover:underline underline-offset-4">
+                  Contact
+                </Link>
+                <Link
+                  to="/login"
+                  className={buttonVariants({ size: "lg", variant: "outline" })}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register_institution"
+                  className={buttonVariants({ size: "lg" })}
+                >
+                  Sign Up
+                </Link>
+              </nav>
+            </div>
+          )}
+        </header>
+      </div>
       <main className="flex-1">
-        <section className="w-full py-8 md:py-12 lg:py-16">
+        <section className="w-full py-4 md:py-6 lg:py-8 bg-muted/50">
           <div className="container px-4 md:px-6">
             <div className="grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
@@ -100,12 +104,12 @@ const LandingPage = () => {
                   </p>
                 </div>
                 <div className="flex flex-col gap-4 min-[400px]:flex-row">
-                  <Link
+    {/*<Link
                     to="/"
                     className={buttonVariants({size: "lg", variant: "secondary"})}
                   >
                     Request Demo
-                  </Link>
+                  </Link>*/}
                   <Link
                     to="/register_institution"
                     className={buttonVariants({size: "lg"})}
@@ -182,7 +186,7 @@ const LandingPage = () => {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+    {/*<section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -193,7 +197,7 @@ const LandingPage = () => {
                 </p>
               </div>
             </div>
-    {/*<div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
+    <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
               <div className="bg-background rounded-lg p-6 shadow-lg">
                 <blockquote className="text-lg font-semibold leading-snug">
                   "The school management system has been a game-changer for\n our school. It has streamlined our
@@ -227,10 +231,10 @@ const LandingPage = () => {
                   </div>
                 </div>
               </div>
-            </div>a*/}
+            </div>a
             <div>None yet</div>
           </div>
-        </section>
+        </section>*/}
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
             <div className="space-y-2">
@@ -243,12 +247,12 @@ const LandingPage = () => {
               </p>
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row lg:justify-end">
-              <Link
+    {/*<Link
                 to="/"
                 className={buttonVariants({size: "lg", variant: "secondary"})}
               >
                 Request Demo
-              </Link>
+              </Link>*/}
               <Link
                 to="/register_institution"
                 className={buttonVariants({size: "lg"})}
@@ -260,7 +264,7 @@ const LandingPage = () => {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 Apollo. All rights reserved.</p>
+        <p className="text-xs text-muted-foreground">&copy; {date} Apollo. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link to="/" className="text-xs hover:underline underline-offset-4">
             Terms of Service
