@@ -72,11 +72,11 @@ const Login = () => {
       <CardContent>
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="username">Phone Number</Label>
+            <Label htmlFor="phone">Phone Number</Label>
             <Input
-              id="username"
-              type="username"
-              placeholder="username"
+              id="phone"
+              type="phone"
+              placeholder="070000000"
               required
 	      onChange={(e) => setUsername(e.target.value)}
 	      value={username}
