@@ -123,5 +123,7 @@ def get_student_count(request):
     except School.DoesNotExist:
         return Response({"message": "School with the provided id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-    student_count = Student.objects.filter(_class__school=school).count()
-    return Response({"student_count": student_count}, status=status.HTTP_200_OK)
+    male_count = Student.objects.filter(_class__school=school, gender='male').count()
+    female_count = Student.objects.filter(_class__school=school, gender='female').count()
+    student_count = {"male_count": male_count, "female_count": female_count} 
+    return Response(student_count, status=status.HTTP_200_OK)
