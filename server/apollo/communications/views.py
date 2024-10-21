@@ -29,9 +29,7 @@ class MessageViewSet(viewsets.ModelViewSet):
             "type": request.data.get("type", "notification")
             })
         serializer.is_valid()
-        print(serializer.errors)
         self.perform_create(serializer)
-        print(serializer.data, "Here")
         send_message(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         

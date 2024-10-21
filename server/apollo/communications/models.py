@@ -22,7 +22,7 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     type = models.CharField(max_length=20, choices=MESSAGE_TYPES, default='notification')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='sending')
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver}"
