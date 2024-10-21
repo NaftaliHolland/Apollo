@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
       setUser({ "token": response.data.tokens.access, "roles": decoded.roles, "username": response.data.user.first_name })
       setSchool(JSON.stringify(response.data.user.school))
     } catch (error) {
-      console.log(error)
+        throw new Error(error);
     }
   }
   const logout = async () => {
