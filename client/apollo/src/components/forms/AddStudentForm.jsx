@@ -195,7 +195,7 @@ const AddStudentForm = ({ addToState, classes }) => {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="dob">Date of Birth</Label>
+            <Label>Date of Birth</Label>
 						<DatePicker setDateState={setDateState}/>
           </div>
           <div className="space-y-2">
