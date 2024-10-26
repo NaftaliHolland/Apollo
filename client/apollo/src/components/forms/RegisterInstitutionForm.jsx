@@ -12,32 +12,81 @@ import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from '@/contexts/AuthContext'
+import { validateField } from '@/utils/InputValidation';
 
 const RegisterInstitutionForm = () => {
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [password, setPassword] = useState('')
-  const [repeatPassword, setRepeatPassword] = useState('')
-  const [adminEmail, setAdminEmail] = useState('')
-  const [adminPhone, setAdminPhone] = useState('')
 
-  const [name, setName] = useState('')
-  const [postalCode, setPostalCode] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [county, setCounty] = useState('')
-  const [website, setWebsite] = useState('')
-  const [description, setDescription] = useState('')
-  const [type, setType] = useState('')
-  const [logo, setLogo] = useState('')
-  const [year, setYear] = useState('')
-  const [documents, setDocuments] = useState({})
+  const [formData, setFormData] = useState({
+    institutionName: '',
+		firstName: '',
+    lastName: '',
+    password: '',
+    repeatPassword: '',
+    adminEmail: '',
+    adminPhone: '',
+    postalCode: '',
+    phone: '',
+    email: '',
+    county: '',
+    website: '',
+    description: '',
+    type: '',
+    logo: '',
+    year: '',
+    documents: {}
+  })
+
+	const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    password: '',
+    repeatPassword: '',
+    adminEmail: '',
+    adminPhone: '',
+    institutionName: '',
+    postalCode: '',
+    phone: '',
+    email: '',
+    county: '',
+    website: '',
+    description: '',
+    type: '',
+    year: ''
+  });
+
   const [success, setSuccess] = useState(false)
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const { login: authLogin, user, loading: authLoading } = useAuth();
   const { toast } = useToast()
   const navigate = useNavigate()
+
+  const handleChange = (e) => {
+    const {name, value, type, files} = e.target;
+
+    if (type === 'file') {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: files
+      }));
+      return;
+    }
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+
+    setErrors(prevState => ({
+      [name]: validateField(name, value)
+    }));
+  }
+
+  const handleSelectChange = (name, value) => {
+    setFormData(prev => ({
+      ...prevState,
+      [name]: value
+    }));
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -154,42 +203,47 @@ const RegisterInstitutionForm = () => {
         <form className="grid gap-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Institution Name</Label>
+              <Label htmlFor="name" className={errors.institutionName && "text-red-500"}>Institution Name</Label>
               <Input
                 id="name"
+                name="institutionName"
                 placeholder="Enter institution name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formData.institutionName}
+                onChange={handleChange}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="postal-code">Postal Code</Label>
               <Input
                 id="postal-code"
+                name="postalCode"
                 placeholder="Enter institution postal code"
-                value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
+                value={formData.postalCode}
+                onChange={handleChange}
               />
             </div>
+              {errors.institutionName && <p className="text-red-500 text-sm">{errors.institutionName}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="contact-phone">Contact Phone Number</Label>
               <Input
                 id="contact-phone"
+                name="phone"
                 placeholder="Enter contact phone number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={formData.phone}
+                onChange={handleChange}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="contact-email">Contact Email</Label>
+              <Label htmlFor="email">Contact Email</Label>
               <Input
-                id="contact-email"
+                id="email"
+                name="email"
                 type="email"
                 placeholder="Enter contact email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -198,10 +252,10 @@ const RegisterInstitutionForm = () => {
               <Label htmlFor="county">County</Label>
               <Input
                 id="county"
+                name="county"
                 list="counties"
-                onChange={(e) => setCounty(e.target.value)}
-                value={county}
-                name="county" 
+                onChange={handleChange}
+                value={formData.county}
                 placeholder="Select county"
               />
                 <datalist id="counties">
@@ -214,7 +268,7 @@ const RegisterInstitutionForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="type">Type</Label>
-              <Select onValueChange={(value) => setType(value)}>
+              <Select onValueChange={(value) => handleSelectChange('type', value)}>
                 { /* TODO have school types */ }
                 <SelectTrigger id="type">
                   <SelectValue placeholder="Select your type of School" />
@@ -230,12 +284,12 @@ const RegisterInstitutionForm = () => {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="year-established">Year Established</Label>
+              <Label htmlFor="year">Year Established</Label>
               <Input
-                id="year-established"
+                id="year"
+                name="year" 
                 list="years"
-                onChange={(e) => setYear(e.target.value)}
-                name="year-established" 
+                onChange={handleChange}
                 placeholder="Select year"
               />
                 <datalist id="years">
@@ -251,36 +305,40 @@ const RegisterInstitutionForm = () => {
             <Label htmlFor="website">School Website</Label>
             <Input
               id="website"
+              name="website"
+              value={ formData.website }
               placeholder="Enter school website"
-              onChange={(e) => setWebsite(e.target.value)}
-              value={ website }
+              onChange={handleChange}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
+              name="description"
               placeholder="Provide a brief description of your institution"
+              value={ formData.description }
               rows={4}
-              onChange={(e) => setDescription(e.target.value)}
-              value={ description }
+              onChange={handleChange}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="logo">Upload Logo</Label>
             <Input
               id="logo"
+              name="logo"
               type="file"
-              onChange={(e) => setLogo(e.target.files[0])}
+              onChange={handleChange}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="documents">Supporting Documents</Label>
             <Input
               id="documents"
+              name="documents"
               type="file"
               multiple
-              onChange={(e) => setDocuments(e.target.files)}
+              onChange={handleChange}
             />
           </div>
           <Separator className="mt-4 h-0.5"/>
@@ -291,18 +349,20 @@ const RegisterInstitutionForm = () => {
               <Label htmlFor="fist-name">First Name</Label>
               <Input
                 id="first-name"
+                name="firstName"
                 placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={formData.firstName}
+                onChange={handleChange}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="last-name">Last Name</Label>
               <Input
                 id="last-name"
+                name="lastName"
                 placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                value={formData.lastName}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -310,19 +370,21 @@ const RegisterInstitutionForm = () => {
             <Label htmlFor="admin-email">Email</Label>
             <Input
               id="admin-email"
+              name="adminEmail"
+              value={ formData.adminEmail }
               placeholder="Enter email"
               type="email"
-              onChange={(e) => setAdminEmail(e.target.value)}
-              value={ adminEmail }
+              onChange={handleChange}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="admin-phone">Phone</Label>
             <Input
               id="admin-phone"
+              name="adminPhone"
+              value={ formData.adminPhone }
               placeholder="Enter phone"
-              onChange={(e) => setAdminPhone(e.target.value)}
-              value={ adminPhone }
+              onChange={handleChange}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -330,20 +392,22 @@ const RegisterInstitutionForm = () => {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="repeat-password">Repeat Password</Label>
               <Input
                 id="repeat-password"
+                name="repeatPassword"
                 type="password"
                 placeholder="Repeat Password"
-                value={repeatPassword}
-                onChange={(e) => setRepeatPassword(e.target.value)}
+                value={formData.repeatPassword}
+                onChange={handleChange}
               />
             </div>
           </div>
