@@ -61,6 +61,8 @@ const RegisterInstitutionForm = () => {
   const { toast } = useToast()
   const navigate = useNavigate()
 
+  const requiredFields = ["firstName", "lastName", "password", "repeatPassword", "adminPhone", "institutionName", "postalCode", "phone", "county", "type", "year"]
+
   const handleChange = (e) => {
     const {name, value, type, files} = e.target;
 
@@ -77,69 +79,105 @@ const RegisterInstitutionForm = () => {
     }));
 
     setErrors(prevState => ({
-      [name]: validateField(name, value)
+      ...prevState,
+      [name]: validateField(name, value, formData.password)
     }));
   }
 
   const handleSelectChange = (name, value) => {
-    setFormData(prev => ({
+    setFormData(prevState => ({
       ...prevState,
       [name]: value
     }));
+
+    setErrors(prevState => ({
+      ...prevState,
+      [name]: validateField(name, value, formData.password)
+    }));
+
   }
+
+  const validateForm = () => {
+    let isValid = true;
+    Object.keys(errors).forEach(key => {
+      if (requiredFields.includes(key)) {
+        if (formData[key] === '' || errors[key]) {
+          isValid = false;
+          setErrors(prevState => ({
+            ...prevState,
+            [key]: `${key} is required`
+          }));
+        }
+      } else {
+        if (errors[key]) {
+          console.log(key, "Here")
+          isValid = false;
+        }
+      }
+    });
+    return isValid
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
-
-    try {
-      const response = await registerInstitution(
-        name,
-        postalCode,
-        county,
-        phone,
-        email,
-        year,
-        description,
-        type,
-        website,
-        logo,
-        documents,
-        firstName,
-        lastName,
-        adminEmail,
-        adminPhone,
-        password
-      )
-      setSuccess(true)
-      setLoading(false)
-      setMessage(response.data.message)
-      toast({
-        title: "School created",
-        description: "Your school data has been uploaded succesfully"
-      });
-      console.log(message);
+    if (validateForm()) {
+      setLoading(true)
       try {
-        await authLogin(adminPhone, password);
-        navigate("/dashboard")
+        const response = await registerInstitution(
+          formData.institutionName,
+          formData.postalCode,
+          formData.county,
+          formData.phone,
+          formData.email,
+          formData.year,
+          formData.description,
+          formData.type,
+          formData.website,
+          formData.logo,
+          formData.documents,
+          formData.firstName,
+          formData.lastName,
+          formData.adminEmail,
+          formData.adminPhone,
+          formData.password
+        )
+        setSuccess(true)
+        setLoading(false)
+        setMessage(response.data.message)
+        toast({
+          title: "School created",
+          description: "Your school data has been uploaded succesfully"
+        });
+        console.log(message);
+        try {
+          await authLogin(formData.adminPhone, formData.password);
+          navigate("/dashboard")
+        } catch (error) {
+          console.error('LoginFailed', error)
+        }
       } catch (error) {
-        console.error('LoginFailed', error)
+        setSuccess(false)
+        setLoading(false)
+        toast({
+          title: "School not created",
+          description: "Your data could not be processed",
+          variant: "destructive",
+          action: <ToastAction altText="Try Again">Try Again</ToastAction>,
+        });
+        console.log(error)
       }
-    } catch (error) {
-      setSuccess(false)
-      setLoading(false)
-      toast({
-        title: "School not created",
-        description: "Your data could not be processed",
-        variant: "destructive",
-        action: <ToastAction altText="Try Again">Try Again</ToastAction>,
-      });
-      console.log(error)
+    } else {
+        toast({
+          title: "Input Error",
+          description: "Some fields may need attention. Please correct the errors to proceed",
+          variant: "destructive",
+        });
     }
+
   }
 
   const years = []
-  for (let i = 1900; i < 2100 ; i++) {
+  for (let i = 1900; i <= new Date().getFullYear() ; i++) {
     years.push(i)
   }
 
@@ -193,6 +231,8 @@ const RegisterInstitutionForm = () => {
 		"West Pokot"
 	];
 
+  const inputErrorStyle = "text-red-500 text-sm";
+
   return (
     <Card className="w-full md:w-[800px] mt-10">
       <CardHeader>
@@ -203,30 +243,32 @@ const RegisterInstitutionForm = () => {
         <form className="grid gap-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name" className={errors.institutionName && "text-red-500"}>Institution Name</Label>
+              <Label htmlFor="name" className={errors.institutionName && inputErrorStyle}>Institution Name *</Label>
               <Input
                 id="name"
                 name="institutionName"
                 placeholder="Enter institution name"
+                required
                 value={formData.institutionName}
                 onChange={handleChange}
               />
+              {errors.institutionName && <p className={inputErrorStyle}>{errors.institutionName}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="postal-code">Postal Code</Label>
+              <Label htmlFor="postal-code" className={errors.postalCode && inputErrorStyle}>Postal Code *</Label>
               <Input
                 id="postal-code"
                 name="postalCode"
-                placeholder="Enter institution postal code"
+                placeholder="1234"
                 value={formData.postalCode}
                 onChange={handleChange}
               />
+              {errors.postalCode && <p className="text-red-500 text-sm">{errors.postalCode}</p>}
             </div>
-              {errors.institutionName && <p className="text-red-500 text-sm">{errors.institutionName}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="contact-phone">Contact Phone Number</Label>
+              <Label htmlFor="contact-phone" className={errors.phone && inputErrorStyle}>Contact Phone Number *</Label>
               <Input
                 id="contact-phone"
                 name="phone"
@@ -234,9 +276,10 @@ const RegisterInstitutionForm = () => {
                 value={formData.phone}
                 onChange={handleChange}
               />
+              {errors.phone&& <p className={inputErrorStyle}>{errors.phone}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Contact Email</Label>
+              <Label htmlFor="email" className={errors.email && inputErrorStyle}>Contact Email</Label>
               <Input
                 id="email"
                 name="email"
@@ -245,11 +288,12 @@ const RegisterInstitutionForm = () => {
                 value={formData.email}
                 onChange={handleChange}
               />
+              {errors.email && <p className={inputErrorStyle}>{errors.email}</p>}
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="county">County</Label>
+              <Label htmlFor="county" className={errors.county && inputErrorStyle}>County *</Label>
               <Input
                 id="county"
                 name="county"
@@ -265,9 +309,10 @@ const RegisterInstitutionForm = () => {
                       <option key={ index } value={ county }>{ county }</option>)
                   }
                 </datalist>
+              {errors.county && <p className={inputErrorStyle}>{errors.county}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="type">Type</Label>
+              <Label htmlFor="type" className={errors.type && inputErrorStyle}>Type *</Label>
               <Select onValueChange={(value) => handleSelectChange('type', value)}>
                 { /* TODO have school types */ }
                 <SelectTrigger id="type">
@@ -282,9 +327,10 @@ const RegisterInstitutionForm = () => {
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.type && <p className={inputErrorStyle}>{errors.type}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="year">Year Established</Label>
+              <Label htmlFor="year" className={errors.year && inputErrorStyle}>Year Established *</Label>
               <Input
                 id="year"
                 name="year" 
@@ -299,17 +345,19 @@ const RegisterInstitutionForm = () => {
                       <option key={ index } value={ year }>{ year }</option>)
                   }
                 </datalist>
+              {errors.year && <p className={inputErrorStyle}>{errors.year}</p>}
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="website">School Website</Label>
+            <Label htmlFor="website" className={errors.website && inputErrorStyle}>School Website</Label>
             <Input
               id="website"
               name="website"
               value={ formData.website }
-              placeholder="Enter school website"
+              placeholder="www.greatschool.com"
               onChange={handleChange}
             />
+            {errors.website && <p className={inputErrorStyle}>{errors.website}</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
@@ -346,7 +394,7 @@ const RegisterInstitutionForm = () => {
           <h2 className="text-md">Use these credentials to log into the school as an admin</h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="fist-name">First Name</Label>
+              <Label htmlFor="fist-name" className={errors.firstName && inputErrorStyle}>First Name *</Label>
               <Input
                 id="first-name"
                 name="firstName"
@@ -354,9 +402,10 @@ const RegisterInstitutionForm = () => {
                 value={formData.firstName}
                 onChange={handleChange}
               />
+            {errors.firstName && <p className={inputErrorStyle}>{errors.firstName}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="last-name">Last Name</Label>
+              <Label htmlFor="last-name" className={errors.lastName && inputErrorStyle}>Last Name *</Label>
               <Input
                 id="last-name"
                 name="lastName"
@@ -364,10 +413,11 @@ const RegisterInstitutionForm = () => {
                 value={formData.lastName}
                 onChange={handleChange}
               />
+              {errors.lastName && <p className={inputErrorStyle}>{errors.lastName}</p>}
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="admin-email">Email</Label>
+            <Label htmlFor="admin-email" className={errors.adminEmail && inputErrorStyle}>Email</Label>
             <Input
               id="admin-email"
               name="adminEmail"
@@ -376,9 +426,10 @@ const RegisterInstitutionForm = () => {
               type="email"
               onChange={handleChange}
             />
+            {errors.adminEmail && <p className={inputErrorStyle}>{errors.adminEmail}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="admin-phone">Phone</Label>
+            <Label htmlFor="admin-phone" className={errors.adminPhone && inputErrorStyle}>Phone *</Label>
             <Input
               id="admin-phone"
               name="adminPhone"
@@ -386,10 +437,11 @@ const RegisterInstitutionForm = () => {
               placeholder="Enter phone"
               onChange={handleChange}
             />
+            {errors.adminPhone && <p className={inputErrorStyle}>{errors.adminPhone}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className={errors.password && inputErrorStyle}>Password *</Label>
               <Input
                 id="password"
                 name="password"
@@ -398,9 +450,10 @@ const RegisterInstitutionForm = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
+              {errors.password && <p className={inputErrorStyle}>{errors.password}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="repeat-password">Repeat Password</Label>
+              <Label htmlFor="repeat-password" className={errors.repeatPassword && inputErrorStyle}>Repeat Password *</Label>
               <Input
                 id="repeat-password"
                 name="repeatPassword"
@@ -409,6 +462,7 @@ const RegisterInstitutionForm = () => {
                 value={formData.repeatPassword}
                 onChange={handleChange}
               />
+              {errors.repeatPassword && <p className={inputErrorStyle}>{errors.repeatPassword}</p>}
             </div>
           </div>
         </form>

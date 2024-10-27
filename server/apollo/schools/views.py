@@ -18,7 +18,8 @@ def register_school(request):
     if school_serializer.is_valid():
         school = school_serializer.save()
     else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(school_serializer.errors)
+        return Response(school_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # Create admin user
     user_data = request.data.get("admin")
     user_data["school"] = school_serializer.data
