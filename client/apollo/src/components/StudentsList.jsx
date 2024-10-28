@@ -14,6 +14,17 @@ import { Input } from "@/components/ui/input"
 import { Search } from 'lucide-react'
 import FormDialog from "@/components/FormDialog";
 import AddStudentForm from "@/components/forms/AddStudentForm";
+import {
+  Sheet,
+  SheetContent,
+  SheetClose,
+  SheetFooter,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import StudentDetails from "@/components/StudentDetails";
 
 const NoStudents = () => {
   return (
@@ -42,7 +53,7 @@ const StudentsList = ({ students }) => {
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead className="hidden sm:table-cell">Student ID</TableHead>
+            <TableHead className="hidden sm:table-cell">Admission Number</TableHead>
             <TableHead className="hidden sm:table-cell">
               Class
             </TableHead> <TableHead className="hidden sm:table-cell">Gender</TableHead>
@@ -56,32 +67,43 @@ const StudentsList = ({ students }) => {
           return search.toLowerCase() === '' ? student : student.first_name.toLowerCase().includes(search) || student.last_name.toLowerCase().includes(search) || search.includes(student.id)
           }).map(student => 
           <TableRow key={ student.id }>
-            <TableCell >
-              <div className="flex items-center space-x-2">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src={student.profile_photo} />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <div className="font-medium">{ `${student.first_name} ${student.last_name}` } </div>
-              </div>
-            </TableCell>
-            <TableCell>
-              { student.id }
-            </TableCell>
-            <TableCell>
-                <div className="hidden text-sm text-muted-foreground md:inline">
-                  { student._class.name } 
-                </div>
-            </TableCell>
-            <TableCell className="hidden sm:table-cell">
-              { student.gender } 
-            </TableCell>
-            <TableCell className="hidden sm:table-cell">
-              <Badge className="text-xs" variant="secondary">
-                { student.is_active? "Active" : "absent" } 
-              </Badge>
-            </TableCell>
-          </TableRow>
+						<Sheet>
+              <SheetTrigger asChild >
+                <TableCell className="cursor-pointer">
+                  <div className="flex items-center space-x-2">
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={student.profile_photo} />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <div className="font-medium">{ `${student.first_name} ${student.last_name}` } </div>
+                  </div>
+                </TableCell>
+              </SheetTrigger>
+                <TableCell>
+                  <div className="text-sm text-muted-foreground">
+                    { student.admission_number }
+                  </div>
+                </TableCell>
+                <TableCell>
+                    <div className="hidden text-sm text-muted-foreground md:inline">
+                      { student._class.name } 
+                    </div>
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  <div className="text-sm text-muted-foreground">
+                    { student.gender } 
+                  </div>
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  <Badge className="text-xs" variant="secondary">
+                    { student.is_active? "Active" : "absent" } 
+                  </Badge>
+                </TableCell>
+                <SheetContent className="p-0">
+                  <StudentDetails student={student} />
+                </SheetContent>
+              </Sheet>
+            </TableRow>
           )): <NoStudents />}
         </TableBody>
       </Table>

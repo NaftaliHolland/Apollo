@@ -13,7 +13,7 @@ class ParentSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["first_name", "last_name"]
+        fields = ["first_name", "last_name", "phone_number"]
     
 class ParentDetailSerializer(serializers.ModelSerializer):
     user = UserDetailSerializer()
@@ -25,7 +25,7 @@ class ParentDetailSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = "__all__"
+        exclude = ["admission_number"]
 
 class StudentDetailSerializer(serializers.ModelSerializer):
     _class = ClassSerializer()

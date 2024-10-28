@@ -239,7 +239,7 @@ const Layout = ({children}) => {
         </div>
       </div>
       <div className="flex flex-col">
-        <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+        <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px] lg:px-6 z-50">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -420,10 +420,10 @@ const Layout = ({children}) => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="secondary" size="icon" className="rounded-full">
-                <Avatar>
+                <Avatar >
                   {/*Change this to the user's avatar */}
-                  <AvatarImage src="" />
-                  <AvatarFallback>JN</AvatarFallback>
+                  <AvatarImage src=""/>
+                  <AvatarFallback className="bg-white">JN</AvatarFallback>
                 </Avatar>
               <span className="sr-only">Toggle user menu</span>
                   </Button>
