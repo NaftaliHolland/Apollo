@@ -48,6 +48,11 @@ class ClassView(APIView):
             return Response({"message": "School with the provided id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
         classes = Class.objects.filter(school=school)
+        if (request.GET.get("count")):
+            class_count = Class.objects.filter(school=school).count()
+            return Response(class_count)
+
+        classes = Class.objects.filter(school=school)
         serializer = ClassGetSerializer(classes, many=True)
         return Response({"classes": serializer.data}, status=status.HTTP_200_OK)
 

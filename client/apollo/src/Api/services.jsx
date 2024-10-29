@@ -151,6 +151,10 @@ export const getClasses = (schoolId) => {
   return axiosInstance.get(`/classes/?school=${schoolId}`);
 }
 
+export const getClassCount = (schoolId) => {
+  return axiosInstance.get(`/classes/?school=${schoolId}&count=true`)
+}
+
 export const getStudentCount = (schoolId) => {
   return axiosInstance.get(`/students/count/?school_id=${schoolId}`);
 }

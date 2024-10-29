@@ -25,7 +25,7 @@ import {
   GraduationCap,
 } from "lucide-react"
 import { useAuth} from "@/contexts/AuthContext";
-import { getStudentCount, getTeacherCount } from "@/Api/services";
+import { getStudentCount, getTeacherCount, getClassCount } from "@/Api/services";
 import { Calendar } from "@/components/ui/calendar";
 
 const GenderDistribution = ({studentCount}) => {
@@ -64,6 +64,44 @@ const GenderDistribution = ({studentCount}) => {
   )
 }
 
+const ClassCount = () => {
+  const [classCount, setClassCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(true);
+
+  useEffect(() => {
+    const fetchClassCount = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getClassCount(schoolId);
+        setClassCount(response.data);
+      } catch (error) {
+        console.log(error);
+        setSuccess(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchClassCount();
+  }, []);
+
+  return (
+    <Card className="bg-lime-100">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium">Total Classes</CardTitle>
+        <BookIcon className="w-4 h-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        { loading
+          ? <div className="text-sm muted">Loading ...</div>
+          : success? <div className="text-2xl font-bold">{classCount}</div> : <div>An error occured</div>
+        }
+{/*<p className="text-xs text-muted-foreground">+2.4% from last year</p>*/}
+      </CardContent>
+    </Card>
+  )
+  
+}
 const Messages = () => {
 	return (
 		<Card className="col-span-full">
@@ -124,7 +162,7 @@ const RecentActivities = () => {
 				<Activity className="h-4 w-4 text-muted-foreground" />
 			</CardHeader>
 			<CardContent>
-				<ul className="space-y-4">
+    {/*<ul className="space-y-4">
 					<li className="flex items-center">
 						<span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
 						<span className="text-sm">John Doe submitted assignment for Math 101</span>
@@ -145,7 +183,8 @@ const RecentActivities = () => {
 						<span className="text-sm">Library added 50 new books to the catalog</span>
 						<span className="ml-auto text-xs text-muted-foreground">3h ago</span>
 					</li>
-				</ul>
+				</ul>*/}
+        <div className="text-sm">Coming soon</div>
 			</CardContent>
 		</Card>)
 }
@@ -159,8 +198,10 @@ const StudentCount = ({studentCount}) => {
           <UsersIcon className="w-8 h-8 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{ studentCount["male_count"] + studentCount["female_count"] }</div>
-      {/*<p className="text-xs text-muted-foreground">+5.2% from last year</p>*/}
+          {studentCount
+            ? <div className="text-2xl font-bold">{ studentCount["male_count"] + studentCount["female_count"] }</div>
+            : <div className="text-sm">Loading ...</div>
+          }
         </CardContent>
       </Card>
     </Link>
@@ -199,6 +240,40 @@ const TeacherCount = () => {
   );
 }
 
+const Attendance = () => {
+  return (
+    <Card className="bg-green-100">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium">Attendance Rate</CardTitle>
+        <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-sm">Coming Soon</div>
+        <p className="text-xs text-muted-foreground"></p>
+      </CardContent>
+    </Card>
+  );
+}
+
+const Announcements = () => {
+  return (
+    <Card className="md:col-span-2 lg:col-span-1 flex-grow">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">Announcements</CardTitle>
+        <Bell className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+    {/*<ul className="space-y-2">
+          <li>Parent-Teacher Conference - Next Week</li>
+          <li>School Play Auditions - This Friday</li>
+          <li>New Library Books Arrived</li>
+        </ul>*/}
+        <div className="text-sm"> Comming Soon </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 const AdminDashboard = () => {
   const { user, logout, school } = useAuth();
   const [studentCount, setStudentCount] = useState(0);
@@ -216,6 +291,7 @@ const AdminDashboard = () => {
     fetchStudentCount();
   }, []);
 
+
   return (
 	  <Layout>
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 h-full">
@@ -223,47 +299,17 @@ const AdminDashboard = () => {
 					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <StudentCount studentCount={studentCount}/>
               <TeacherCount />
-							<Card className="bg-lime-100">
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">Total Classes</CardTitle>
-									<BookIcon className="w-4 h-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">10</div>
-    {/*<p className="text-xs text-muted-foreground">+2.4% from last year</p>*/}
-								</CardContent>
-							</Card>
-							<Card className="bg-green-100">
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">Attendance Rate</CardTitle>
-									<CalendarIcon className="w-4 h-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">92.5%</div>
-									<p className="text-xs text-muted-foreground">+1.2% from last year</p>
-								</CardContent>
-							</Card>
+              <ClassCount />
+              <Attendance />
 					 </div>
             <div className="flex flex-col gap-4 w-full md:flex-row md:w-auto mt-4">
               <GenderDistribution studentCount={studentCount}/>
-							<Card className="md:col-span-2 lg:col-span-1 flex-grow">
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">Announcements</CardTitle>
-									<Bell className="h-4 w-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<ul className="space-y-2">
-										<li>Parent-Teacher Conference - Next Week</li>
-										<li>School Play Auditions - This Friday</li>
-										<li>New Library Books Arrived</li>
-									</ul>
-								</CardContent>
-							</Card>
+              <Announcements />
          		</div>
 						<RecentActivities />
 				</div>
 				{ /* Second grid */ }
-        <div className="flex flex-col gap-4">
+        <div className="flex md:col-span-2 lg:col-span-1 flex-col gap-4">
         <div>
           <Calendar 
             mode="single"
@@ -285,4 +331,5 @@ const AdminDashboard = () => {
 	  </Layout>
   )
 }
+
 export default AdminDashboard;
