@@ -111,7 +111,7 @@ def get_students(request, class_id, school_id):
             return Response({"message": "The provided class does not exist make sure the class is created first"}, status=status.HTTP_404_NOT_FOUND)
 
         students = Student.objects.filter(_class=_class)
-    serializer = StudentSerializer(students, many=True)
+    serializer = StudentDetailSerializer(students, many=True)
     return Response({"students": serializer.data}, status=status.HTTP_200_OK)
     
 @api_view(['GET'])
