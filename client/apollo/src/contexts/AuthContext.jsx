@@ -16,21 +16,19 @@ export const AuthProvider = ({ children }) => {
         const decoded = jwtDecode(token);
         const roles = decoded.roles;
         const storedSchool = localStorage.getItem('schoolInfo');
-        console.log("Here before getting user details");
-				const response = await getUserDetails();
-        console.log("Here after getting user details");
-				const userDetails = response.data.user
+        try {
+				  const response = await getUserDetails();
+				  const userDetails = response.data.user
+          setUser({ token, roles, "username": userDetails.first_name})
+        } catch (error) {
+          setLoading(false)
+        }
         if (storedSchool) {
           setSchool(storedSchool);
         } else {
-          try {
-            localStorage.setItem('schoolInfo', JSON.stringify(userDetails.school))
-            setSchool(JSON.stringify(userDetails.school))
-          } catch (error) {
-            console.log("Could not get user details", error)
-          }
-        };
-        setUser({ token, roles, "username": userDetails.first_name})
+        localStorage.setItem('schoolInfo', JSON.stringify(userDetails.school))
+        setSchool(JSON.stringify(userDetails.school))
+        }
       } else {
         console.log("Not logged in");
       }
