@@ -38,7 +38,9 @@ axiosInstance.interceptors.response.use(
         axios.defaults.headers.common['Authorization'] = `Bearer ${access}`;
         return axiosInstance(originalRequest);
       } catch (err) {
-        console.error('Refresh token error', err);
+        if (err.response.data.code === 'token_not_valid') {
+          throw new Error(err.response.data.code)
+        }
         return Promise.reject(error);
       }
     }
@@ -149,6 +151,10 @@ export const getStudents = (_class, schoolId) => {
 
 export const getClasses = (schoolId) => {
   return axiosInstance.get(`/classes/?school=${schoolId}`);
+}
+
+export const getClassCount = (schoolId) => {
+  return axiosInstance.get(`/classes/?school=${schoolId}&count=true`)
 }
 
 export const getStudentCount = (schoolId) => {
