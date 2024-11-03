@@ -70,9 +70,10 @@ const AddStudentForm = ({ addToState, classes }) => {
 
   const handleParentChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => (
-      {...prevState,
+    setFormData(prevState => ({
+      ...prevState,
         parentDetails: {
+          ...prevState.parentDetails,
           [name]: value
         }
     }));
@@ -109,7 +110,7 @@ const AddStudentForm = ({ addToState, classes }) => {
       if (selectedFile) {
         profilePhotoUrl = await uploadProfile(selectedFile);
       }
-      const response = await addStudent(formData.firstName, formData.lastName, formData.date, formData.gender, formData.parentDetails, formData.classId, formData.profilePhotoUrl)
+      const response = await addStudent(formData.firstName, formData.lastName, formData.date, formData.gender, formData.parentDetails, formData.classId, profilePhotoUrl)
       addToState(response.data.student)
       setFormData(
         {
@@ -129,6 +130,8 @@ const AddStudentForm = ({ addToState, classes }) => {
           }
         }
       )
+      const profileInput = document.getElementById('profile');
+      console.log(profileInput);
       setSuccess(true)
       setMessage(response.data.message)
     } catch (error) {
