@@ -37,121 +37,114 @@ import DatePicker from "@/components/DatePicker"
 
 const AddStudentForm = ({ addToState, classes }) => {
 
-  const [firstName, setFirstName] = useState('');
-  const [validFirstName, setValidFirstName] = useState(false);
-  
-  const [lastName, setLastName] = useState('');
-  const [validLastName, setValidLastName] = useState(false);
-
-  const [dob, setDob] = useState('');
-  const [validDob, setValidDob] = useState(false);
-
-  const [gender, setGender] = useState('');
-  const [validGender, setValidGender] = useState(false);
-
-  const [classId, setClassId] = useState('');
-  const [valid_Class, setValid_Class] = useState(false);
-
-  const [message, setMessage] = useState('');
-  const [success, setSuccess] = useState(false);
-
-  const [date, setDate] = useState('');
-
-	const [uploading, setUploading] = useState(true);
-
-	const [profilePhotoFile, setProfilePhotoFile] = useState(null);
-	const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
-
-	const [parentDetails, setParentDetails] = useState(
+  const [formData, setFormData] = useState(
+    {
+      firstName: '',
+      lastName: '',
+      dob: '',
+      gender: '',
+      classId: '',
+      date: '',
+      parentDetails:
 			{
 				firstName: '',
         lastName: '',
         phoneNumber: '',
         email: '',
 			}
-		)
-  const handleParentChange = (e) => {
-    const { name, value } = e.target;
-    setParentDetails((prevDetails) => ({
-      ...prevDetails, [name]: value,
+    }
+  );
+
+  const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
+	const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleInputChange = (e) => {
+    const {name, value} = e.target;
+    setFormData(prevState =>  ({
+      ...prevState,
+      [name]: value
     }));
   }
 
-	const handleProfilePhotoChange = (event) => {
-		const file = event.target.files[0];
-		console.log(event.target.value);
-		setProfilePhotoFile(file);
-		console.log(profilePhotoFile);
-	};
+  const handleParentChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => (
+      {...prevState,
+        parentDetails: {
+          [name]: value
+        }
+    }));
+  };
 
-	useEffect (() => {
-		let isMounted = true;
-		const uploadPhoto = async () => {
-			if (!profilePhotoFile) {
-				return
-			}
-			setUploading(true)
-			try{
-				const cloudinaryResponse = await uploadProfilePhoto(profilePhotoFile);
-				console.log(cloudinaryResponse);
-				if (isMounted) {
-					setProfilePhotoUrl(cloudinaryResponse.data.secure_url);
-				}
-				console.log("Here", profilePhotoUrl);
-			} catch (error) {
-				if (isMounted) {
-					console.log(error);
-					setMessage("Failed to upload photo");
-					setSuccess(false);
-				}
-			} finally {
-				if (isMounted) {
-					setUploading(false);
-				}
-			}
-		}
-		uploadPhoto();
-		return () => {
-			isMounted = false;
-		}
-	}, [profilePhotoFile]);
+  const handleFileChange = (event) => {
+    setMessage('')
+		const file = event.target.files[0];
+    // TODO file validation, size and format
+    setSelectedFile(file);
+  }
+  // 
+
+  const uploadProfile = async (file) => {
+    try {
+      const response = await uploadProfilePhoto(file);
+      return response.data.secure_url;
+    } catch (error) {
+      console.log("There was an error uploading the profile photo");
+      }
+  };
 
 	const handleSubmit = async (e) => {
+    console.log("Here")
 		e.preventDefault();
-		console.log(uploading);
-		if (uploading) {
-			setMessage("Please wait, still uploading profile photo");
-			return;
-		}
-
+    if (isSubmiting) return
+    // TODO form validation
+    //
+    // Start uploading the file
     try {
-      const response = await addStudent(firstName, lastName, date, gender, parentDetails, classId, profilePhotoUrl)
+      setIsSubmiting(true);
+		  setMessage("");
+      let profilePhotoUrl = '';
+      if (selectedFile) {
+        profilePhotoUrl = await uploadProfile(selectedFile);
+      }
+      const response = await addStudent(formData.firstName, formData.lastName, formData.date, formData.gender, formData.parentDetails, formData.classId, formData.profilePhotoUrl)
       addToState(response.data.student)
-      setFirstName('')
-      setLastName('')
-      setDate('')
-      setClassId('')
-      setGender('')
-      setParentDetails(
+      setFormData(
         {
           firstName: '',
           lastName: '',
-          phoneNumber: '',
-          email: '',
+          dob: '',
+          gender: '',
+          classId: '',
+          date: '',
+          profilePhotoUrl: '',
+          parentDetails:
+          {
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
+            email: '',
+          }
         }
       )
       setSuccess(true)
       setMessage(response.data.message)
-      console.log(response)
     } catch (error) {
+      console.log(error)
       setSuccess(false)
       setMessage(error.response.data.message);
-      console.log(error)
+    } finally {
+      setIsSubmiting(false);
     }
   };
 
   const setDateState = (date) => {
-		setDate(date)
+    setFormData(prevState => ({
+      ...prevState,
+      date: date
+    }));
   }
 
   const successClassName = "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
@@ -178,18 +171,20 @@ const AddStudentForm = ({ addToState, classes }) => {
             <Label htmlFor="first-name">First Name</Label>
             <Input
               id="first-name"
+              name="firstName"
               placeholder="Enter first name"
-              onChange={(e) => setFirstName(e.target.value)}
-              value={firstName}
+              onChange={handleInputChange}
+              value={formData.firstName}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="last-name">Last Name</Label>
             <Input
               id="last-name"
+              name="lastName"
               placeholder="Enter last name"
-              onChange={(e) => setLastName(e.target.value)}
-              value={lastName}
+              onChange={handleInputChange}
+              value={formData.lastName}
             />
           </div>
         </div>
@@ -200,7 +195,7 @@ const AddStudentForm = ({ addToState, classes }) => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
-            <Select onValueChange={(value) => setGender(value)}>
+            <Select onValueChange={(value) => setFormData(prevState => ({ ...prevState, gender: value}))}>
               <SelectTrigger id="gender">
                 <SelectValue placeholder="Select gender" />
               </SelectTrigger>
@@ -214,7 +209,7 @@ const AddStudentForm = ({ addToState, classes }) => {
         </div>
         <div className="space-y-2">
           <Label htmlFor="class">Class</Label>
-          <Select onValueChange={(value) => setClassId(value)}>
+          <Select onValueChange={(value) => setFormData(prevState => ({...prevState, classId: value}))}>
             <SelectTrigger id="class">
               <SelectValue placeholder="Select class" />
             </SelectTrigger>
@@ -229,7 +224,7 @@ const AddStudentForm = ({ addToState, classes }) => {
 						<Input id="profile"
 							type="file"
 							accept="image/jpeg, image/png"
-							onChange={ handleProfilePhotoChange }
+							onChange={ handleFileChange }
 						/>
 					</div>
         </div>
@@ -239,9 +234,9 @@ const AddStudentForm = ({ addToState, classes }) => {
             <Label htmlFor="parent-first-name">Parent/Guardian First Name</Label>
             <Input
               id="parent-first-name"
-              placeholder="Enter first name"
               name="firstName"
-              value={parent.firstName}
+              placeholder="Enter first name"
+              value={formData.parentDetails.firstName}
               onChange={handleParentChange}
             />
           </div>
@@ -249,9 +244,9 @@ const AddStudentForm = ({ addToState, classes }) => {
             <Label htmlFor="parent-last-name">Parent/Guardian Last Name</Label>
             <Input
               id="parent-last-name"
-              placeholder="Enter last name"
               name="lastName"
-              value={parent.lastName}
+              placeholder="Enter last name"
+              value={formData.parentDetails.lastName}
               onChange={handleParentChange}
              />
           </div>
@@ -261,10 +256,10 @@ const AddStudentForm = ({ addToState, classes }) => {
             <Label htmlFor="parent-email">Parent/Guardian Email</Label>
             <Input
               id="parent-email"
+              name="email"
               type="email"
               placeholder="Enter email"
-              name="email"
-              value={parent.email}
+              value={formData.parentDetails.email}
               onChange={handleParentChange}
           />
           </div>
@@ -272,17 +267,17 @@ const AddStudentForm = ({ addToState, classes }) => {
             <Label htmlFor="parent-phone">Parent/Guardian Phone</Label>
             <Input
               id="parent-phone"
+              name="phoneNumber"
               type="tel"
               placeholder="Enter phone number"
-              name="phoneNumber"
-              value={parent.phoneNumber}
+              value={formData.parentDetails.phoneNumber}
               onChange={handleParentChange}
           />
           </div>
         </div>
       </CardContent>
       <CardFooter>
-        <Button type="submit" onClick={ handleSubmit }className="ml-auto">
+        <Button type="submit" onClick={handleSubmit}className="ml-auto">
           Register
         </Button>
       </CardFooter>

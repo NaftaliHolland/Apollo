@@ -25,7 +25,7 @@ const LandingPage = () => {
       <div className="sticky top-0 bg-white">
         <header className="sticky top-0 mx-4 lg:mx-16 h-16 flex items-center bg-white">
           <Link to="/" className="flex items-center gap-2 justify-center">
-            <Logo fillColor={"000000"} className="h-8 w-8" /> <span className="text-xl font-bold">Apollo</span>
+            <Logo fillColor={"000000"} /> <span className="text-xl font-bold">Apollo</span>
           </Link>
           <nav className="items-center gap-4 sm:gap-6 hidden md:inline-flex ml-auto">
             <Link to="/" className="text-md font-medium hover:underline underline-offset-4" >
