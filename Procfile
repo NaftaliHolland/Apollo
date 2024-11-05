@@ -1,1 +1,1 @@
-web: cd server/apollo && apollo.wsgi
+web: cd server/apollo && gunicorn apollo.wsgi
