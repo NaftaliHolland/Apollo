@@ -1,7 +1,7 @@
-const Logo = ({ fillColor }) => {
+const Logo = ({height=30, width=30, fillColor }) => {
   return (
     <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-    width="30" height="30" viewBox="0 0 500.000000 500.000000"
+    width={width} height={height} viewBox="0 0 500.000000 500.000000"
     preserveAspectRatio="xMidYMid meet">
 
     <g transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"

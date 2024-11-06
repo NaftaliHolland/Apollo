@@ -16,6 +16,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import Loading from "@/components/loading";
 
 const Login = () => {
   const [username, setUsername] = useState('')
@@ -34,7 +35,7 @@ const Login = () => {
   }, [loading, user, navigate]);
 
   if (loading) {
-      return <div>Loading...</div>;
+      return <Loading />;
   }
 
 
