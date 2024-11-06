@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useEffect, useState } from "react"
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 
@@ -13,16 +13,24 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+/**
+ * @param formSubmited will be set to true once the form that uses the DatePicker has been submite 
+ */
 const DatePicker = ({date=null, setDateState}) => {
-  const [selected, setSelected] = React.useState(date)
+  const [selected, setSelected] = useState(date)
 
-	React.useEffect(() => {
+  useEffect(() => {
+    setSelected(date);
+  }, [date])
+
+	useEffect(() => {
     try {
 		  setDateState(selected?.toLocaleDateString('en-CA'));
   } catch {
     setDateState(selected);
   }
-  }, [selected]);
+  }, [selected, setDateState]);
+
 
   return (
     <div>
