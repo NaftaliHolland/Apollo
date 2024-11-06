@@ -116,7 +116,7 @@ const AddStudentForm = ({ addToState, classes }) => {
         {
           firstName: '',
           lastName: '',
-          dob: '',
+          dob: null,
           gender: '',
           classId: '',
           date: '',
@@ -131,7 +131,7 @@ const AddStudentForm = ({ addToState, classes }) => {
         }
       )
       const profileInput = document.getElementById('profile');
-      console.log(profileInput);
+      profileInput.value = "";
       setSuccess(true)
       setMessage(response.data.message)
     } catch (error) {
@@ -194,12 +194,12 @@ const AddStudentForm = ({ addToState, classes }) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Date of Birth</Label>
-						<DatePicker setDateState={setDateState}/>
+						<DatePicker date={formData.dob} setDateState={setDateState}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
-            <Select onValueChange={(value) => setFormData(prevState => ({ ...prevState, gender: value}))}>
-              <SelectTrigger id="gender">
+            <Select id="gender" value={formData.gender} onValueChange={(value) => setFormData(prevState => ({ ...prevState, gender: value}))}>
+              <SelectTrigger>
                 <SelectValue placeholder="Select gender" />
               </SelectTrigger>
               <SelectContent>
@@ -212,7 +212,7 @@ const AddStudentForm = ({ addToState, classes }) => {
         </div>
         <div className="space-y-2">
           <Label htmlFor="class">Class</Label>
-          <Select onValueChange={(value) => setFormData(prevState => ({...prevState, classId: value}))}>
+          <Select value={formData.classId} onValueChange={(value) => setFormData(prevState => ({...prevState, classId: value}))}>
             <SelectTrigger id="class">
               <SelectValue placeholder="Select class" />
             </SelectTrigger>
