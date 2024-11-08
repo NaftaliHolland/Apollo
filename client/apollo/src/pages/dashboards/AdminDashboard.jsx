@@ -111,7 +111,8 @@ const Messages = () => {
 			</CardHeader>
 			<CardContent>
 				<ul className="space-y-4">
-					<li className="flex items-start space-x-4">
+                 <li>Coming soon</li>
+        {/*<li className="flex items-start space-x-4">
 						<div className="bg-blue-100 rounded-full p-2">
 							<User className="h-4 w-4 text-blue-500" />
 						</div>
@@ -149,7 +150,7 @@ const Messages = () => {
 							<p className="text-sm text-gray-600 mt-1">Thank you for organizing the career day event.</p>
 							<Badge variant="outline" className="mt-2">Parent</Badge>
 						</div>
-					</li>
+					</li>*/}
 				</ul>
 			</CardContent>
 		</Card>)
