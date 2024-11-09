@@ -21,6 +21,7 @@ import Exams from "@/pages/Exams";
 import ExamPage from "@/pages/ExamPage";
 import Grades from "@/pages/Grades";
 import Messaging from "@/pages/Messaging";
+import FeeStructurePage from "@/pages/feeStructurePage";
 import ProtectedRoutes from "@/utils/ProtectedRoutes";
 import { AuthProvider } from '@/contexts/AuthContext'
 
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
         { path: "/exams", element: <Exams /> },
         { path: "/exams/:id", element: <ExamPage /> },
         { path: "/messages/", element: <Messaging /> },
+        { path: "/fee_structure", element: <FeeStructurePage />},
       ]
     },
     { path: "/login", element: <Login />},
