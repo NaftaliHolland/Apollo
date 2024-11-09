@@ -1,9 +1,10 @@
 import Layout from "@/components/layouts/Layout"
+import FeeCategoriesCard from "@/components/feeCategoriesCard"
 
 const FeeStructurePage = () => {
   return (
     <Layout>
-      <div>Fee structures page</div>
+      <FeeCategoriesCard />
     </Layout>
   )
 }
