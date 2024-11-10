@@ -10,11 +10,11 @@ import { getClasses } from "@/Api/services";
 import { sendMessage, getMessages } from "@/Api/services";
 
 	
-	const initialMessages = [
+const initialMessages = [
   { id: 1, recipients: "All Students", content: "Welcome to the new school year!", status: "Sent" },
   { id: 2, recipients: "Grade 2", content: "Field trip next week", status: "Sending" },
   { id: 3, recipients: "All Parents", content: "Parent-teacher conference schedule", status: "Failed" },
-	]
+]
 
 const Messaging = () => {
 
@@ -32,6 +32,15 @@ const Messaging = () => {
       ? prevState.filter(id => id !== classId)
       : [...prevState, classId]
     )
+  }
+
+  const handleToggleAll = () => {
+    const allClasses = classes.map((classItem) => classItem.id)
+    if (allClasses.length === recipients.length) {
+      setRecipients([]);
+    } else {
+      setRecipients(classes.map((classItem) => classItem.id))
+    }
   }
 
   useEffect(() => {
@@ -88,6 +97,17 @@ const Messaging = () => {
 						<div>
 							<h2 className="text-lg font-semibold mb-2">Select Recipients:</h2>
 							<ScrollArea className="border rounded-md p-4">
+                {classes.length > 0 && (<div className="flex items-center gap-2 mb-2">
+                  <Checkbox
+                    id="all"
+                    checked={classes.map((classItem) => classItem.id).length === recipients.length} 
+                    onCheckedChange={() => handleToggleAll()}
+                  />
+                  <label
+                    htmlFor="all"
+								    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >All</label>
+                </div>)}
 								{classes.map((classItem) => (
 									<div key={classItem.id} className="flex items-center space-x-2 mb-2">
 										<Checkbox
