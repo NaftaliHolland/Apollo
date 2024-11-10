@@ -166,7 +166,7 @@ const Nav = () => {
         ) : 
           (null)}
        </div>
-      <div onClick={() => setFinanceToggled(!financeToggled)}
+      {/*<div onClick={() => setFinanceToggled(!financeToggled)}
   >
         <div
           className={`flex items-center gap-3 rounded-lg px-3 py-2 ${ financeToggled ? ("text-foreground bg-muted") : ("text-muted-foreground") } transition-all hover:text-primary hover:cursor-pointer`}>
@@ -190,7 +190,7 @@ const Nav = () => {
           </div>
         ) : 
           (null)}
-       </div>
+       </div>*/}
       <NavLink
         to="/messages"
         className={({ isActive }) =>
