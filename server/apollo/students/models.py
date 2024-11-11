@@ -18,6 +18,14 @@ class Parent(models.Model):
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
 
+class StudentGroup(models.Model):
+    name = models.CharField(max_length=100)
+    school = models.ForeignKey("schools.School", on_delete=models.CASCADE)
+    fee_discount = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.name
+
 class Student(models.Model):
     admission_number = models.CharField(max_length=50)
     first_name = models.CharField(max_length = 50)
@@ -28,6 +36,7 @@ class Student(models.Model):
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE, related_name="children")
     _class = models.ForeignKey(Class, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
+    group = models.ForeignKey(StudentGroup, null=True, blank=True, on_delete=models.SET_NULL)
 
     objects = StudentManager()
 

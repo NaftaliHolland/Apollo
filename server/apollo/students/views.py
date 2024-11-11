@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
-from .serializers import StudentSerializer, ParentSerializer, StudentDetailSerializer
+from .serializers import StudentSerializer, ParentSerializer, StudentDetailSerializer, StudentGroupSerializer
 from .models import *
 from classes.serializers import ClassSerializer
 from fee.serializers import StudentAccountSerializer
@@ -127,3 +127,13 @@ def get_student_count(request):
     female_count = Student.objects.filter(_class__school=school, gender='female').count()
     student_count = {"male_count": male_count, "female_count": female_count} 
     return Response(student_count, status=status.HTTP_200_OK)
+
+class StudentGroupViewSet(viewsets.ModelViewSet):
+    queryset = StudentGroup.objects.all()
+    serializer_class = StudentGroupSerializer
+
+    def list(self, request):
+        school = request.GET.get("school")
+        queryset = StudentGroup.objects.filter(school=school)
+        serializer = StudentGroupSerializer(queryset, many=True)
+        return Response(serializer.data)

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -7,10 +7,13 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
+import { getClasses } from "@/Api/services";
+
 
 const AddFeeCategoryForm = () => {
 	const [feeCategoryName, setFeeCategoryName] = useState('')
   const [feeDuration, setFeeDuration] = useState('')
+  const [classes, setClasses] = useState([])
   const [classAmounts, setClassAmounts] = useState({
     'Class 1': { checked: false, amount: '' },
     'Class 2': { checked: false, amount: '' },
@@ -19,6 +22,19 @@ const AddFeeCategoryForm = () => {
     'Class 5': { checked: false, amount: '' },
     'Class 6': { checked: false, amount: '' },
   })
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      const schoolId = JSON.parse(localStorage.getItem("schoolInfo")).id
+      try {
+        const response = await getClasses(schoolId);
+        setClasses(response.data.classes)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchClasses()
+  }, []);
 
   const handleClassToggle = (className) => {
     setClassAmounts(prev => ({
@@ -92,31 +108,58 @@ const AddFeeCategoryForm = () => {
 							<Textarea className="resize-none min-h-[10px]" placeholder="Type Fee description here." id="description" />
 						</div> 
 				</div>
-				<div className="space-y-2">
-					<Label>Class Amounts</Label>
-					<div className="space-y-2">
-						{Object.entries(classAmounts).map(([className, { checked, amount }]) => (
-							<div key={className} className="flex items-center space-x-4">
-								<div className="flex items-center space-x-2">
-									<Checkbox
-										id={className}
-										checked={checked}
-										onCheckedChange={() => handleClassToggle(className)}
-									/>
-									<Label htmlFor={className} className="w-20">{className}</Label>
-								</div>
-								<Input
-									type="number"
-									value={amount}
-									onChange={(e) => handleAmountChange(className, e.target.value)}
-									placeholder="Enter amount"
-									disabled={!checked}
-									className="w-32"
-								/>
-							</div>
-						))}
-					</div>
-				</div>
+        <div className="grid grid-cols-2">
+          <div className="space-y-2">
+            <Label>Class Amounts</Label>
+            <div className="space-y-2">
+              {Object.entries(classAmounts).map(([className, { checked, amount }]) => (
+                <div key={className} className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={className}
+                      checked={checked}
+                      onCheckedChange={() => handleClassToggle(className)}
+                    />
+                    <Label htmlFor={className} className="w-20">{className}</Label>
+                  </div>
+                  <Input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => handleAmountChange(className, e.target.value)}
+                    placeholder="Enter amount"
+                    disabled={!checked}
+                    className="w-32"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Discounts</Label>
+            <div className="space-y-2">
+              {Object.entries(classAmounts).map(([className, { checked, amount }]) => (
+                <div key={className} className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={className}
+                      checked={checked}
+                      onCheckedChange={() => handleClassToggle(className)}
+                    />
+                    <Label htmlFor={className} className="w-20">{className}</Label>
+                  </div>
+                  <Input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => handleAmountChange(className, e.target.value)}
+                    placeholder="Enter amount"
+                    disabled={!checked}
+                    className="w-32"
+                  />
+                </div>
+              ))}
+            </div>
+           </div>
+        </div>
 			</CardContent>
 			<CardFooter>
 				<Button type="submit" className="w-full">Create Fee Category</Button>
