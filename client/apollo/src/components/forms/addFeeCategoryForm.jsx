@@ -22,6 +22,8 @@ const AddFeeCategoryForm = () => {
     'Class 5': { checked: false, amount: '' },
     'Class 6': { checked: false, amount: '' },
   })
+  const [groupDiscounts, setGroupDiscounts] = useState({
+  })
 
   useEffect(() => {
     const fetchClasses = async () => {

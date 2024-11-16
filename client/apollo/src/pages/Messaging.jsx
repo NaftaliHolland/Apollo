@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Layout from "@/components/layouts/Layout";
-import { getClasses } from "@/Api/services";
-import { sendMessage, getMessages } from "@/Api/services";
+import { sendMessage, getMessages, getClasses } from "@/Api/services";
 
 	
 const initialMessages = [
