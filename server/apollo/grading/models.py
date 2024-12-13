@@ -1,5 +1,4 @@
 from django.db import models
-from fee.models import AcademicYear, Term
 from django.core.validators import MinValueValidator, MaxValueValidator
 from students.models import Student
 from schools.models import School

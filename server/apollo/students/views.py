@@ -5,8 +5,6 @@ from rest_framework.response import Response
 from .serializers import StudentSerializer, ParentSerializer, StudentDetailSerializer
 from .models import *
 from classes.serializers import ClassSerializer
-from fee.serializers import StudentAccountSerializer
-from fee.models import AcademicYear, TermCategory, FeeStructure, StudentFeeBalance
 from schools.models import School
 from django.shortcuts import get_object_or_404
 from grading.models import Exam, StudentSubjectGrade
