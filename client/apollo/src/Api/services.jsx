@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-//const BACKEND_URL = 'http://localhost:8000';//TODO set this as an environment variable
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_SECRET_KEY = import.meta.env.VITE_CLOUDINARY_SECRET_KEY;
